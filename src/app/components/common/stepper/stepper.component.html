@@ -1,0 +1,46 @@
+<mat-horizontal-stepper [linear]="isLinear" #stepper labelPosition="bottom">
+  <mat-step [stepControl]="step1Group">
+    <ng-template matStepLabel>Demand</ng-template>
+    <app-form1 [step1Group]="step1Group" [stepper]="stepper"></app-form1>
+  </mat-step>
+  <mat-step [stepControl]="step2Group">
+    <ng-template matStepLabel>Primary Sanction</ng-template>
+    <app-form2 [step2Group]="step2Group" [stepper]="stepper"></app-form2>
+  </mat-step>
+  <mat-step [stepControl]="step3Group">
+    <ng-template matStepLabel>Technical Sanction</ng-template>
+    <app-form3 [step3Group]="step3Group" [stepper]="stepper"></app-form3>
+  </mat-step>
+  <mat-step [stepControl]="step4Group">
+    <ng-template matStepLabel>Administrative Sanction</ng-template>
+    <app-form4 [step4Group]="step4Group" [stepper]="stepper"></app-form4>
+  </mat-step>
+  <mat-step [stepControl]="step5Group">
+    <ng-template matStepLabel>Grant</ng-template>
+    <app-form5 [step5Group]="step5Group" [stepper]="stepper"></app-form5>
+  </mat-step>
+  <mat-step [stepControl]="step6Group">
+    <ng-template matStepLabel>Work Order</ng-template>
+    <app-form6 [step6Group]="step6Group" [stepper]="stepper"></app-form6>
+  </mat-step>
+  <mat-step [stepControl]="step7Group">
+    <ng-template matStepLabel>Inspection</ng-template>
+    <app-form7 [step7Group]="step7Group" [stepper]="stepper"></app-form7>
+  </mat-step>
+  <mat-step [stepControl]="step8Group">
+    <ng-template matStepLabel>Full Payment</ng-template>
+    <app-form8 [step8Group]="step2Group" [stepper]="stepper"></app-form8>
+  </mat-step>
+  <mat-step [stepControl]="step9Group">
+    <ng-template matStepLabel>UTC</ng-template>
+    <app-form9 [step9Group]="step9Group" [stepper]="stepper"></app-form9>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    You are now done.
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

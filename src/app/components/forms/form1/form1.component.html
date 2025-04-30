@@ -1,0 +1,47 @@
+<form [formGroup]="step1Group">
+  <div class="form-grid">
+    <!-- Left column -->
+    <div class="form-column">
+      <mat-form-field class="full-width">
+        <input
+          matInput
+          formControlName="demand_number"
+          placeholder="Number"
+          [defaultValue]="1"
+          readonly
+        />
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <input
+          matInput
+          placeholder="Work ID"
+          formControlName="demand_workId"
+          required
+        />
+      </mat-form-field>
+    </div>
+
+    <!-- Right column (future fields) -->
+    <div class="form-column">
+      <mat-form-field class="full-width">
+        <input
+          matInput
+          formControlName="demand_officer"
+          placeholder="demand_officer"
+        />
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <input
+          matInput
+          placeholder="Assign PS To"
+          formControlName="demand_assignPSTo"
+          required
+        />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div>
+    <button mat-button (click)="goNext()">Next</button>
+  </div>
+</form>

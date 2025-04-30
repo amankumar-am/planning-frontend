@@ -1,0 +1,14 @@
+<form [formGroup]="step6Group">
+  <mat-form-field>
+    <input
+      matInput
+      placeholder="Address"
+      formControlName="secondCtrl"
+      required
+    />
+  </mat-form-field>
+  <div>
+    <button mat-button (click)="goBack()">Back</button>
+    <button mat-button (click)="goNext()">Next</button>
+  </div>
+</form>
