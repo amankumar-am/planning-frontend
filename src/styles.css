@@ -1,5 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
-@import "@angular/material/prebuilt-themes/azure-blue.css";
 html,
 body {
   height: 100%;
@@ -7,4 +6,12 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.right-aligned-container {
+  display: flex;
+  justify-content: flex-end; /* Right aligns items horizontally */
+  align-items: center; /* Vertically aligns items to the center (optional) */
+  gap: 16px; /* Adds spacing between items (optional) */
+  margin-top: 16px; /* Adds spacing above the container (optional) */
 }

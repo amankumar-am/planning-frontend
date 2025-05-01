@@ -2,46 +2,231 @@
   <div class="form-grid">
     <!-- Left column -->
     <div class="form-column">
-      <mat-form-field class="full-width">
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Number</mat-label>
         <input
           matInput
           formControlName="demand_number"
-          placeholder="Number"
           [defaultValue]="1"
           readonly
         />
       </mat-form-field>
-      <mat-form-field class="full-width">
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Work ID</mat-label>
+        <input matInput formControlName="demand_workId" required />
+      </mat-form-field>
+      <div class="compact-form-field full-width">
+        <app-reference-field
+          label="Financial Year"
+          [required]="true"
+          [referenceData]="financialYears"
+          [control]="financialYearControl"
+          displayField="name"
+          valueField="id"
+          (selected)="onFinancialYearSelected($event)"
+        >
+        </app-reference-field>
+      </div>
+      <!-- <mat-form-field class="full-width compact-form-field">
+        <mat-label>Financial Year2</mat-label>
+
+        <mat-select formControlName="demand_financialYear" required>
+          <mat-option *ngFor="let year of financialYears" [value]="year">
+            {{ year }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field> -->
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Request Date</mat-label>
         <input
           matInput
-          placeholder="Work ID"
-          formControlName="demand_workId"
+          [matDatepicker]="requestDatePicker"
+          formControlName="demand_requestDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="requestDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #requestDatePicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Proposal Amount</mat-label>
+        <input matInput formControlName="demand_proposalAmount" required />
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Proposal Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="proposalDatePicker"
+          formControlName="demand_proposalDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="proposalDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #proposalDatePicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Demand Number</mat-label>
+        <input matInput formControlName="demand_dmndNumber" required />
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Proposer Name</mat-label>
+        <input matInput formControlName="demand_proposerName" required />
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Scheme Name</mat-label>
+        <input matInput formControlName="demand_schemeName" required />
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Fund</mat-label>
+        <input matInput formControlName="demand_fund" required />
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>MP/MLA Name</mat-label>
+        <input matInput formControlName="demand_MpMlaName" required />
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Work Description</mat-label>
+        <textarea
+          matInput
+          formControlName="demand_workDescription"
+          required
+        ></textarea>
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Estimation Completion Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="estimatedCompletionDatePicker"
+          formControlName="demand_estimatedCompletionDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="estimatedCompletionDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #estimatedCompletionDatePicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Estimation Completion Date</mat-label>
+        <input
+          matInput
+          formControlName="demand_estimatedCompletionDate"
           required
         />
       </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Importance of Work</mat-label>
+        <input matInput formControlName="demand_importanceOfWork" required />
+      </mat-form-field>
+      <div class="compact-form-field full-width">
+        <label class="mat-label">Trust?</label>
+        <mat-checkbox formControlName="demand_isTrust"></mat-checkbox>
+      </div>
+
+      @if (step1Group.get('demand_isTrust')?.value) {
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Trust Name</mat-label>
+        <input matInput formControlName="demand_trustName" required />
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Trust Address</mat-label>
+        <input matInput formControlName="demand_trustAddress" required />
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Trust Registration Number</mat-label>
+        <input
+          matInput
+          formControlName="demand_trustRegistrationNumber"
+          required
+        />
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Trust Registration Date</mat-label>
+        <input
+          matInput
+          formControlName="demand_trustRegistrationDate"
+          required
+        />
+      </mat-form-field>
+      }
     </div>
 
     <!-- Right column (future fields) -->
     <div class="form-column">
-      <mat-form-field class="full-width">
-        <input
-          matInput
-          formControlName="demand_officer"
-          placeholder="demand_officer"
-        />
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Demand Officer</mat-label>
+        <input matInput formControlName="demand_officer" />
       </mat-form-field>
-      <mat-form-field class="full-width">
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Assign PS To</mat-label>
+        <input matInput formControlName="demand_assignPSTo" required />
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Sector</mat-label>
+        <input matInput formControlName="demand_sector" required />
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>SubSector</mat-label>
+        <input matInput formControlName="demand_subSector" required />
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Implementation Officer</mat-label>
         <input
           matInput
-          placeholder="Assign PS To"
-          formControlName="demand_assignPSTo"
+          formControlName="demand_implementationOfficer"
           required
         />
       </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Beneficiary District</mat-label>
+        <input matInput formControlName="demand_beneficiaryDistrict" required />
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Beneficiary Taluka</mat-label>
+        <input matInput formControlName="demand_beneficiaryTaluka" required />
+      </mat-form-field>
+      <div class="full-width compact-form-field">
+        <label class="mat-label">Beneficiary Area Type</label>
+        <mat-radio-group formControlName="demand_beneficiaryAreaType">
+          <mat-radio-button value="urban">Urban</mat-radio-button>
+          <mat-radio-button value="village">Village</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      @if (step1Group.get('demand_beneficiaryAreaType')?.value == 'village') {
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Beneficiary Village</mat-label>
+        <input matInput formControlName="demand_beneficiaryVillage" required />
+      </mat-form-field>
+      } @else {<mat-form-field class="full-width compact-form-field">
+        <mat-label>Beneficiary Nagarpalika</mat-label>
+        <input
+          matInput
+          formControlName="demand_beneficiaryNagarpalika"
+          required
+        /> </mat-form-field
+      >}
+      <div class="full-width compact-form-field">
+        <label class="mat-label">Beneficiary Group</label>
+        <mat-radio-group formControlName="demand_beneficiaryGroup">
+          <mat-radio-button value="sc">S.C.</mat-radio-button>
+          <mat-radio-button value="st">S.T.</mat-radio-button>
+          <mat-radio-button value="obc">O.B.C</mat-radio-button>
+          <mat-radio-button value="general">General</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="full-width compact-form-field">
+        <label class="mat-label">Demand Status</label>
+        <mat-radio-group formControlName="demand_demandStatus">
+          <mat-radio-button value="draft">Draft</mat-radio-button>
+          <mat-radio-button value="submit">Submit</mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="compact-form-field right-aligned-container">
+        <button mat-raised-button (click)="goNext()" color="primary">
+          Submit
+        </button>
+      </div>
     </div>
-  </div>
-
-  <div>
-    <button mat-button (click)="goNext()">Next</button>
   </div>
 </form>

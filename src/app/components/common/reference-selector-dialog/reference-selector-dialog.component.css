@@ -1,0 +1,29 @@
+.search-container {
+  padding: 16px;
+}
+
+.results-container {
+  max-height: 500px;
+  overflow: auto;
+  margin-bottom: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-table {
+  width: 100%;
+}
+
+mat-row {
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+}
+
+mat-radio-button {
+  margin-right: 8px;
+}

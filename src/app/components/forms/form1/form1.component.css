@@ -5,11 +5,14 @@
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
 }
 
 .form-column {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+}
+
+.compact-form-field {
+  transform: scale(0.9);
+  transform-origin: center;
 }
