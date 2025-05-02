@@ -22,15 +22,6 @@ import { ReferenceFieldComponent } from '../../common/reference-field/reference-
   styleUrl: './form1.component.css'
 })
 export class Form1Component implements OnInit {
-  // private _control: FormControl = new FormControl();
-
-  // @Input()
-  // set control(ctrl: FormControl | null) {
-  //   this._control = ctrl || new FormControl();
-  // }
-  // get control(): FormControl {
-  //   return this._control;
-  // }
 
   @Input() step1Group!: FormGroup;
   @Input() stepper!: MatStepper;

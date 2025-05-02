@@ -1,62 +1,65 @@
-<!-- src/app/components/reference-selector-dialog/reference-selector-dialog.component.html -->
 <h2 mat-dialog-title>Select {{ data.label || "Item" }}</h2>
 
 <mat-dialog-content>
-  <div class="search-container">
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Search</mat-label>
-      <input
-        matInput
-        [(ngModel)]="searchQuery"
-        (input)="filterData()"
-        placeholder="Type to search..."
-      />
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
-  </div>
+  <!-- Search box -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Search</mat-label>
+    <input
+      matInput
+      [(ngModel)]="searchQuery"
+      (input)="filterData()"
+      placeholder="Type to search..."
+    />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
 
-  <div class="results-container">
-    <mat-table [dataSource]="filteredData" class="mat-elevation-z8">
-      <!-- Select Column -->
-      <ng-container matColumnDef="select">
-        <mat-header-cell *matHeaderCellDef></mat-header-cell>
-        <mat-cell *matCellDef="let row">
-          <mat-radio-button
-            [checked]="row[data.valueField] === selectedValue"
-            (click)="selectedValue = row[data.valueField]"
-          ></mat-radio-button>
-        </mat-cell>
-      </ng-container>
+  <!-- Dropdown to select visible extra columns -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Show Extra Columns</mat-label>
+    <mat-select
+      multiple
+      [(value)]="selectedDisplayFields"
+      (selectionChange)="updateDisplayedColumns()"
+    >
+      <mat-option *ngFor="let field of allDisplayFields" [value]="field">
+        {{ field }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 
-      <!-- Display Field Column -->
-      <ng-container matColumnDef="displayField">
-        <mat-header-cell *matHeaderCellDef>{{
-          data.label || "Name"
-        }}</mat-header-cell>
-        <mat-cell *matCellDef="let row">{{ row[data.displayField] }}</mat-cell>
-      </ng-container>
+  <!-- Table -->
+  <mat-table [dataSource]="filteredData" class="mat-elevation-z8">
+    <!-- Select Column -->
+    <ng-container matColumnDef="select">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <mat-radio-button
+          [checked]="row[data.valueField] === selectedValue"
+          (click)="selectedValue = row[data.valueField]"
+        ></mat-radio-button>
+      </mat-cell>
+    </ng-container>
 
-      <!-- Additional Columns (customize as needed) -->
-      <ng-container
-        matColumnDef="startDate"
-        *ngIf="data.displayFields?.includes('startDate')"
-      >
-        <mat-header-cell *matHeaderCellDef>Start Date</mat-header-cell>
-        <mat-cell *matCellDef="let row">{{ row.startDate | date }}</mat-cell>
-      </ng-container>
+    <!-- Display Field Column -->
+    <ng-container matColumnDef="displayField">
+      <mat-header-cell *matHeaderCellDef>{{
+        data.label || "Name"
+      }}</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{ row[data.displayField] }}</mat-cell>
+    </ng-container>
 
-      <ng-container
-        matColumnDef="endDate"
-        *ngIf="data.displayFields?.includes('endDate')"
-      >
-        <mat-header-cell *matHeaderCellDef>End Date</mat-header-cell>
-        <mat-cell *matCellDef="let row">{{ row.endDate | date }}</mat-cell>
-      </ng-container>
+    <!-- Dynamic Optional Columns -->
+    <ng-container
+      *ngFor="let column of allDisplayFields"
+      [matColumnDef]="column"
+    >
+      <mat-header-cell *matHeaderCellDef>{{ column }}</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{ row[column] }}</mat-cell>
+    </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-    </mat-table>
-  </div>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

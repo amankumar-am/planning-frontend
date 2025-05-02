@@ -1,20 +1,28 @@
 // src/app/components/reference-selector-dialog/reference-selector-dialog.component.ts
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.module';
 
 @Component({
   selector: 'app-reference-selector-dialog',
+  standalone: true,
   templateUrl: './reference-selector-dialog.component.html',
   styleUrls: ['./reference-selector-dialog.component.css'],
-  imports: [...MATERIAL_STANDALONE_IMPORTS, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ...MATERIAL_STANDALONE_IMPORTS
+  ],
 })
 export class ReferenceSelectorDialogComponent {
   searchQuery: string = '';
   filteredData: any[] = [];
   selectedValue: any;
+
+  allDisplayFields: string[] = [];
+  selectedDisplayFields: string[] = [];
   displayedColumns: string[] = ['select', 'displayField'];
 
   constructor(
@@ -23,11 +31,19 @@ export class ReferenceSelectorDialogComponent {
   ) {
     this.filteredData = [...data.referenceData];
     this.selectedValue = data.currentValue;
+    console.log(data);
 
-    // Add additional columns if specified
     if (data.displayFields) {
-      this.displayedColumns = ['select', 'displayField', ...data.displayFields];
+      this.allDisplayFields = [...data.displayFields];
     }
+
+    this.updateDisplayedColumns();
+    console.log(this.allDisplayFields);
+
+  }
+
+  updateDisplayedColumns(): void {
+    this.displayedColumns = ['select', 'displayField', ...this.selectedDisplayFields];
   }
 
   filterData(): void {
@@ -37,7 +53,7 @@ export class ReferenceSelectorDialogComponent {
     }
 
     this.filteredData = this.data.referenceData.filter((item: any) =>
-      item[this.data.displayField].toLowerCase().includes(this.searchQuery.toLowerCase())
+      item[this.data.displayField]?.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
   }
 
