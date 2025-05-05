@@ -4,13 +4,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.module';
 import { FinancialYear } from '../../../models/financialYear.model';
 import { ReferenceFieldModalComponent } from './reference-field-modal/reference-field-modal.component';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-reference-field',
   templateUrl: './reference-field.component.html',
   styleUrls: ['./reference-field.component.css'],
-  imports: [CommonModule, ...MATERIAL_STANDALONE_IMPORTS]
+  imports: [CommonModule, ...MATERIAL_STANDALONE_IMPORTS, FormsModule]
 })
 export class ReferenceFieldComponent implements OnInit {
   @Input() fetchData!: () => Promise<{ data: FinancialYear[]; schema: { field: keyof FinancialYear; label: string }[] }>;
