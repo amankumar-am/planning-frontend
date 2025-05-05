@@ -17,15 +17,11 @@
       </mat-form-field>
       <div class="compact-form-field full-width">
         <app-reference-field
-          label="Financial Year"
-          [required]="true"
-          [referenceData]="financialYears"
-          [control]="financialYearControl"
-          displayField="name"
-          valueField="id"
-          (selected)="onFinancialYearSelected($event)"
-        >
-        </app-reference-field>
+          [fetchData]="loadFinancialYears"
+          [labelField]="financialYearLabelField"
+          [schema]="schema"
+          [(selectedItem)]="selectedFinancialYear"
+        ></app-reference-field>
       </div>
       <!-- <mat-form-field class="full-width compact-form-field">
         <mat-label>Financial Year2</mat-label>

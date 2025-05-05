@@ -1,13 +1,13 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { CommonModule } from '@angular/common';
 import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.module';
 import { FinancialYearService } from '../../../services/financial-year.service';
 import { FinancialYear } from '../../../models/financialYear.model';
 import { ReferenceFieldComponent } from '../../common/reference-field/reference-field.component';
-// import { ReferenceFieldComponent } from '../../common/reference-field/reference-field.component';
-
+import { MatDialog } from '@angular/material/dialog';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-form1',
@@ -15,8 +15,8 @@ import { ReferenceFieldComponent } from '../../common/reference-field/reference-
   imports: [
     ReactiveFormsModule,
     ...MATERIAL_STANDALONE_IMPORTS,
-    CommonModule,
-    ReferenceFieldComponent
+    CommonModule, ReferenceFieldComponent,
+    FormsModule
   ],
   templateUrl: './form1.component.html',
   styleUrl: './form1.component.css'
@@ -25,35 +25,50 @@ export class Form1Component implements OnInit {
 
   @Input() step1Group!: FormGroup;
   @Input() stepper!: MatStepper;
-
+  selectedItemChange: EventEmitter<FinancialYear | null> = new EventEmitter<FinancialYear | null>();
   financialYears: FinancialYear[] = [];
+  schema: { field: keyof FinancialYear; label: string }[] = [];
+  displayedColumns: string[] = ['id', 'name', 'duration'];  // Adjust based on your schema
+  selectedItem: FinancialYear | null = null;
   currentFinancialYear: FinancialYear | null = null;
-  isLoading = false;
-  error: string | null = null;
+  selectedFinancialYear: FinancialYear | null = null;
+  financialYearLabelField = 'name';
+
+  constructor(private fyService: FinancialYearService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.loadFinancialYears();
-    this.loadCurrentFinancialYear();
   }
 
-  loadFinancialYears(): void {
-    this.isLoading = true;
-    this.error = null;
+  loadFinancialYears = async (): Promise<{
+    data: FinancialYear[];
+    schema: { field: keyof FinancialYear; label: string }[];
+  }> => {
+    try {
+      const response = await firstValueFrom(this.fyService.getAllFinancialYears());
 
-    this.financialYearService.getAllFinancialYears().subscribe({
-      next: (data) => {
-        this.financialYears = data;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.error = err.message;
-        this.isLoading = false;
+      if (response && response.data && response.schema) {
+        return {
+          data: response.data,
+          schema: response.schema,
+        };
+      } else {
+        return {
+          data: [],
+          schema: [],
+        };
       }
-    });
-  }
+    } catch (error) {
+      console.error('Error loading financial years:', error);
+      return {
+        data: [],
+        schema: [],
+      };
+    }
 
+  };
   loadCurrentFinancialYear(): void {
-    this.financialYearService.getCurrentFinancialYear().subscribe({
+    this.fyService.getCurrentFinancialYear().subscribe({
       next: (data) => {
         this.currentFinancialYear = data;
       },
@@ -65,7 +80,7 @@ export class Form1Component implements OnInit {
 
   setAsCurrent(id: number): void {
     if (confirm('Are you sure you want to set this as the current financial year?')) {
-      this.financialYearService.setCurrentFinancialYear(id).subscribe({
+      this.fyService.setCurrentFinancialYear(id).subscribe({
         next: () => {
           this.loadCurrentFinancialYear();
           this.loadFinancialYears(); // Refresh list to update status
@@ -81,7 +96,7 @@ export class Form1Component implements OnInit {
       this.stepper.next();
     }
   }
-  constructor(private financialYearService: FinancialYearService) { }
+
 
   onFinancialYearSelected(selectedValue: any): void {
     console.log('Selected financial year:', selectedValue);

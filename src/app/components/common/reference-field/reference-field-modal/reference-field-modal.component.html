@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Select a Financial Year</h2>
+<mat-dialog-content>
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Search</mat-label>
+    <input
+      matInput
+      [(ngModel)]="searchTerm"
+      (input)="applyFilter()"
+      placeholder="Search..."
+    />
+  </mat-form-field>
+
+  <mat-table [dataSource]="filteredData">
+    <ng-container *ngFor="let column of schema" [matColumnDef]="column.field">
+      <mat-header-cell *matHeaderCellDef>{{ column.label }}</mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <!-- Safely access the value from row[column.field] -->
+        {{ row[column.field] }}
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+  <button mat-button (click)="submitSelection()">Submit</button>
+</mat-dialog-actions>

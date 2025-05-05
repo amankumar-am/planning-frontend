@@ -1,26 +1,5 @@
-<mat-form-field appearance="fill" class="full-width">
-  <mat-label>{{ label }}</mat-label>
-
-  <!-- Single input acting as both control and display -->
-  <input
-    matInput
-    [formControl]="control"
-    [value]="getDisplayValue()"
-    [required]="required"
-    readonly
-  />
-
-  <button
-    mat-icon-button
-    matSuffix
-    (click)="openSelector($event)"
-    type="button"
-    [disabled]="control.disabled"
-  >
-    <mat-icon>search</mat-icon>
-  </button>
-
-  <mat-error *ngIf="control?.hasError('required')">
-    {{ label }} is required
-  </mat-error>
-</mat-form-field>
+<div class="compact-form-field full-width">
+  <label class="mat-label">Financial Year</label>
+  <!-- Button to trigger the modal -->
+  <button mat-button (click)="openModal()">Select Financial Year</button>
+</div>

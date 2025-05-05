@@ -14,6 +14,7 @@ export interface FinancialYear {
 }
 
 export interface CreateFinancialYearDto {
+    id: number;
     name: string;
     duration: string;
     startDate: Date;
@@ -25,4 +26,9 @@ export interface CreateFinancialYearDto {
 export interface UpdateFinancialYearDto extends Partial<CreateFinancialYearDto> {
     modifiedBy: string;
     modifiedAt: Date;
+}
+
+export interface FinancialYearResponse {
+    schema: any[]; // Define the schema structure
+    data: FinancialYear[]; // Array of FinancialYear objects
 }

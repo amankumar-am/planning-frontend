@@ -4,7 +4,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 
 
-import { CreateFinancialYearDto, FinancialYear, UpdateFinancialYearDto } from '../models/financialYear.model';
+import { CreateFinancialYearDto, FinancialYear, FinancialYearResponse, UpdateFinancialYearDto } from '../models/financialYear.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -16,10 +16,8 @@ export class FinancialYearService {
   constructor(private http: HttpClient) { }
 
   // Get all financial years
-  getAllFinancialYears(): Observable<FinancialYear[]> {
-    return this.http.get<FinancialYear[]>(this.apiUrl).pipe(
-      catchError(this.handleError)
-    );
+  getAllFinancialYears(): Observable<FinancialYearResponse> {
+    return this.http.get<FinancialYearResponse>(this.apiUrl);
   }
 
   // Get current financial year
