@@ -24,6 +24,7 @@ export class ReferenceFieldModalComponent<T extends object> implements AfterView
   dataSource = new MatTableDataSource<T>([]);
   data: T[] = [];
   schema: ReferenceFieldSchema<T>[] = [];
+  defaultVisibleColumns: string[] = [];
   displayedColumns: string[] = [];
   filteredData: T[] = [];
   searchTerm: string = '';

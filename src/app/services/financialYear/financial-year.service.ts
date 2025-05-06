@@ -1,11 +1,10 @@
-// src/app/services/financial-year.service.ts
+// src/app/services/financialYear/financial-year.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
-
-
-import { CreateFinancialYearDto, FinancialYear, FinancialYearResponse, UpdateFinancialYearDto } from '../models/financialYear.model';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment.prod';
+import { ReferenceDataResponse } from '../generic.model';
+import { CreateFinancialYearDto, FinancialYear, UpdateFinancialYearDto } from './financialYear.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +15,8 @@ export class FinancialYearService {
   constructor(private http: HttpClient) { }
 
   // Get all financial years
-  getAllFinancialYears(): Observable<FinancialYearResponse> {
-    return this.http.get<FinancialYearResponse>(this.apiUrl);
+  getAllFinancialYears(): Observable<ReferenceDataResponse<FinancialYear>> {
+    return this.http.get<ReferenceDataResponse<FinancialYear>>(this.apiUrl);
   }
 
   // Get current financial year

@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.module';
 import { ReferenceFieldModalComponent } from './reference-field-modal/reference-field-modal.component';
 import { FormsModule } from '@angular/forms';
-import { HasName } from '../../../models/generic.model';
+import { HasName } from '../../../services/generic.model';
 
 
 @Component({
@@ -14,7 +14,7 @@ import { HasName } from '../../../models/generic.model';
   imports: [CommonModule, ...MATERIAL_STANDALONE_IMPORTS, FormsModule]
 })
 export class ReferenceFieldComponent<T extends HasName> implements OnInit {
-  @Input() fetchData!: () => Promise<{ data: T[]; schema: { field: keyof T; label: string }[] }>;
+  @Input() fetchData!: () => Promise<{ data: T[]; schema: { field: keyof T; label: string }[], defaultVisibleColumns: string[] }>;
   @Input() labelField: string = '';
   @Input() schema: { field: keyof T; label: string }[] = [];
   @Input() selectedItem: T | null = null;
@@ -34,6 +34,7 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit {
     this.fetchData().then((response) => {
       this.data = response.data;
       this.schema = response.schema;
+      this.defaultVisibleColumns = response.defaultVisibleColumns;
     }).catch((error) => {
       console.error('Error fetching data:', error);
     });

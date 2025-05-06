@@ -28,7 +28,3 @@ export interface UpdateFinancialYearDto extends Partial<CreateFinancialYearDto> 
     modifiedAt: Date;
 }
 
-export interface FinancialYearResponse {
-    schema: any[]; // Define the schema structure
-    data: FinancialYear[]; // Array of FinancialYear objects
-}
