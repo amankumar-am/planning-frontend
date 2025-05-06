@@ -5,9 +5,10 @@ import { CommonModule } from '@angular/common';
 import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.module';
 import { FinancialYearService } from '../../../services/financial-year.service';
 import { FinancialYear } from '../../../models/financialYear.model';
-import { ReferenceFieldComponent } from '../../common/reference-field/reference-field.component';
 import { MatDialog } from '@angular/material/dialog';
 import { firstValueFrom } from 'rxjs';
+import { ReferenceFieldModule } from '../../shared/reference-field/reference-field.module';
+
 
 @Component({
   selector: 'app-form1',
@@ -15,7 +16,7 @@ import { firstValueFrom } from 'rxjs';
   imports: [
     ReactiveFormsModule,
     ...MATERIAL_STANDALONE_IMPORTS,
-    CommonModule, ReferenceFieldComponent,
+    CommonModule, ReferenceFieldModule,
     FormsModule
   ],
   templateUrl: './form1.component.html',
@@ -32,7 +33,7 @@ export class Form1Component implements OnInit {
   selectedItem: FinancialYear | null = null;
   currentFinancialYear: FinancialYear | null = null;
   selectedFinancialYear: FinancialYear | null = null;
-  financialYearLabelField = 'name';
+  financialYearLabelField = 'Financial Year';
 
   constructor(private fyService: FinancialYearService, public dialog: MatDialog) { }
 
@@ -99,8 +100,7 @@ export class Form1Component implements OnInit {
 
 
   onFinancialYearSelected(selectedValue: any): void {
-    console.log('Selected financial year:', selectedValue);
-    // Add any additional logic here
+    this.selectedFinancialYear = selectedValue;
   }
 
   get financialYearControl(): FormControl {

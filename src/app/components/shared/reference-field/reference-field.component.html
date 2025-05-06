@@ -1,0 +1,20 @@
+<mat-form-field class="full-width">
+  <mat-label>{{ labelField }}</mat-label>
+  <input
+    matInput
+    [value]="getName(selectedItem)"
+    readonly
+    (click)="onInputClick($event)"
+    (focus)="blurInput($event)"
+    tabindex="-1"
+  />
+  <button
+    mat-icon-button
+    matSuffix
+    (click)="openModal()"
+    aria-label="Select item"
+    type="button"
+  >
+    <mat-icon>search</mat-icon>
+  </button>
+</mat-form-field>

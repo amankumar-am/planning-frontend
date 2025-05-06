@@ -1,0 +1,86 @@
+<div
+  cdkDrag
+  [cdkDragRootElement]="'.cdk-overlay-pane'"
+  cdkDragBoundary="body"
+  class="cdk-drag draggable-modal"
+>
+  <div class="dialog-header" mat-dialog-title>
+    <h2 mat-dialog-title>Select an Item</h2>
+    <div class="header-buttons">
+      <button
+        mat-icon-button
+        (click)="toggleFullscreen()"
+        matTooltip="Toggle Fullscreen"
+      >
+        <mat-icon>{{
+          isFullscreen ? "fullscreen_exit" : "fullscreen"
+        }}</mat-icon>
+      </button>
+      <button mat-icon-button (click)="dialogRef.close()" matTooltip="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <mat-dialog-content class="mat-mdc-dialog-content">
+    <div class="form-row">
+      <mat-form-field appearance="fill" class="half-width">
+        <mat-label>Search</mat-label>
+        <input
+          matInput
+          [(ngModel)]="searchTerm"
+          (input)="applyFilter()"
+          placeholder="Search..."
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="half-width">
+        <mat-label>Visible Columns</mat-label>
+        <mat-select [(ngModel)]="visibleColumns" multiple>
+          <mat-option *ngFor="let column of schema" [value]="column.field">
+            {{ column.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+      <!-- Radio Column -->
+      <ng-container matColumnDef="select">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <mat-radio-button
+            [checked]="selectedItem === row"
+            (change)="selectedItem = row"
+          >
+          </mat-radio-button>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Dynamic Columns -->
+      <ng-container
+        *ngFor="let column of schema"
+        [matColumnDef]="getFieldString(column)"
+      >
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ column.label }}
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{ row[column.field] }} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="tableColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: tableColumns"></mat-row>
+    </mat-table>
+
+    <mat-paginator
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 20]"
+    ></mat-paginator>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="mat-mdc-dialog-actions" align="center">
+    <button mat-button (click)="dialogRef.close()">Cancel</button>
+    <button mat-button (click)="resetVisibleColumns()">Reset Columns</button>
+    <button mat-button (click)="submitSelection()">Submit</button>
+  </mat-dialog-actions>
+</div>

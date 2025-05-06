@@ -19,8 +19,8 @@
         <app-reference-field
           [fetchData]="loadFinancialYears"
           [labelField]="financialYearLabelField"
-          [schema]="schema"
           [(selectedItem)]="selectedFinancialYear"
+          [defaultVisibleColumns]="['name', 'startDate']"
         ></app-reference-field>
       </div>
       <!-- <mat-form-field class="full-width compact-form-field">

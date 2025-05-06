@@ -27,6 +27,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 export const MATERIAL_STANDALONE_IMPORTS = [
     MatDialogModule,
@@ -58,6 +59,7 @@ export const MATERIAL_STANDALONE_IMPORTS = [
     MatSlideToggleModule,
     MatSliderModule,
     MatStepperModule,
+    MatGridListModule
 ];
 
 import { Provider } from '@angular/core';

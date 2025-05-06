@@ -40,3 +40,47 @@ mat-dialog-actions {
 mat-dialog-actions button {
   margin-left: 8px;
 }
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.mat-dialog-actions {
+  display: flex;
+  justify-content: center; /* Center-aligns the buttons */
+  gap: 10px;
+}
+
+.mat-dialog-actions button {
+  margin-left: 10px;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.draggable-modal {
+  resize: both;
+  overflow: auto;
+  min-width: 400px;
+  min-height: 300px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.half-width {
+  flex: 1;
+  min-width: 0;
+}
