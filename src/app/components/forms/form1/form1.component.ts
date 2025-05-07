@@ -29,6 +29,7 @@ export class Form1Component implements OnInit {
 
   ngOnInit(): void {
     this.fyUtils.loadItems()
+    this.bgUtils.loadItems()
   }
 
   goNext(): void {
@@ -39,5 +40,9 @@ export class Form1Component implements OnInit {
 
   get financialYearControl(): FormControl {
     return this.step1Group.get('demand_financialYear') as FormControl;
+  }
+
+  get geneficiaryGroupControl(): FormControl {
+    return this.step1Group.get('demand_beneficiaryGroup') as FormControl;
   }
 }
