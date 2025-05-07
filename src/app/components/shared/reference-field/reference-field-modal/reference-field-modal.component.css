@@ -1,86 +1,160 @@
-/* Make form fields full width */
-.full-width {
-  width: 100%;
-  margin-bottom: 16px;
-  margin-top: 10px;
+/* --- Modal Container --- */
+.cdk-drag.draggable-modal {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  min-width: 400px;
+  min-height: 300px;
+  overflow: hidden;
 }
 
-/* Style the mat-table */
-mat-table {
-  width: 100%;
-  overflow-x: auto;
-  margin-top: 16px;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-}
-
-/* Header cell styling */
-mat-header-cell {
-  font-weight: bold;
-  background: #f5f5f5;
-}
-
-/* Row hover effect */
-mat-row:hover {
-  background-color: #f0f0f0;
-  cursor: pointer;
-}
-
-/* Align radio button column properly */
-mat-cell mat-radio-button {
-  margin-left: 8px;
-}
-
-/* Dialog actions spacing */
-mat-dialog-actions {
-  margin-top: 24px;
-}
-
-/* Space between actions */
-mat-dialog-actions button {
-  margin-left: 8px;
-}
-
+/* --- Dialog Header --- */
 .dialog-header {
+  padding: 8px 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-.header-buttons {
-  display: flex;
-  gap: 10px;
+.dialog-header h2 {
+  margin: 0;
+  font-size: 16px;
 }
 
-.mat-dialog-actions {
-  display: flex;
-  justify-content: center; /* Center-aligns the buttons */
-  gap: 10px;
-}
-
-.mat-dialog-actions button {
-  margin-left: 10px;
-}
-
-.dialog-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.draggable-modal {
-  resize: both;
+/* --- Dialog Content --- */
+mat-dialog-content {
+  padding: 12px;
   overflow: auto;
-  min-width: 400px;
-  min-height: 300px;
+  flex: 1 1 auto;
 }
 
-.form-row {
+/* --- Form Row Layout --- */
+.form-row.spaced-row {
   display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
-.half-width {
+/* --- Search Field --- */
+.search-field {
+  width: 40%;
+  min-width: 160px;
+}
+.search-field mat-form-field {
+  width: 100%;
+}
+
+/* --- Table --- */
+.table-wrapper {
   flex: 1;
-  min-width: 0;
+  overflow: auto;
+  margin-bottom: 8px;
+}
+
+mat-header-cell {
+  font-weight: 500;
+  background: #f0f0f0;
+  padding: 4px;
+}
+
+mat-cell {
+  padding: 4px;
+}
+
+mat-row {
+  min-height: 36px;
+}
+
+mat-row:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.radio-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- Dialog Footer --- */
+mat-dialog-actions {
+  padding: 8px 12px;
+  margin: 0;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  background: white;
+  flex-shrink: 0;
+}
+
+mat-dialog-actions button {
+  font-size: 13px;
+  min-height: 30px;
+  padding: 2px 12px;
+}
+
+/* --- Column Menu --- */
+.column-select-menu {
+  min-width: 300px;
+  max-height: 500px;
+}
+
+.column-select-menu .mat-menu-content {
+  padding: 0;
+}
+
+.column-select-menu .menu-container {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+}
+
+.column-select-menu .menu-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.column-select-menu .menu-actions button.mat-flat-button {
+  font-size: 12px;
+  line-height: 28px;
+  padding: 0 12px;
+  color: #6200ee;
+  background-color: transparent;
+}
+
+.column-select-menu .menu-actions button.mat-flat-button:hover {
+  background: rgba(98, 0, 238, 0.04);
+}
+
+.column-select-menu .checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns */
+  gap: 8px 16px; /* Row and column gap */
+  padding: 8px 16px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.column-select-menu .menu-item {
+  display: flex;
+  align-items: center;
+}
+
+.column-select-menu .menu-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.column-select-menu .mat-checkbox {
+  width: 100%;
+}
+
+/* --- Buttons --- */
+button[mat-stroked-button] {
+  white-space: nowrap;
 }

@@ -5,7 +5,7 @@
   class="cdk-drag draggable-modal"
 >
   <div class="dialog-header" mat-dialog-title>
-    <h2 mat-dialog-title>Select an Item</h2>
+    <h2>Select an Item</h2>
     <div class="header-buttons">
       <button
         mat-icon-button
@@ -22,9 +22,9 @@
     </div>
   </div>
 
-  <mat-dialog-content class="mat-mdc-dialog-content">
-    <div class="form-row">
-      <mat-form-field appearance="fill" class="half-width">
+  <mat-dialog-content>
+    <div class="form-row spaced-row">
+      <mat-form-field appearance="fill" class="search-field">
         <mat-label>Search</mat-label>
         <input
           matInput
@@ -34,53 +34,101 @@
         />
       </mat-form-field>
 
-      <mat-form-field appearance="fill" class="half-width">
-        <mat-label>Visible Columns</mat-label>
-        <mat-select [(ngModel)]="visibleColumns" multiple>
-          <mat-option *ngFor="let column of schema" [value]="column.field">
-            {{ column.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <button
+        mat-stroked-button
+        [matMenuTriggerFor]="columnMenu"
+        #menuTrigger="matMenuTrigger"
+      >
+        Columns
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+
+      <mat-menu
+        #columnMenu="matMenu"
+        [hasBackdrop]="false"
+        class="column-select-menu"
+      >
+        <div class="menu-container">
+          <!-- Action buttons at the top -->
+          <div class="menu-actions">
+            <button mat-flat-button (click)="resetVisibleColumns()">
+              Reset
+            </button>
+            <button mat-flat-button (click)="columnMenu.closed.emit()">
+              OK
+            </button>
+            <button mat-flat-button (click)="selectAllColumns()">
+              Select All
+            </button>
+          </div>
+
+          <!-- Two-column layout for checkboxes -->
+          <div class="checkbox-grid">
+            <div *ngFor="let column of schema" class="menu-item">
+              <mat-checkbox
+                [checked]="isColumnVisible(column.field)"
+                (click)="$event.stopPropagation()"
+                (change)="toggleColumnSafe(column.field)"
+              >
+                {{ column.label }}
+              </mat-checkbox>
+            </div>
+          </div>
+
+          <!-- Action buttons at the bottom -->
+        </div>
+      </mat-menu>
     </div>
 
-    <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-      <!-- Radio Column -->
-      <ng-container matColumnDef="select">
-        <mat-header-cell *matHeaderCellDef></mat-header-cell>
-        <mat-cell *matCellDef="let row">
-          <mat-radio-button
-            [checked]="selectedItem === row"
-            (change)="selectedItem = row"
-          >
-          </mat-radio-button>
-        </mat-cell>
-      </ng-container>
-
-      <!-- Dynamic Columns -->
-      <ng-container
-        *ngFor="let column of schema"
-        [matColumnDef]="getFieldString(column)"
+    <div class="table-wrapper">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        matSort
+        class="mat-elevation-z8"
       >
-        <mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{ column.label }}
-        </mat-header-cell>
-        <mat-cell *matCellDef="let row"> {{ row[column.field] }} </mat-cell>
-      </ng-container>
+        <!-- Radio Column -->
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row" class="radio-cell">
+            <mat-radio-button
+              [checked]="selectedItem === row"
+              (change)="selectedItem = row"
+            ></mat-radio-button>
+          </td>
+        </ng-container>
 
-      <mat-header-row *matHeaderRowDef="tableColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: tableColumns"></mat-row>
-    </mat-table>
+        <!-- Dynamic Columns -->
+        <ng-container
+          *ngFor="let column of schema"
+          [matColumnDef]="getFieldString(column)"
+        >
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ column.label }}
+          </th>
+          <td mat-cell *matCellDef="let row">{{ row[column.field] }}</td>
+        </ng-container>
 
-    <mat-paginator
-      [pageSize]="5"
-      [pageSizeOptions]="[5, 10, 20]"
-    ></mat-paginator>
+        <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: tableColumns"></tr>
+      </table>
+    </div>
+
+    <div class="paginator-container">
+      <mat-paginator
+        [pageSize]="5"
+        [pageSizeOptions]="[5, 10, 20]"
+      ></mat-paginator>
+    </div>
   </mat-dialog-content>
 
-  <mat-dialog-actions class="mat-mdc-dialog-actions" align="center">
-    <button mat-button (click)="dialogRef.close()">Cancel</button>
-    <button mat-button (click)="resetVisibleColumns()">Reset Columns</button>
-    <button mat-button (click)="submitSelection()">Submit</button>
+  <mat-dialog-actions align="center">
+    <button mat-stroked-button (click)="dialogRef.close()">Cancel</button>
+    <button mat-stroked-button (click)="resetVisibleColumns()">
+      Reset Columns
+    </button>
+    <button mat-flat-button color="primary" (click)="submitSelection()">
+      Submit
+    </button>
   </mat-dialog-actions>
 </div>

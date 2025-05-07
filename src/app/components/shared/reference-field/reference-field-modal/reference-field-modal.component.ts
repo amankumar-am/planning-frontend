@@ -7,6 +7,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 interface ReferenceFieldSchema<T> {
   field: keyof T;
@@ -33,9 +35,9 @@ export class ReferenceFieldModalComponent<T extends object> implements AfterView
   isFullscreen: boolean = false;
   LOCAL_STORAGE_KEY = 'reference_field_visible_columns';
 
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('menuTrigger') menuTrigger!: MatMenuTrigger;
 
   constructor(
     public dialogRef: MatDialogRef<ReferenceFieldModalComponent<T>>,
@@ -44,7 +46,7 @@ export class ReferenceFieldModalComponent<T extends object> implements AfterView
   ) {
     this.data = dialogData.data;
     this.schema = dialogData.schema;
-    this.displayedColumns = this.schema.map(col => col.field as string);
+    this.displayedColumns = this.schema.map(col => String(col.field));
     this.filteredData = [...this.data];
     this.dataSource = new MatTableDataSource(this.data);
     const savedColumns = localStorage.getItem(this.LOCAL_STORAGE_KEY);
@@ -55,7 +57,6 @@ export class ReferenceFieldModalComponent<T extends object> implements AfterView
         ? dialogData.defaultVisibleColumns
         : this.displayedColumns;
   }
-
   ngOnInit(): void {
     const savedColumns = localStorage.getItem(this.LOCAL_STORAGE_KEY);
     const parsed = savedColumns ? JSON.parse(savedColumns) : null;
@@ -114,14 +115,39 @@ export class ReferenceFieldModalComponent<T extends object> implements AfterView
     localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(this.visibleColumns));
   }
 
+  toggleColumnSafe(field: keyof T): void {
+    this.toggleColumn(String(field));
+
+    if (this.menuTrigger) {
+      setTimeout(() => {
+        this.menuTrigger.openMenu();
+      });
+    }
+  }
+
+  toggleColumn(field: string): void {
+    const index = this.visibleColumns.indexOf(field);
+    if (index > -1) {
+      this.visibleColumns.splice(index, 1);
+    } else {
+      this.visibleColumns.push(field);
+    }
+    this.onVisibleColumnsChange();
+  }
+
+  isColumnVisible(field: keyof T): boolean {
+    return this.visibleColumns.includes(String(field));
+  }
+
+  selectAllColumns(): void {
+    this.visibleColumns = [...this.displayedColumns];
+    this.onVisibleColumnsChange();
+  }
+
   resetVisibleColumns(): void {
-    const savedColumns = localStorage.getItem(this.LOCAL_STORAGE_KEY);
-    const parsed = savedColumns ? JSON.parse(savedColumns) : null;
-
-    // Reset to the default columns, if none are saved
-    this.visibleColumns = parsed?.length ? parsed : this.displayedColumns;
-
-    // Optionally clear localStorage if you want to reset the stored columns
-    localStorage.removeItem(this.LOCAL_STORAGE_KEY);
+    this.visibleColumns = this.dialogData.defaultVisibleColumns?.length
+      ? [...this.dialogData.defaultVisibleColumns]
+      : [...this.displayedColumns];
+    this.onVisibleColumnsChange();
   }
 }

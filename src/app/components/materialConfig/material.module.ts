@@ -59,7 +59,7 @@ export const MATERIAL_STANDALONE_IMPORTS = [
     MatSlideToggleModule,
     MatSliderModule,
     MatStepperModule,
-    MatGridListModule
+    MatGridListModule,
 ];
 
 import { Provider } from '@angular/core';

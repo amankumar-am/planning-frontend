@@ -47,7 +47,7 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit {
     this.fetchData().then((response) => {
       const dialogRef = this.dialog.open(ReferenceFieldModalComponent, {
         width: '95vw',
-        height: '95vh',
+        height: '90vh',
         maxWidth: '100vw',
         panelClass: 'custom-modal-panel',
         data: { data: response.data, schema: response.schema, defaultVisibleColumns: this.defaultVisibleColumns }
