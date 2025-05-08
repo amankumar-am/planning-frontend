@@ -7,8 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 interface ReferenceFieldSchema<T> {
   field: keyof T;
@@ -33,7 +32,7 @@ export class ReferenceFieldModalComponent<T extends object> implements AfterView
   selectedItem: T | null = null;
   visibleColumns: string[] = [];
   isFullscreen: boolean = false;
-  LOCAL_STORAGE_KEY = 'reference_field_visible_columns';
+  LOCAL_STORAGE_KEY: string;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -42,26 +41,33 @@ export class ReferenceFieldModalComponent<T extends object> implements AfterView
   constructor(
     public dialogRef: MatDialogRef<ReferenceFieldModalComponent<T>>,
     @Inject(MAT_DIALOG_DATA)
-    public dialogData: { data: T[]; schema: ReferenceFieldSchema<T>[], defaultVisibleColumns: string[] }
+    public dialogData: {
+      data: T[];
+      schema: ReferenceFieldSchema<T>[];
+      defaultVisibleColumns: string[];
+      storageKey?: string; // optional per-instance key
+    }
   ) {
+    this.LOCAL_STORAGE_KEY = this.generateStorageKeyFromSchema(this.dialogData.schema);
+
     this.data = dialogData.data;
     this.schema = dialogData.schema;
     this.displayedColumns = this.schema.map(col => String(col.field));
     this.filteredData = [...this.data];
     this.dataSource = new MatTableDataSource(this.data);
-    const savedColumns = localStorage.getItem(this.LOCAL_STORAGE_KEY);
-    const parsed = savedColumns ? JSON.parse(savedColumns) : null;
-    this.visibleColumns = parsed?.length
-      ? parsed
-      : dialogData.defaultVisibleColumns?.length
-        ? dialogData.defaultVisibleColumns
-        : this.displayedColumns;
   }
+
   ngOnInit(): void {
     const savedColumns = localStorage.getItem(this.LOCAL_STORAGE_KEY);
     const parsed = savedColumns ? JSON.parse(savedColumns) : null;
-    this.visibleColumns = parsed?.length ? parsed : this.displayedColumns;
+
+    this.visibleColumns = parsed?.length
+      ? parsed.filter((col: string) => this.displayedColumns.includes(col))
+      : this.dialogData.defaultVisibleColumns?.length
+        ? [...this.dialogData.defaultVisibleColumns]
+        : [...this.displayedColumns];
   }
+
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -70,8 +76,7 @@ export class ReferenceFieldModalComponent<T extends object> implements AfterView
   applyFilter(): void {
     const filterValue = this.searchTerm.trim().toLowerCase();
     this.dataSource.filterPredicate = (item: T) => {
-      return Object.values(item)
-        .some(val => String(val).toLowerCase().includes(filterValue));
+      return Object.values(item).some(val => String(val).toLowerCase().includes(filterValue));
     };
     this.dataSource.filter = filterValue;
   }
@@ -117,7 +122,6 @@ export class ReferenceFieldModalComponent<T extends object> implements AfterView
 
   toggleColumnSafe(field: keyof T): void {
     this.toggleColumn(String(field));
-
     if (this.menuTrigger) {
       setTimeout(() => {
         this.menuTrigger.openMenu();
@@ -149,5 +153,36 @@ export class ReferenceFieldModalComponent<T extends object> implements AfterView
       ? [...this.dialogData.defaultVisibleColumns]
       : [...this.displayedColumns];
     this.onVisibleColumnsChange();
+  }
+
+  generateStorageKeyFromSchema<T>(schema: { field: keyof T; label: string }[]): string {
+    const fields = schema.map(col => col.field).sort().join(',');
+    let hash = 0;
+    for (let i = 0; i < fields.length; i++) {
+      const char = fields.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return `reference_field_visible_columns_${hash}`;
+  }
+
+  formatCellValue(value: any, type?: string): string {
+    if (!value) return '';
+
+    if (type === 'datetime' || (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(value))) {
+      try {
+        return new Date(value).toLocaleString();
+      } catch {
+        return value;
+      }
+    } else if (type === 'date' || (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value))) {
+      try {
+        return new Date(value).toLocaleDateString();
+      } catch {
+        return value;
+      }
+    }
+
+    return value.toString();
   }
 }

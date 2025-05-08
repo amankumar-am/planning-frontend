@@ -1,3 +1,4 @@
+// reference-field.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -50,7 +51,11 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit {
         height: '90vh',
         maxWidth: '100vw',
         panelClass: 'custom-modal-panel',
-        data: { data: response.data, schema: response.schema, defaultVisibleColumns: this.defaultVisibleColumns }
+        data: {
+          data: response.data,
+          schema: response.schema,
+          defaultVisibleColumns: this.defaultVisibleColumns,
+        },
       });
 
       dialogRef.afterClosed().subscribe((result: T | null) => {

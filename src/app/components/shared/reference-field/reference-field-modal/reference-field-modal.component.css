@@ -1,12 +1,12 @@
 /* --- Modal Container --- */
-.cdk-drag.draggable-modal {
+/* .cdk-drag.draggable-modal {
   display: flex;
   flex-direction: column;
   max-height: 90vh;
   min-width: 400px;
   min-height: 300px;
   overflow: hidden;
-}
+} */
 
 /* --- Dialog Header --- */
 .dialog-header {
@@ -74,8 +74,10 @@ mat-row:hover {
 
 .radio-cell {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  height: 100%; /* Ensures vertical centering */
+  padding: 10px !important; /* Optional: remove extra space if needed */
 }
 
 /* --- Dialog Footer --- */
