@@ -4,7 +4,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
-import { CreateBeneficiaryGroupDto, BeneficiaryGroup, UpdateBeneficiaryGroupDto } from './beneficiaryGroup.model';
+import { CreateBeneficiaryGroupDto, BeneficiaryGroup, UpdateBeneficiaryGroupDto } from '../../models/beneficiaryGroup.model';
 
 @Injectable({
   providedIn: 'root'

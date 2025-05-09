@@ -4,7 +4,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
-import { CreateFinancialYearDto, FinancialYear, UpdateFinancialYearDto } from './financialYear.model';
+import { CreateFinancialYearDto, FinancialYear, UpdateFinancialYearDto } from '../../models/financialYear.model';
 
 @Injectable({
   providedIn: 'root'

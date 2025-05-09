@@ -1,4 +1,6 @@
-import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+// src/app/components/forms/form1/form1.component.ts
+
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { CommonModule } from '@angular/common';
@@ -6,6 +8,9 @@ import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.modul
 import { ReferenceFieldModule } from '../../shared/reference-field/reference-field.module';
 import { FinancialYearUtilsService } from '../../../services/financialYear/financial-year-utils.service';
 import { BeneficiaryGroupUtilsService } from '../../../services/beneficiaryGroup/beneficiary-group-utils.service';
+import { FundUtilsService } from '../../../services/fund/fund-utils.service';
+import { SectorUtilsService } from '../../../services/sector/sector-utils.service';
+import { SubsectorUtilsService } from '../../../services/subsector/subsector-utils.service';
 
 @Component({
   selector: 'app-form1',
@@ -24,12 +29,21 @@ export class Form1Component implements OnInit {
 
   @Input() step1Group!: FormGroup;
   @Input() stepper!: MatStepper;
-
-  constructor(public fyUtils: FinancialYearUtilsService, public bgUtils: BeneficiaryGroupUtilsService) { }
+  gridCols: number = 2;
+  constructor(
+    public fyUtils: FinancialYearUtilsService,
+    public bgUtils: BeneficiaryGroupUtilsService,
+    public fundUtils: FundUtilsService,
+    public sectorUtils: SectorUtilsService,
+    public subsectorUtils: SubsectorUtilsService
+  ) { }
 
   ngOnInit(): void {
     this.fyUtils.loadItems()
     this.bgUtils.loadItems()
+    this.fundUtils.loadItems()
+    this.sectorUtils.loadItems()
+    this.subsectorUtils.loadItems()
   }
 
   goNext(): void {
@@ -44,5 +58,17 @@ export class Form1Component implements OnInit {
 
   get geneficiaryGroupControl(): FormControl {
     return this.step1Group.get('demand_beneficiaryGroup') as FormControl;
+  }
+
+  get fundGroupControl(): FormControl {
+    return this.step1Group.get('demand_fund') as FormControl;
+  }
+
+  get sectorGroupControl(): FormControl {
+    return this.step1Group.get('demand_sector') as FormControl;
+  }
+
+  get subsectorGroupControl(): FormControl {
+    return this.step1Group.get('demand_subsector') as FormControl;
   }
 }

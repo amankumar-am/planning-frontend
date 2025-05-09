@@ -4,7 +4,7 @@
 
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .form-column {
@@ -13,6 +13,8 @@
 }
 
 .compact-form-field {
-  transform: scale(0.9);
-  transform-origin: center;
+  transform: scale(0.7);
+  transform-origin: left;
+  margin: 0;
+  padding: 0;
 }

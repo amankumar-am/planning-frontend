@@ -1,12 +1,12 @@
-// src/app/models/financial-year.model.ts
+// src/app/models/financialYear.model.ts
 export interface FinancialYear {
     id: number;
     name: string;
     duration: string;
     startDate: Date;
     endDate: Date;
-    isActive: boolean;
     isCurrent: boolean;
+    isActive: boolean;
     createdBy: string;
     createdAt: Date;
     modifiedBy: string;

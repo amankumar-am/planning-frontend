@@ -1,5 +1,6 @@
+// src/app/services/generic.model.ts
+
 import { ReferenceSchema } from "./BaseReferenceUtilsService";
-import { FinancialYear } from "./financialYear/financialYear.model";
 
 export interface HasName {
     name: string;

@@ -1,13 +1,3 @@
-/* --- Modal Container --- */
-/* .cdk-drag.draggable-modal {
-  display: flex;
-  flex-direction: column;
-  max-height: 90vh;
-  min-width: 400px;
-  min-height: 300px;
-  overflow: hidden;
-} */
-
 /* --- Dialog Header --- */
 .dialog-header {
   padding: 8px 12px;

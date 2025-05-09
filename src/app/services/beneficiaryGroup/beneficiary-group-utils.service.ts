@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { BaseReferenceUtilsService, ReferenceSchema } from '../BaseReferenceUtilsService';
 import { firstValueFrom } from 'rxjs';
 import { BeneficiaryGroupService } from './beneficiary-group.service';
-import { BeneficiaryGroup } from './beneficiaryGroup.model';
+import { BeneficiaryGroup } from '../../models/beneficiaryGroup.model';
 
 @Injectable({
     providedIn: 'root'

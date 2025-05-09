@@ -1,7 +1,7 @@
 // src/app/services/financialYear/financial-year-utils.service.ts
 import { Injectable } from '@angular/core';
 import { FinancialYearService } from './financial-year.service';
-import { FinancialYear } from './financialYear.model';
+import { FinancialYear } from '../../models/financialYear.model';
 import { BaseReferenceUtilsService, ReferenceSchema } from '../BaseReferenceUtilsService';
 import { firstValueFrom } from 'rxjs';
 

@@ -1,6 +1,6 @@
 <form [formGroup]="step1Group">
   <div class="form-grid">
-    <!-- Left column -->
+    <!-- First column -->
     <div class="form-column">
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Number</mat-label>
@@ -14,6 +14,11 @@
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Work ID</mat-label>
         <input matInput formControlName="demand_workId" required />
+        <mat-error
+          *ngIf="step1Group.get('demand_workId')?.hasError('required')"
+        >
+          Work ID is required
+        </mat-error>
       </mat-form-field>
       <div class="compact-form-field full-width">
         <app-reference-field
@@ -60,18 +65,7 @@
         <mat-label>Proposer Name</mat-label>
         <input matInput formControlName="demand_proposerName" required />
       </mat-form-field>
-      <mat-form-field class="full-width compact-form-field">
-        <mat-label>Scheme Name</mat-label>
-        <input matInput formControlName="demand_schemeName" required />
-      </mat-form-field>
-      <mat-form-field class="full-width compact-form-field">
-        <mat-label>Fund</mat-label>
-        <input matInput formControlName="demand_fund" required />
-      </mat-form-field>
-      <mat-form-field class="full-width compact-form-field">
-        <mat-label>MP/MLA Name</mat-label>
-        <input matInput formControlName="demand_MpMlaName" required />
-      </mat-form-field>
+
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Work Description</mat-label>
         <textarea
@@ -79,6 +73,26 @@
           formControlName="demand_workDescription"
           required
         ></textarea>
+      </mat-form-field>
+    </div>
+    <!-- First column finished-->
+
+    <!-- Second column -->
+    <div class="form-column">
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Scheme Name</mat-label>
+        <input matInput formControlName="demand_schemeName" required />
+      </mat-form-field>
+      <div class="compact-form-field full-width">
+        <app-reference-field
+          [fetchData]="fundUtils.getDataFetcher()"
+          [labelField]="fundUtils.getLabelField()"
+          [(selectedItem)]="fundUtils.selectedItem"
+        ></app-reference-field>
+      </div>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>MP/MLA Name</mat-label>
+        <input matInput formControlName="demand_MpMlaName" required />
       </mat-form-field>
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Estimation Completion Date</mat-label>
@@ -106,10 +120,24 @@
         <input matInput formControlName="demand_importanceOfWork" required />
       </mat-form-field>
       <div class="compact-form-field full-width">
+        <app-reference-field
+          [fetchData]="sectorUtils.getDataFetcher()"
+          [labelField]="sectorUtils.getLabelField()"
+          [(selectedItem)]="sectorUtils.selectedItem"
+        ></app-reference-field>
+      </div>
+      <div class="compact-form-field full-width">
+        <app-reference-field
+          [fetchData]="subsectorUtils.getDataFetcher()"
+          [labelField]="subsectorUtils.getLabelField()"
+          [(selectedItem)]="subsectorUtils.selectedItem"
+        ></app-reference-field>
+      </div>
+
+      <div class="compact-form-field full-width">
         <label class="mat-label">Trust?</label>
         <mat-checkbox formControlName="demand_isTrust"></mat-checkbox>
       </div>
-
       @if (step1Group.get('demand_isTrust')?.value) {
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Trust Name</mat-label>
@@ -137,8 +165,6 @@
       </mat-form-field>
       }
     </div>
-
-    <!-- Right column (future fields) -->
     <div class="form-column">
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Demand Officer</mat-label>
@@ -148,14 +174,7 @@
         <mat-label>Assign PS To</mat-label>
         <input matInput formControlName="demand_assignPSTo" required />
       </mat-form-field>
-      <mat-form-field class="full-width compact-form-field">
-        <mat-label>Sector</mat-label>
-        <input matInput formControlName="demand_sector" required />
-      </mat-form-field>
-      <mat-form-field class="full-width compact-form-field">
-        <mat-label>SubSector</mat-label>
-        <input matInput formControlName="demand_subSector" required />
-      </mat-form-field>
+
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Implementation Officer</mat-label>
         <input
@@ -164,6 +183,7 @@
           required
         />
       </mat-form-field>
+
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Beneficiary District</mat-label>
         <input matInput formControlName="demand_beneficiaryDistrict" required />

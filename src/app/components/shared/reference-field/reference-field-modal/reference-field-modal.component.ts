@@ -1,4 +1,6 @@
-import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
+// src/app/components/shared/reference-field/reference-field-modal/reference-field-modal.component.ts
+
+import { AfterViewInit, Component, Inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MATERIAL_STANDALONE_IMPORTS } from '../../../materialConfig/material.module';
 import { CommonModule } from '@angular/common';
@@ -19,7 +21,11 @@ interface ReferenceFieldSchema<T> {
   templateUrl: './reference-field-modal.component.html',
   styleUrls: ['./reference-field-modal.component.css'],
   standalone: true,
-  imports: [...MATERIAL_STANDALONE_IMPORTS, CommonModule, FormsModule, DragDropModule]
+  imports: [...MATERIAL_STANDALONE_IMPORTS, CommonModule, FormsModule, DragDropModule],
+  encapsulation: ViewEncapsulation.None,
+  host: {
+    '[class.mat-table-dense]': 'true',
+  }
 })
 export class ReferenceFieldModalComponent<T extends object> implements AfterViewInit, OnInit {
   dataSource = new MatTableDataSource<T>([]);
