@@ -18,8 +18,6 @@ export class SubsectorUtilsService extends BaseReferenceUtilsService<Subsector> 
 
     protected async fetchAllItems(): Promise<{ data: Subsector[]; schema: ReferenceSchema<Subsector>[], defaultVisibleColumns: string[] }> {
         const response = await firstValueFrom(this.subsectorService.getAllSubsectors());
-        console.log(response);
-
         return {
             data: response?.data || [],
             schema: response?.schema || [],

@@ -108,14 +108,6 @@
         <mat-datepicker #estimatedCompletionDatePicker></mat-datepicker>
       </mat-form-field>
       <mat-form-field class="full-width compact-form-field">
-        <mat-label>Estimation Completion Date</mat-label>
-        <input
-          matInput
-          formControlName="demand_estimatedCompletionDate"
-          required
-        />
-      </mat-form-field>
-      <mat-form-field class="full-width compact-form-field">
         <mat-label>Importance of Work</mat-label>
         <input matInput formControlName="demand_importanceOfWork" required />
       </mat-form-field>
@@ -184,14 +176,20 @@
         />
       </mat-form-field>
 
-      <mat-form-field class="full-width compact-form-field">
-        <mat-label>Beneficiary District</mat-label>
-        <input matInput formControlName="demand_beneficiaryDistrict" required />
-      </mat-form-field>
-      <mat-form-field class="full-width compact-form-field">
-        <mat-label>Beneficiary Taluka</mat-label>
-        <input matInput formControlName="demand_beneficiaryTaluka" required />
-      </mat-form-field>
+      <div class="compact-form-field full-width">
+        <app-reference-field
+          [fetchData]="districtUtils.getDataFetcher()"
+          [labelField]="districtUtils.getLabelField()"
+          [(selectedItem)]="districtUtils.selectedItem"
+        ></app-reference-field>
+      </div>
+      <div class="compact-form-field full-width">
+        <app-reference-field
+          [fetchData]="talukaUtils.getDataFetcher()"
+          [labelField]="talukaUtils.getLabelField()"
+          [(selectedItem)]="talukaUtils.selectedItem"
+        ></app-reference-field>
+      </div>
       <div class="full-width compact-form-field">
         <label class="mat-label">Beneficiary Area Type</label>
         <mat-radio-group formControlName="demand_beneficiaryAreaType">
@@ -200,10 +198,13 @@
         </mat-radio-group>
       </div>
       @if (step1Group.get('demand_beneficiaryAreaType')?.value == 'village') {
-      <mat-form-field class="full-width compact-form-field">
-        <mat-label>Beneficiary Village</mat-label>
-        <input matInput formControlName="demand_beneficiaryVillage" required />
-      </mat-form-field>
+      <div class="compact-form-field full-width">
+        <app-reference-field
+          [fetchData]="gpVillageUtils.getDataFetcher()"
+          [labelField]="gpVillageUtils.getLabelField()"
+          [(selectedItem)]="gpVillageUtils.selectedItem"
+        ></app-reference-field>
+      </div>
       } @else {<mat-form-field class="full-width compact-form-field">
         <mat-label>Beneficiary Nagarpalika</mat-label>
         <input

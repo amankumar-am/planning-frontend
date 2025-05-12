@@ -1,3 +1,5 @@
+// src/app/components/common/stepper/stepper.component.ts
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,7 +22,7 @@ import { createFormGroups } from '../../forms/form-groups';
 @Component({
   selector: 'app-stepper',
   templateUrl: './stepper.component.html',
-  styleUrls: ['./stepper.component.css'],
+  styleUrls: ['./stepper.component.scss'],
   imports: [
     MatStepperModule,
     ReactiveFormsModule,

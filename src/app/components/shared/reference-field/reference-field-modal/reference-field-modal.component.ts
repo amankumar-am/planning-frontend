@@ -19,7 +19,7 @@ interface ReferenceFieldSchema<T> {
 @Component({
   selector: 'app-reference-field-modal',
   templateUrl: './reference-field-modal.component.html',
-  styleUrls: ['./reference-field-modal.component.css'],
+  styleUrls: ['./reference-field-modal.component.scss'],
   standalone: true,
   imports: [...MATERIAL_STANDALONE_IMPORTS, CommonModule, FormsModule, DragDropModule],
   encapsulation: ViewEncapsulation.None,

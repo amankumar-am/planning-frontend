@@ -1,3 +1,5 @@
+// src/app/components/forms/form2/form2.component.ts
+
 import { Component, Input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,7 +15,7 @@ import { MatStepper } from '@angular/material/stepper';
     MatInputModule,
     MatButtonModule],
   templateUrl: './form2.component.html',
-  styleUrl: './form2.component.css'
+  styleUrl: './form2.component.scss'
 })
 export class Form2Component {
   @Input() step2Group!: FormGroup;

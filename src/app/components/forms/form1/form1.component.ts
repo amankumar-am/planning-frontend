@@ -11,6 +11,9 @@ import { BeneficiaryGroupUtilsService } from '../../../services/beneficiaryGroup
 import { FundUtilsService } from '../../../services/fund/fund-utils.service';
 import { SectorUtilsService } from '../../../services/sector/sector-utils.service';
 import { SubsectorUtilsService } from '../../../services/subsector/subsector-utils.service';
+import { DistrictUtilsService } from '../../../services/district/district-utils.service';
+import { TalukaUtilsService } from '../../../services/taluka/taluka-utils.service';
+import { GpVillageUtilsService } from '../../../services/gp-village/gp-village-utils.service';
 
 @Component({
   selector: 'app-form1',
@@ -23,7 +26,7 @@ import { SubsectorUtilsService } from '../../../services/subsector/subsector-uti
     FormsModule
   ],
   templateUrl: './form1.component.html',
-  styleUrl: './form1.component.css'
+  styleUrl: './form1.component.scss'
 })
 export class Form1Component implements OnInit {
 
@@ -35,7 +38,10 @@ export class Form1Component implements OnInit {
     public bgUtils: BeneficiaryGroupUtilsService,
     public fundUtils: FundUtilsService,
     public sectorUtils: SectorUtilsService,
-    public subsectorUtils: SubsectorUtilsService
+    public subsectorUtils: SubsectorUtilsService,
+    public districtUtils: DistrictUtilsService,
+    public talukaUtils: TalukaUtilsService,
+    public gpVillageUtils: GpVillageUtilsService
   ) { }
 
   ngOnInit(): void {
@@ -44,6 +50,9 @@ export class Form1Component implements OnInit {
     this.fundUtils.loadItems()
     this.sectorUtils.loadItems()
     this.subsectorUtils.loadItems()
+    this.districtUtils.loadItems()
+    this.talukaUtils.loadItems()
+    this.gpVillageUtils.loadItems()
   }
 
   goNext(): void {
@@ -70,5 +79,16 @@ export class Form1Component implements OnInit {
 
   get subsectorGroupControl(): FormControl {
     return this.step1Group.get('demand_subsector') as FormControl;
+  }
+
+  get districtGroupControl(): FormControl {
+    return this.step1Group.get('demand_district') as FormControl;
+  }
+  get talukaGroupControl(): FormControl {
+    return this.step1Group.get('demand_taluka') as FormControl;
+  }
+
+  get gpVillageGroupControl(): FormControl {
+    return this.step1Group.get('demand_gpVillage') as FormControl;
   }
 }

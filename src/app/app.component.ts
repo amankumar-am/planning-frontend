@@ -1,3 +1,5 @@
+// src/app/app.component.ts
+
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/common/header/header.component';
@@ -8,7 +10,7 @@ import { StepperComponent } from './components/common/stepper/stepper.component'
   selector: 'app-root',
   imports: [RouterOutlet, HeaderComponent, FooterComponent, StepperComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.scss'
 })
 export class AppComponent {
   title = 'planning';

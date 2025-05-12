@@ -1,4 +1,4 @@
-// reference-field.component.ts
+// src/app/components/shared/reference-field/reference-field.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,7 +11,7 @@ import { HasName } from '../../../services/generic.model';
 @Component({
   selector: 'app-reference-field',
   templateUrl: './reference-field.component.html',
-  styleUrls: ['./reference-field.component.css'],
+  styleUrls: ['./reference-field.component.scss'],
   imports: [CommonModule, ...MATERIAL_STANDALONE_IMPORTS, FormsModule]
 })
 export class ReferenceFieldComponent<T extends HasName> implements OnInit {

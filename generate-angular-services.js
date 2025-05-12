@@ -211,25 +211,35 @@ const generateFiles = (entity, entityCode, projectPath) => {
 };
 
 // Example usage for fund
-const entity = 'subsector';
+const entity = 'gpVillage';
 const entityCode = `
-    @PrimaryGeneratedColumn({ name: 'MSS_Id' })
+  @PrimaryGeneratedColumn({ name: 'MGPV_Id' })
   id!: number;
 
-  @Column({ name: 'MSS_Name_En', length: 100 })
-  name!: string;
+  @Column({ name: 'MGPV_LGDCode', length: 10, nullable: true })
+  lgdCode!: string;
 
-  @Column({ name: 'MSS_Name_En', length: 100 })
+  @Column({ name: 'MGPV_Name_En', })
   nameEn!: string;
 
-  @Column({ name: 'MSS_Name_Gu', length: 100, nullable: true })
+  @Column({ name: 'MGPV_Name_En', })
+  name!: string;
+
+  @Column({ name: 'MGPV_Name_Gu', length: 100, })
   nameGu?: string;
 
-  @Column({ name: 'MSS_Sector', length: 100 })
-  sector!: string;
+  @Column({ name: 'MGPV_VillagesIncluded', length: 200, nullable: true })
+  villagesIncluded?: string;
 
-  @Column({ name: 'MSS_SubSectorNumber', nullable: true })
-  SubsectorNumber?: number;
+
+  @Column({ name: 'MGPV_Population(2011)', nullable: true })
+  population2011?: string;
+
+  @Column({ name: 'MGPV_District', })
+  district?: number;
+
+  @Column({ name: 'MGPV_Taluka', })
+  taluka?: number;
 `;
 const projectPath = 'D:/Angular/planning/planning-frontend';
 

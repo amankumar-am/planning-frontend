@@ -1,0 +1,132 @@
+// src/app/components/forms/form1/form1.component.scss
+
+// Variables for consistent sizing
+$font-size-base: 12px; // Reduced from default ~14px
+$input-height: 28px; // Smaller input height
+$spacing-unit: 0; // Reduced margin/padding unit
+$scale-factor: 0.65; // Slightly smaller than 0.7 for more compactness
+
+.full-width {
+  width: 100%;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr ;
+  gap: $spacing-unit; // Reduced gap between columns (default ~16px)
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-unit; // Tighter spacing between fields
+}
+
+// Compact form fields (inputs, textareas, datepickers, etc.)
+.compact-form-field {
+  transform: scale($scale-factor); // Slightly smaller than 0.7
+  transform-origin: left;
+  margin: 0;
+  padding: 0;
+
+  // Override Material defaults for compactness
+  ::ng-deep .mat-form-field {
+    font-size: $font-size-base;
+    line-height: 1.2;
+
+    .mat-form-field-wrapper {
+      padding-bottom: 0;
+      margin: $spacing-unit 0;
+    }
+
+    .mat-form-field-flex {
+      height: $input-height;
+      padding: 0 $spacing-unit;
+    }
+
+    .mat-form-field-infix {
+      padding: $spacing-unit 0;
+      line-height: $input-height;
+    }
+
+    input,
+    textarea {
+      height: $input-height;
+      padding: 0 $spacing-unit;
+      font-size: $font-size-base;
+    }
+
+    .mat-form-field-label {
+      top: calc($input-height / 2);
+      font-size: $font-size-base;
+      transform: translateY(-50%) scale(0.75); // Smaller label
+    }
+
+    .mat-datepicker-toggle {
+      transform: scale(0.8); // Smaller datepicker icon
+      margin-right: $spacing-unit;
+    }
+  }
+
+  // Style for checkboxes and radio buttons
+  ::ng-deep .mat-checkbox,
+  ::ng-deep .mat-radio-button {
+    transform: scale(0.8);
+    margin: $spacing-unit 0;
+
+    .mat-checkbox-label,
+    .mat-radio-label-content {
+      font-size: $font-size-base;
+    }
+  }
+
+  // Style for custom labels
+  .mat-label {
+    font-size: $font-size-base;
+    margin-bottom: $spacing-unit;
+  }
+}
+
+// Compact button
+.right-aligned-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: $spacing-unit;
+
+  button {
+    transform: scale(0.8); // Smaller button
+    font-size: $font-size-base;
+    padding: $spacing-unit $spacing-unit * 2;
+    line-height: 1.5;
+  }
+}
+
+// Ensure app-reference-field is compact
+::ng-deep app-reference-field {
+  transform: scale($scale-factor); // Match form field scaling
+  transform-origin: left;
+  margin: 0;
+  padding: 0;
+
+  // Override internal styles for compactness
+  .mat-form-field {
+    font-size: $font-size-base;
+
+    .mat-form-field-wrapper {
+      margin: $spacing-unit 0;
+      padding-bottom: 0;
+    }
+
+    .mat-form-field-flex {
+      height: $input-height;
+      padding: 0 $spacing-unit;
+    }
+
+    input,
+    select {
+      height: $input-height;
+      font-size: $font-size-base;
+      padding: 0 $spacing-unit;
+    }
+  }
+}

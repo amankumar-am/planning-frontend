@@ -6,7 +6,7 @@ export interface Subsector {
     name: string;
     nameEn: string;
     nameGu: string;
-    sector: string;
+    sector: number;
     subsectorNumber: number;
     isActive: boolean;
     createdBy: string;
@@ -20,8 +20,9 @@ export interface CreateSubsectorDto {
     name: string;
     nameEn: string;
     nameGu: string;
-    sector: string;
-    SubsectorNumber: number; isActive?: boolean;
+    sector: number;
+    subsectorNumber: number;
+    isActive?: boolean;
 }
 
 export interface UpdateSubsectorDto extends Partial<CreateSubsectorDto> {

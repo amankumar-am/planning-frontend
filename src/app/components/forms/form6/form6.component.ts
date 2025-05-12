@@ -1,3 +1,5 @@
+// src/app/components/forms/form6/form6.component.ts
+
 import { Component, Input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,7 +16,7 @@ import { MatStepper } from '@angular/material/stepper';
     MatButtonModule
   ],
   templateUrl: './form6.component.html',
-  styleUrl: './form6.component.css'
+  styleUrl: './form6.component.scss'
 })
 export class Form6Component {
   @Input() step6Group!: FormGroup;
