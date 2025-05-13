@@ -1,5 +1,8 @@
 // src/app/models/gp-village.model.ts
 
+import { District } from "./district.model";
+import { Taluka } from "./taluka.model";
+
 
 export interface GpVillage {
     id: number;
@@ -9,8 +12,8 @@ export interface GpVillage {
     nameGu: string;
     villagesIncluded: string;
     population2011: string;
-    district: number;
-    taluka: number;
+    district: District;
+    taluka: Taluka;
     isActive: boolean;
     createdBy: string;
     createdAt: Date;
@@ -26,8 +29,9 @@ export interface CreateGpVillageDto {
     nameGu: string;
     villagesIncluded: string;
     population2011: string;
-    district: number;
-    taluka: number; isActive?: boolean;
+    district: District;
+    taluka: Taluka;
+    isActive?: boolean;
 }
 
 export interface UpdateGpVillageDto extends Partial<CreateGpVillageDto> {

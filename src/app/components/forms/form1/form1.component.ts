@@ -1,6 +1,6 @@
 // src/app/components/forms/form1/form1.component.ts
 
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { CommonModule } from '@angular/common';
@@ -28,7 +28,7 @@ import { GpVillageUtilsService } from '../../../services/gp-village/gp-village-u
   templateUrl: './form1.component.html',
   styleUrl: './form1.component.scss'
 })
-export class Form1Component implements OnInit {
+export class Form1Component implements OnInit, AfterViewInit {
 
   @Input() step1Group!: FormGroup;
   @Input() stepper!: MatStepper;
@@ -55,11 +55,26 @@ export class Form1Component implements OnInit {
     this.gpVillageUtils.loadItems()
   }
 
+  ngAfterViewInit(): void {
+    const talukaControl = this.step1Group.get('demand_beneficiaryTaluka');
+    if (talukaControl) {
+      talukaControl.valueChanges.subscribe((taluka: any) => {
+        const talukaId = taluka?.id;
+        if (talukaId) {
+          this.gpVillageUtils.setTalukaId(talukaId);
+          this.gpVillageUtils.loadItems();
+        }
+      });
+    }
+  }
+
   goNext(): void {
     if (this.step1Group.valid) {
       this.stepper.next();
     }
   }
+
+
 
   get financialYearControl(): FormControl {
     return this.step1Group.get('demand_financialYear') as FormControl;

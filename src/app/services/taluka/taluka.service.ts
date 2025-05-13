@@ -1,3 +1,5 @@
+// src/app/services/taluka/taluka.service.ts
+
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -22,6 +24,12 @@ export class TalukaService {
   // Get taluka by ID
   getTalukaById(id: number): Observable<Taluka> {
     return this.http.get<Taluka>(`${this.apiUrl}/${id}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getTalukaByDistrict(id: number): Observable<Taluka> {
+    return this.http.get<Taluka>(`${this.apiUrl}/district/${id}`).pipe(
       catchError(this.handleError)
     );
   }

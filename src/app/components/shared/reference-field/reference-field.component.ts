@@ -1,10 +1,10 @@
 // src/app/components/shared/reference-field/reference-field.component.ts
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, forwardRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.module';
 import { ReferenceFieldModalComponent } from './reference-field-modal/reference-field-modal.component';
-import { FormsModule } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { HasName } from '../../../services/generic.model';
 
 
@@ -12,9 +12,14 @@ import { HasName } from '../../../services/generic.model';
   selector: 'app-reference-field',
   templateUrl: './reference-field.component.html',
   styleUrls: ['./reference-field.component.scss'],
-  imports: [CommonModule, ...MATERIAL_STANDALONE_IMPORTS, FormsModule]
+  imports: [CommonModule, ...MATERIAL_STANDALONE_IMPORTS, FormsModule],
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => ReferenceFieldComponent),
+    multi: true
+  }]
 })
-export class ReferenceFieldComponent<T extends HasName> implements OnInit {
+export class ReferenceFieldComponent<T extends HasName> implements OnInit, ControlValueAccessor {
   @Input() fetchData!: () => Promise<{ data: T[]; schema: { field: keyof T; label: string }[], defaultVisibleColumns: string[] }>;
   @Input() labelField: string = '';
   @Input() schema: { field: keyof T; label: string }[] = [];
@@ -62,6 +67,9 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit {
         if (result) {
           this.selectedItem = result;
           this.selectedItemChange.emit(this.selectedItem);
+
+          this.onChange(result);
+          this.onTouched();
         }
       });
     });
@@ -87,5 +95,25 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit {
 
   blurInput(event: FocusEvent): void {
     (event.target as HTMLInputElement).blur();
+  }
+
+  // ControlValueAccessor methods
+  onChange: (value: T | null) => void = () => { };
+  onTouched: () => void = () => { };
+
+  writeValue(value: T | null): void {
+    this.selectedItem = value;
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    // Optional: handle disabled state if needed
   }
 }

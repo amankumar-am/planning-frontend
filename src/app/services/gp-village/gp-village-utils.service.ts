@@ -11,13 +11,25 @@ import { firstValueFrom } from 'rxjs';
     providedIn: 'root'
 })
 export class GpVillageUtilsService extends BaseReferenceUtilsService<GpVillage> {
+    private talukaId: number | null = null;
     constructor(private gpVillageService: GpVillageService) {
         super();
         this.labelField = 'GpVillage';
     }
 
+    setTalukaId(talukaId: number): void {
+        this.talukaId = talukaId;
+    }
+
+
+
     protected async fetchAllItems(): Promise<{ data: GpVillage[]; schema: ReferenceSchema<GpVillage>[], defaultVisibleColumns: string[] }> {
-        const response = await firstValueFrom(this.gpVillageService.getAllGpVillages());
+        if (this.talukaId == null) {
+            console.warn('Taluka ID is not set. Skipping fetch.');
+            return { data: [], schema: [], defaultVisibleColumns: [] };
+        }
+
+        const response = await firstValueFrom(this.gpVillageService.getGpVillageByTaluka(this.talukaId));
         return {
             data: response?.data || [],
             schema: response?.schema || [],

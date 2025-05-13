@@ -1,4 +1,4 @@
-// reference-field.module.ts
+// src/app/components/shared/reference-field/reference-field.module.ts
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReferenceFieldComponent } from './reference-field.component';

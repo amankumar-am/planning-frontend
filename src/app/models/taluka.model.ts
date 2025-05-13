@@ -1,5 +1,7 @@
 // src/app/models/taluka.model.ts
 
+import { District } from "./district.model";
+
 
 export interface Taluka {
     id: number;
@@ -7,7 +9,7 @@ export interface Taluka {
     nameEn: string;
     name: string;
     nameGu: string;
-    district: number;
+    district: District;
     prant: number;
     isActive: boolean;
     createdBy: string;

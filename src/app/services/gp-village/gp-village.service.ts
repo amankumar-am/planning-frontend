@@ -28,6 +28,12 @@ export class GpVillageService {
     );
   }
 
+  getGpVillageByTaluka(id: number): Observable<ReferenceDataResponse<GpVillage>> {
+    return this.http.get<ReferenceDataResponse<GpVillage>>(`${this.apiUrl}/taluka/${id}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   // Create new gp-village
   createGpVillage(gpVillage: CreateGpVillageDto): Observable<GpVillage> {
     return this.http.post<GpVillage>(this.apiUrl, gpVillage).pipe(
