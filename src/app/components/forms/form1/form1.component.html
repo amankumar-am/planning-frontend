@@ -1,24 +1,21 @@
+<!-- src/app/components/forms/form1/form1.component.html -->
+
 <form [formGroup]="step1Group">
   <div class="form-grid">
     <!-- First column -->
     <div class="form-column">
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Number</mat-label>
-        <input
-          matInput
-          formControlName="demand_number"
-          [defaultValue]="1"
-          readonly
-        />
+        <input matInput formControlName="demand_number" readonly />
       </mat-form-field>
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Work ID</mat-label>
         <input matInput formControlName="demand_workId" required />
         <mat-error
-          *ngIf="step1Group.get('demand_workId')?.hasError('required')"
-        >
-          Work ID is required
-        </mat-error>
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_workId'"
+        ></mat-error>
       </mat-form-field>
       <div class="compact-form-field full-width">
         <app-reference-field
@@ -27,6 +24,11 @@
           [labelField]="fyUtils.getLabelField()"
           [(selectedItem)]="fyUtils.selectedItem"
         ></app-reference-field>
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_financialYear'"
+        ></mat-error>
       </div>
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Request Date</mat-label>
@@ -40,10 +42,20 @@
           [for]="requestDatePicker"
         ></mat-datepicker-toggle>
         <mat-datepicker #requestDatePicker></mat-datepicker>
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_requestDate'"
+        ></mat-error>
       </mat-form-field>
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Proposal Amount</mat-label>
         <input matInput formControlName="demand_proposalAmount" required />
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_proposalAmount'"
+        ></mat-error>
       </mat-form-field>
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Proposal Date</mat-label>
@@ -57,23 +69,41 @@
           [for]="proposalDatePicker"
         ></mat-datepicker-toggle>
         <mat-datepicker #proposalDatePicker></mat-datepicker>
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_proposalDate'"
+        ></mat-error>
       </mat-form-field>
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Demand Number</mat-label>
         <input matInput formControlName="demand_dmndNumber" required />
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_dmndNumber'"
+        ></mat-error>
       </mat-form-field>
     </div>
-    <!-- First column finished-->
-
     <!-- Second column -->
     <div class="form-column">
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Proposer Name</mat-label>
         <input matInput formControlName="demand_proposerName" required />
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_proposerName'"
+        ></mat-error>
       </mat-form-field>
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Scheme Name</mat-label>
         <input matInput formControlName="demand_schemeName" required />
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_schemeName'"
+        ></mat-error>
       </mat-form-field>
       <div class="compact-form-field full-width">
         <app-reference-field
@@ -82,10 +112,20 @@
           [labelField]="fundUtils.getLabelField()"
           [(selectedItem)]="fundUtils.selectedItem"
         ></app-reference-field>
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_fund'"
+        ></mat-error>
       </div>
       <mat-form-field class="full-width compact-form-field">
         <mat-label>MP/MLA Name</mat-label>
         <input matInput formControlName="demand_MpMlaName" required />
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_MpMlaName'"
+        ></mat-error>
       </mat-form-field>
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Estimation Completion Date</mat-label>
@@ -99,6 +139,11 @@
           [for]="estimatedCompletionDatePicker"
         ></mat-datepicker-toggle>
         <mat-datepicker #estimatedCompletionDatePicker></mat-datepicker>
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_estimatedCompletionDate'"
+        ></mat-error>
       </mat-form-field>
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Work Description</mat-label>
@@ -107,6 +152,11 @@
           formControlName="demand_workDescription"
           required
         ></textarea>
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_workDescription'"
+        ></mat-error>
       </mat-form-field>
       <div class="compact-form-field full-width">
         <label class="mat-label">Trust?</label>
@@ -115,37 +165,52 @@
       @if (step1Group.get('demand_isTrust')?.value) {
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Trust Name</mat-label>
-        <input matInput formControlName="demand_trustName" required />
+        <input matInput formControlName="demand_trustName" />
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_trustName'"
+        ></mat-error>
       </mat-form-field>
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Trust Address</mat-label>
-        <input matInput formControlName="demand_trustAddress" required />
+        <input matInput formControlName="demand_trustAddress" />
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_trustAddress'"
+        ></mat-error>
       </mat-form-field>
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Trust Registration Number</mat-label>
-        <input
-          matInput
-          formControlName="demand_trustRegistrationNumber"
-          required
-        />
+        <input matInput formControlName="demand_trustRegistrationNumber" />
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_trustRegistrationNumber'"
+        ></mat-error>
       </mat-form-field>
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Trust Registration Date</mat-label>
-        <input
-          matInput
-          formControlName="demand_trustRegistrationDate"
-          required
-        />
+        <input matInput formControlName="demand_trustRegistrationDate" />
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_trustRegistrationDate'"
+        ></mat-error>
       </mat-form-field>
       }
     </div>
-    <!-- Second column finished-->
-
     <!-- Third column -->
     <div class="form-column">
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Importance of Work</mat-label>
         <input matInput formControlName="demand_importanceOfWork" required />
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_importanceOfWork'"
+        ></mat-error>
       </mat-form-field>
       <div class="compact-form-field full-width">
         <app-reference-field
@@ -154,6 +219,11 @@
           [labelField]="sectorUtils.getLabelField()"
           [(selectedItem)]="sectorUtils.selectedItem"
         ></app-reference-field>
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_sector'"
+        ></mat-error>
       </div>
       <div class="compact-form-field full-width">
         <app-reference-field
@@ -162,8 +232,12 @@
           [labelField]="subsectorUtils.getLabelField()"
           [(selectedItem)]="subsectorUtils.selectedItem"
         ></app-reference-field>
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_subSector'"
+        ></mat-error>
       </div>
-
       <div class="compact-form-field full-width">
         <app-reference-field
           formControlName="demand_beneficiaryDistrict"
@@ -171,6 +245,11 @@
           [labelField]="districtUtils.getLabelField()"
           [(selectedItem)]="districtUtils.selectedItem"
         ></app-reference-field>
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_beneficiaryDistrict'"
+        ></mat-error>
       </div>
       <div class="compact-form-field full-width">
         <app-reference-field
@@ -179,6 +258,11 @@
           [labelField]="talukaUtils.getLabelField()"
           [(selectedItem)]="talukaUtils.selectedItem"
         ></app-reference-field>
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_beneficiaryTaluka'"
+        ></mat-error>
       </div>
       <div class="full-width compact-form-field">
         <label class="mat-label">Beneficiary Area Type</label>
@@ -186,6 +270,11 @@
           <mat-radio-button value="urban">Urban</mat-radio-button>
           <mat-radio-button value="village">Village</mat-radio-button>
         </mat-radio-group>
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_beneficiaryAreaType'"
+        ></mat-error>
       </div>
       @if (step1Group.get('demand_beneficiaryAreaType')?.value == 'village') {
       <div class="compact-form-field full-width">
@@ -195,15 +284,23 @@
           [labelField]="gpVillageUtils.getLabelField()"
           [(selectedItem)]="gpVillageUtils.selectedItem"
         ></app-reference-field>
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_beneficiaryVillage'"
+        ></mat-error>
       </div>
-      } @else {<mat-form-field class="full-width compact-form-field">
+      } @else {
+      <mat-form-field class="full-width compact-form-field">
         <mat-label>Beneficiary Nagarpalika</mat-label>
-        <input
-          matInput
-          formControlName="demand_beneficiaryNagarpalika"
-          required
-        /> </mat-form-field
-      >}
+        <input matInput formControlName="demand_beneficiaryNagarpalika" />
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_beneficiaryNagarpalika'"
+        ></mat-error>
+      </mat-form-field>
+      }
       <div class="compact-form-field full-width">
         <app-reference-field
           formControlName="demand_beneficiaryGroup"
@@ -211,18 +308,33 @@
           [labelField]="bgUtils.getLabelField()"
           [(selectedItem)]="bgUtils.selectedItem"
         ></app-reference-field>
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_beneficiaryGroup'"
+        ></mat-error>
       </div>
     </div>
+    <!-- Fourth column -->
     <div class="form-column">
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Demand Officer</mat-label>
         <input matInput formControlName="demand_officer" />
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_officer'"
+        ></mat-error>
       </mat-form-field>
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Assign PS To</mat-label>
         <input matInput formControlName="demand_assignPSTo" required />
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_assignPSTo'"
+        ></mat-error>
       </mat-form-field>
-
       <mat-form-field class="full-width compact-form-field">
         <mat-label>Implementation Officer</mat-label>
         <input
@@ -230,14 +342,23 @@
           formControlName="demand_implementationOfficer"
           required
         />
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_implementationOfficer'"
+        ></mat-error>
       </mat-form-field>
-
       <div class="full-width compact-form-field">
         <label class="mat-label">Demand Status</label>
         <mat-radio-group formControlName="demand_demandStatus">
           <mat-radio-button value="draft">Draft</mat-radio-button>
           <mat-radio-button value="submit">Submit</mat-radio-button>
         </mat-radio-group>
+        <mat-error
+          appValidationMessage
+          [formGroup]="step1Group"
+          [controlName]="'demand_demandStatus'"
+        ></mat-error>
       </div>
       <div class="right-aligned-container">
         <button mat-raised-button (click)="goNext()" color="primary">

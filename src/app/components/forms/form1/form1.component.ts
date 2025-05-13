@@ -1,7 +1,7 @@
 // src/app/components/forms/form1/form1.component.ts
 
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { CommonModule } from '@angular/common';
 import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.module';
@@ -14,6 +14,8 @@ import { SubsectorUtilsService } from '../../../services/subsector/subsector-uti
 import { DistrictUtilsService } from '../../../services/district/district-utils.service';
 import { TalukaUtilsService } from '../../../services/taluka/taluka-utils.service';
 import { GpVillageUtilsService } from '../../../services/gp-village/gp-village-utils.service';
+import { ValidationMessageDirective } from '../../../directives/validation/validation-message.directive';
+
 
 @Component({
   selector: 'app-form1',
@@ -23,16 +25,17 @@ import { GpVillageUtilsService } from '../../../services/gp-village/gp-village-u
     ...MATERIAL_STANDALONE_IMPORTS,
     CommonModule,
     ReferenceFieldModule,
-    FormsModule
+    FormsModule,
+    ValidationMessageDirective
   ],
   templateUrl: './form1.component.html',
-  styleUrl: './form1.component.scss'
+  styleUrls: ['./form1.component.scss']
 })
 export class Form1Component implements OnInit, AfterViewInit {
-
   @Input() step1Group!: FormGroup;
   @Input() stepper!: MatStepper;
   gridCols: number = 2;
+
   constructor(
     public fyUtils: FinancialYearUtilsService,
     public bgUtils: BeneficiaryGroupUtilsService,
@@ -45,14 +48,14 @@ export class Form1Component implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
-    this.fyUtils.loadItems()
-    this.bgUtils.loadItems()
-    this.fundUtils.loadItems()
-    this.sectorUtils.loadItems()
-    this.subsectorUtils.loadItems()
-    this.districtUtils.loadItems()
-    this.talukaUtils.loadItems()
-    this.gpVillageUtils.loadItems()
+    this.fyUtils.loadItems();
+    this.bgUtils.loadItems();
+    this.fundUtils.loadItems();
+    this.sectorUtils.loadItems();
+    this.subsectorUtils.loadItems();
+    this.districtUtils.loadItems();
+    this.talukaUtils.loadItems();
+    this.gpVillageUtils.loadItems();
 
     this.step1Group.get('demand_isTrust')?.valueChanges.subscribe((isTrust: boolean) => {
       this.toggleTrustValidators(isTrust);
@@ -62,7 +65,6 @@ export class Form1Component implements OnInit, AfterViewInit {
       this.toggleBeneficiaryValidators(areaType);
     });
 
-    // Set initial state in case the form is pre-filled
     this.toggleTrustValidators(this.step1Group.get('demand_isTrust')?.value);
     this.toggleBeneficiaryValidators(this.step1Group.get('demand_beneficiaryAreaType')?.value);
   }
@@ -103,44 +105,9 @@ export class Form1Component implements OnInit, AfterViewInit {
   }
 
   goNext(): void {
-    console.log(this.step1Group);
-
     if (this.step1Group.valid) {
       this.stepper.next();
     }
-  }
-
-
-
-  get financialYearControl(): FormControl {
-    return this.step1Group.get('demand_financialYear') as FormControl;
-  }
-
-  get geneficiaryGroupControl(): FormControl {
-    return this.step1Group.get('demand_beneficiaryGroup') as FormControl;
-  }
-
-  get fundGroupControl(): FormControl {
-    return this.step1Group.get('demand_fund') as FormControl;
-  }
-
-  get sectorGroupControl(): FormControl {
-    return this.step1Group.get('demand_sector') as FormControl;
-  }
-
-  get subsectorGroupControl(): FormControl {
-    return this.step1Group.get('demand_subsector') as FormControl;
-  }
-
-  get districtGroupControl(): FormControl {
-    return this.step1Group.get('demand_district') as FormControl;
-  }
-  get talukaGroupControl(): FormControl {
-    return this.step1Group.get('demand_taluka') as FormControl;
-  }
-
-  get gpVillageGroupControl(): FormControl {
-    return this.step1Group.get('demand_gpVillage') as FormControl;
   }
 
   private toggleTrustValidators(enable: boolean): void {
@@ -175,7 +142,6 @@ export class Form1Component implements OnInit, AfterViewInit {
       nagarpalikaControl?.setValidators([Validators.required]);
       villageControl?.clearValidators();
     } else {
-      // fallback: clear both
       villageControl?.clearValidators();
       nagarpalikaControl?.clearValidators();
     }
