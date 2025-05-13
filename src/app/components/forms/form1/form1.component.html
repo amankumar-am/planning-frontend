@@ -22,6 +22,7 @@
       </mat-form-field>
       <div class="compact-form-field full-width">
         <app-reference-field
+          formControlName="demand_financialYear"
           [fetchData]="fyUtils.getDataFetcher()"
           [labelField]="fyUtils.getLabelField()"
           [(selectedItem)]="fyUtils.selectedItem"
@@ -61,30 +62,22 @@
         <mat-label>Demand Number</mat-label>
         <input matInput formControlName="demand_dmndNumber" required />
       </mat-form-field>
-      <mat-form-field class="full-width compact-form-field">
-        <mat-label>Proposer Name</mat-label>
-        <input matInput formControlName="demand_proposerName" required />
-      </mat-form-field>
-
-      <mat-form-field class="full-width compact-form-field">
-        <mat-label>Work Description</mat-label>
-        <textarea
-          matInput
-          formControlName="demand_workDescription"
-          required
-        ></textarea>
-      </mat-form-field>
     </div>
     <!-- First column finished-->
 
     <!-- Second column -->
     <div class="form-column">
       <mat-form-field class="full-width compact-form-field">
+        <mat-label>Proposer Name</mat-label>
+        <input matInput formControlName="demand_proposerName" required />
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
         <mat-label>Scheme Name</mat-label>
         <input matInput formControlName="demand_schemeName" required />
       </mat-form-field>
       <div class="compact-form-field full-width">
         <app-reference-field
+          formControlName="demand_fund"
           [fetchData]="fundUtils.getDataFetcher()"
           [labelField]="fundUtils.getLabelField()"
           [(selectedItem)]="fundUtils.selectedItem"
@@ -108,26 +101,13 @@
         <mat-datepicker #estimatedCompletionDatePicker></mat-datepicker>
       </mat-form-field>
       <mat-form-field class="full-width compact-form-field">
-        <mat-label>Importance of Work</mat-label>
-        <input matInput formControlName="demand_importanceOfWork" required />
+        <mat-label>Work Description</mat-label>
+        <textarea
+          matInput
+          formControlName="demand_workDescription"
+          required
+        ></textarea>
       </mat-form-field>
-      <div class="compact-form-field full-width">
-        <app-reference-field
-          formControlName="demand_sector"
-          [fetchData]="sectorUtils.getDataFetcher()"
-          [labelField]="sectorUtils.getLabelField()"
-          [(selectedItem)]="sectorUtils.selectedItem"
-        ></app-reference-field>
-      </div>
-      <div class="compact-form-field full-width">
-        <app-reference-field
-          formControlName="demand_subSector"
-          [fetchData]="subsectorUtils.getDataFetcher()"
-          [labelField]="subsectorUtils.getLabelField()"
-          [(selectedItem)]="subsectorUtils.selectedItem"
-        ></app-reference-field>
-      </div>
-
       <div class="compact-form-field full-width">
         <label class="mat-label">Trust?</label>
         <mat-checkbox formControlName="demand_isTrust"></mat-checkbox>
@@ -159,24 +139,30 @@
       </mat-form-field>
       }
     </div>
+    <!-- Second column finished-->
+
+    <!-- Third column -->
     <div class="form-column">
       <mat-form-field class="full-width compact-form-field">
-        <mat-label>Demand Officer</mat-label>
-        <input matInput formControlName="demand_officer" />
+        <mat-label>Importance of Work</mat-label>
+        <input matInput formControlName="demand_importanceOfWork" required />
       </mat-form-field>
-      <mat-form-field class="full-width compact-form-field">
-        <mat-label>Assign PS To</mat-label>
-        <input matInput formControlName="demand_assignPSTo" required />
-      </mat-form-field>
-
-      <mat-form-field class="full-width compact-form-field">
-        <mat-label>Implementation Officer</mat-label>
-        <input
-          matInput
-          formControlName="demand_implementationOfficer"
-          required
-        />
-      </mat-form-field>
+      <div class="compact-form-field full-width">
+        <app-reference-field
+          formControlName="demand_sector"
+          [fetchData]="sectorUtils.getDataFetcher()"
+          [labelField]="sectorUtils.getLabelField()"
+          [(selectedItem)]="sectorUtils.selectedItem"
+        ></app-reference-field>
+      </div>
+      <div class="compact-form-field full-width">
+        <app-reference-field
+          formControlName="demand_subSector"
+          [fetchData]="subsectorUtils.getDataFetcher()"
+          [labelField]="subsectorUtils.getLabelField()"
+          [(selectedItem)]="subsectorUtils.selectedItem"
+        ></app-reference-field>
+      </div>
 
       <div class="compact-form-field full-width">
         <app-reference-field
@@ -220,11 +206,32 @@
       >}
       <div class="compact-form-field full-width">
         <app-reference-field
+          formControlName="demand_beneficiaryGroup"
           [fetchData]="bgUtils.getDataFetcher()"
           [labelField]="bgUtils.getLabelField()"
           [(selectedItem)]="bgUtils.selectedItem"
         ></app-reference-field>
       </div>
+    </div>
+    <div class="form-column">
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Demand Officer</mat-label>
+        <input matInput formControlName="demand_officer" />
+      </mat-form-field>
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Assign PS To</mat-label>
+        <input matInput formControlName="demand_assignPSTo" required />
+      </mat-form-field>
+
+      <mat-form-field class="full-width compact-form-field">
+        <mat-label>Implementation Officer</mat-label>
+        <input
+          matInput
+          formControlName="demand_implementationOfficer"
+          required
+        />
+      </mat-form-field>
+
       <div class="full-width compact-form-field">
         <label class="mat-label">Demand Status</label>
         <mat-radio-group formControlName="demand_demandStatus">
@@ -232,7 +239,7 @@
           <mat-radio-button value="submit">Submit</mat-radio-button>
         </mat-radio-group>
       </div>
-      <div class="compact-form-field right-aligned-container">
+      <div class="right-aligned-container">
         <button mat-raised-button (click)="goNext()" color="primary">
           Submit
         </button>

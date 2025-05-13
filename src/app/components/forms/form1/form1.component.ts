@@ -1,7 +1,7 @@
 // src/app/components/forms/form1/form1.component.ts
 
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { CommonModule } from '@angular/common';
 import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.module';
@@ -53,6 +53,18 @@ export class Form1Component implements OnInit, AfterViewInit {
     this.districtUtils.loadItems()
     this.talukaUtils.loadItems()
     this.gpVillageUtils.loadItems()
+
+    this.step1Group.get('demand_isTrust')?.valueChanges.subscribe((isTrust: boolean) => {
+      this.toggleTrustValidators(isTrust);
+    });
+
+    this.step1Group.get('demand_beneficiaryAreaType')?.valueChanges.subscribe((areaType: string) => {
+      this.toggleBeneficiaryValidators(areaType);
+    });
+
+    // Set initial state in case the form is pre-filled
+    this.toggleTrustValidators(this.step1Group.get('demand_isTrust')?.value);
+    this.toggleBeneficiaryValidators(this.step1Group.get('demand_beneficiaryAreaType')?.value);
   }
 
   ngAfterViewInit(): void {
@@ -91,6 +103,8 @@ export class Form1Component implements OnInit, AfterViewInit {
   }
 
   goNext(): void {
+    console.log(this.step1Group);
+
     if (this.step1Group.valid) {
       this.stepper.next();
     }
@@ -127,5 +141,46 @@ export class Form1Component implements OnInit, AfterViewInit {
 
   get gpVillageGroupControl(): FormControl {
     return this.step1Group.get('demand_gpVillage') as FormControl;
+  }
+
+  private toggleTrustValidators(enable: boolean): void {
+    const controlsToToggle = [
+      'demand_trustName',
+      'demand_trustAddress',
+      'demand_trustRegistrationNumber',
+      'demand_trustRegistrationDate'
+    ];
+
+    controlsToToggle.forEach(controlName => {
+      const control = this.step1Group.get(controlName);
+      if (control) {
+        if (enable) {
+          control.setValidators([Validators.required]);
+        } else {
+          control.clearValidators();
+        }
+        control.updateValueAndValidity();
+      }
+    });
+  }
+
+  private toggleBeneficiaryValidators(areaType: string): void {
+    const villageControl = this.step1Group.get('demand_beneficiaryVillage');
+    const nagarpalikaControl = this.step1Group.get('demand_beneficiaryNagarpalika');
+
+    if (areaType === 'village') {
+      villageControl?.setValidators([Validators.required]);
+      nagarpalikaControl?.clearValidators();
+    } else if (areaType === 'urban') {
+      nagarpalikaControl?.setValidators([Validators.required]);
+      villageControl?.clearValidators();
+    } else {
+      // fallback: clear both
+      villageControl?.clearValidators();
+      nagarpalikaControl?.clearValidators();
+    }
+
+    villageControl?.updateValueAndValidity();
+    nagarpalikaControl?.updateValueAndValidity();
   }
 }

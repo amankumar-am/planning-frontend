@@ -4,7 +4,7 @@
 $font-size-base: 12px; // Reduced from default ~14px
 $input-height: 28px; // Smaller input height
 $spacing-unit: 0; // Reduced margin/padding unit
-$scale-factor: 0.65; // Slightly smaller than 0.7 for more compactness
+$scale-factor: 0.80; // Slightly smaller than 0.7 for more compactness
 
 .full-width {
   width: 100%;
@@ -12,7 +12,7 @@ $scale-factor: 0.65; // Slightly smaller than 0.7 for more compactness
 
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr ;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: $spacing-unit; // Reduced gap between columns (default ~16px)
 }
 
