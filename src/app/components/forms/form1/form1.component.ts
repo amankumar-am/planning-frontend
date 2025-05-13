@@ -66,6 +66,17 @@ export class Form1Component implements OnInit, AfterViewInit {
         }
       });
     }
+
+    const districtControl = this.step1Group.get('demand_beneficiaryDistrict');
+    if (districtControl) {
+      districtControl.valueChanges.subscribe((district: any) => {
+        const districtId = district?.id;
+        if (districtId) {
+          this.talukaUtils.setDistrictId(districtId);
+          this.talukaUtils.loadItems();
+        }
+      });
+    }
   }
 
   goNext(): void {

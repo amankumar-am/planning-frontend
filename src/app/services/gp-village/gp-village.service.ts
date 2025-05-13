@@ -28,7 +28,7 @@ export class GpVillageService {
     );
   }
 
-  getGpVillageByTaluka(id: number): Observable<ReferenceDataResponse<GpVillage>> {
+  getGpVillagesByTaluka(id: number): Observable<ReferenceDataResponse<GpVillage>> {
     return this.http.get<ReferenceDataResponse<GpVillage>>(`${this.apiUrl}/taluka/${id}`).pipe(
       catchError(this.handleError)
     );

@@ -21,15 +21,12 @@ export class GpVillageUtilsService extends BaseReferenceUtilsService<GpVillage> 
         this.talukaId = talukaId;
     }
 
-
-
     protected async fetchAllItems(): Promise<{ data: GpVillage[]; schema: ReferenceSchema<GpVillage>[], defaultVisibleColumns: string[] }> {
         if (this.talukaId == null) {
-            console.warn('Taluka ID is not set. Skipping fetch.');
             return { data: [], schema: [], defaultVisibleColumns: [] };
         }
 
-        const response = await firstValueFrom(this.gpVillageService.getGpVillageByTaluka(this.talukaId));
+        const response = await firstValueFrom(this.gpVillageService.getGpVillagesByTaluka(this.talukaId));
         return {
             data: response?.data || [],
             schema: response?.schema || [],

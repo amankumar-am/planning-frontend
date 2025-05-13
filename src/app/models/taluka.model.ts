@@ -23,8 +23,9 @@ export interface CreateTalukaDto {
     eDharaCode: number;
     nameEn: string;
     nameGu: string;
-    district: number;
-    prant: number; isActive?: boolean;
+    district: District;
+    prant: number;
+    isActive?: boolean;
 }
 
 export interface UpdateTalukaDto extends Partial<CreateTalukaDto> {

@@ -178,6 +178,7 @@
 
       <div class="compact-form-field full-width">
         <app-reference-field
+          formControlName="demand_beneficiaryDistrict"
           [fetchData]="districtUtils.getDataFetcher()"
           [labelField]="districtUtils.getLabelField()"
           [(selectedItem)]="districtUtils.selectedItem"
@@ -201,6 +202,7 @@
       @if (step1Group.get('demand_beneficiaryAreaType')?.value == 'village') {
       <div class="compact-form-field full-width">
         <app-reference-field
+          formControlName="demand_beneficiaryVillage"
           [fetchData]="gpVillageUtils.getDataFetcher()"
           [labelField]="gpVillageUtils.getLabelField()"
           [(selectedItem)]="gpVillageUtils.selectedItem"

@@ -28,8 +28,8 @@ export class TalukaService {
     );
   }
 
-  getTalukaByDistrict(id: number): Observable<Taluka> {
-    return this.http.get<Taluka>(`${this.apiUrl}/district/${id}`).pipe(
+  getTalukasByDistrict(id: number): Observable<ReferenceDataResponse<Taluka>> {
+    return this.http.get<ReferenceDataResponse<Taluka>>(`${this.apiUrl}/district/${id}`).pipe(
       catchError(this.handleError)
     );
   }
