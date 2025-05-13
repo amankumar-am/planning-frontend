@@ -28,6 +28,12 @@ export class SubsectorService {
     );
   }
 
+  getSubsectorsBySector(id: number): Observable<ReferenceDataResponse<Subsector>> {
+    return this.http.get<ReferenceDataResponse<Subsector>>(`${this.apiUrl}/sector/${id}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   // Create new subsector
   createSubsector(subsector: CreateSubsectorDto): Observable<Subsector> {
     return this.http.post<Subsector>(this.apiUrl, subsector).pipe(

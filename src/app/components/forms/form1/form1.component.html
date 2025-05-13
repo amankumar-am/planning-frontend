@@ -113,6 +113,7 @@
       </mat-form-field>
       <div class="compact-form-field full-width">
         <app-reference-field
+          formControlName="demand_sector"
           [fetchData]="sectorUtils.getDataFetcher()"
           [labelField]="sectorUtils.getLabelField()"
           [(selectedItem)]="sectorUtils.selectedItem"
@@ -120,6 +121,7 @@
       </div>
       <div class="compact-form-field full-width">
         <app-reference-field
+          formControlName="demand_subSector"
           [fetchData]="subsectorUtils.getDataFetcher()"
           [labelField]="subsectorUtils.getLabelField()"
           [(selectedItem)]="subsectorUtils.selectedItem"

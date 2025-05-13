@@ -1,12 +1,14 @@
 // src/app/models/subsector.model.ts
 
+import { Sector } from "./sector.model";
+
 
 export interface Subsector {
     id: number;
     name: string;
     nameEn: string;
     nameGu: string;
-    sector: number;
+    sector: Sector;
     subsectorNumber: number;
     isActive: boolean;
     createdBy: string;
@@ -20,7 +22,7 @@ export interface CreateSubsectorDto {
     name: string;
     nameEn: string;
     nameGu: string;
-    sector: number;
+    sector: Sector;
     subsectorNumber: number;
     isActive?: boolean;
 }

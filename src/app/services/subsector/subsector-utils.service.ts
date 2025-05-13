@@ -11,17 +11,28 @@ import { firstValueFrom } from 'rxjs';
     providedIn: 'root'
 })
 export class SubsectorUtilsService extends BaseReferenceUtilsService<Subsector> {
+    private sectorId: number | null = null;
     constructor(private subsectorService: SubsectorService) {
         super();
         this.labelField = 'Subsector';
     }
 
+    setSectorId(sectorId: number): void {
+        this.sectorId = sectorId;
+    }
+
     protected async fetchAllItems(): Promise<{ data: Subsector[]; schema: ReferenceSchema<Subsector>[], defaultVisibleColumns: string[] }> {
-        const response = await firstValueFrom(this.subsectorService.getAllSubsectors());
+        if (this.sectorId == null) {
+            return { data: [], schema: [], defaultVisibleColumns: [] };
+        }
+
+        const response = await firstValueFrom(this.subsectorService.getSubsectorsBySector(this.sectorId));
         return {
             data: response?.data || [],
             schema: response?.schema || [],
             defaultVisibleColumns: response.defaultVisibleColumns || [],
         };
     }
+
+
 }

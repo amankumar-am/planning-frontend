@@ -77,6 +77,17 @@ export class Form1Component implements OnInit, AfterViewInit {
         }
       });
     }
+
+    const sectorControl = this.step1Group.get('demand_sector');
+    if (sectorControl) {
+      sectorControl.valueChanges.subscribe((sector: any) => {
+        const sectorId = sector?.id;
+        if (sectorId) {
+          this.subsectorUtils.setSectorId(sectorId);
+          this.subsectorUtils.loadItems();
+        }
+      });
+    }
   }
 
   goNext(): void {

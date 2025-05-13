@@ -173,15 +173,25 @@ export class ReferenceFieldModalComponent<T extends object> implements AfterView
   }
 
   formatCellValue(value: any, type?: string): string {
-    if (!value) return '';
+    if (value === null || value === undefined) return '';
 
-    if (type === 'datetime' || (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(value))) {
+    // Handle datetime strings or type 'datetime'
+    if (
+      type === 'datetime' ||
+      (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(value))
+    ) {
       try {
         return new Date(value).toLocaleString();
       } catch {
         return value;
       }
-    } else if (type === 'date' || (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value))) {
+    }
+
+    // Handle date strings or type 'date'
+    if (
+      type === 'date' ||
+      (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value))
+    ) {
       try {
         return new Date(value).toLocaleDateString();
       } catch {
@@ -189,6 +199,18 @@ export class ReferenceFieldModalComponent<T extends object> implements AfterView
       }
     }
 
+    // Handle object types (like selectedItem: { id, name })
+    if (typeof value === 'object') {
+      if ('name' in value) return value.name;
+      if ('label' in value) return value.label;
+      try {
+        return JSON.stringify(value);
+      } catch {
+        return '[Object]';
+      }
+    }
+
+    // Default fallback
     return value.toString();
   }
 }
