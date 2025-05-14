@@ -1,3 +1,5 @@
+// src/app/components/common/stepper/stepper.component.spec.ts
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StepperComponent } from './stepper.component';
@@ -10,7 +12,7 @@ describe('StepperComponent', () => {
     await TestBed.configureTestingModule({
       imports: [StepperComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(StepperComponent);
     component = fixture.componentInstance;

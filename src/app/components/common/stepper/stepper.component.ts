@@ -1,62 +1,59 @@
 // src/app/components/common/stepper/stepper.component.ts
 
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatStepperModule } from '@angular/material/stepper';
-import { Form1Component } from '../../forms/form1/form1.component';
-import { Form2Component } from '../../forms/form2/form2.component';
-import { Form3Component } from '../../forms/form3/form3.component';
-import { Form4Component } from '../../forms/form4/form4.component';
-import { Form5Component } from '../../forms/form5/form5.component';
-import { Form6Component } from '../../forms/form6/form6.component';
-import { Form7Component } from '../../forms/form7/form7.component';
-import { Form8Component } from '../../forms/form8/form8.component';
-import { Form9Component } from '../../forms/form9/form9.component';
-import { createFormGroups } from '../../forms/form-groups';
-/**
- * @title Stepper overview
- */
+import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
+import { form1Config, form2Config, } from '../../forms-config';
+import { GenericFormComponent } from '../generic-form/generic-form.component';
+import { createFormGroups } from '../generic-form/form-groups';
+import { form3Config } from '../../forms-config/form3.config';
+import { form4Config } from '../../forms-config/form4.config';
+import { form5Config } from '../../forms-config/form5.config';
+import { form6Config } from '../../forms-config/form6.config';
+import { form7Config } from '../../forms-config/form7.config';
+import { form8Config } from '../../forms-config/form8.config';
+import { form9Config } from '../../forms-config/form9.config';
+
+interface StepConfig {
+  label: string;
+  formConfig: { columns: { fields: any[] }[] };
+}
+
 @Component({
   selector: 'app-stepper',
   templateUrl: './stepper.component.html',
   styleUrls: ['./stepper.component.scss'],
+  standalone: true,
   imports: [
     MatStepperModule,
     ReactiveFormsModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatButtonModule,
-    Form1Component,
-    Form2Component,
-    Form3Component,
-    Form4Component,
-    Form5Component,
-    Form6Component,
-    Form7Component,
-    Form8Component,
-    Form9Component]
+    CommonModule,
+    GenericFormComponent
+  ],
 })
 export class StepperComponent implements OnInit {
   isLinear = false;
-  step1Group: any;
-  step2Group: any;
-  step3Group: any;
-  step4Group: any;
-  step5Group: any;
-  step6Group: any;
-  step7Group: any;
-  step8Group: any;
-  step9Group: any;
+  formGroups: FormGroup[] = [];
+  steps: StepConfig[] = [
+    { label: 'Demand', formConfig: form1Config },
+    { label: 'Primary Sanction', formConfig: form2Config },
+    { label: 'Technical Sanction', formConfig: form3Config },
+    { label: 'Administrative Sanction', formConfig: form4Config },
+    { label: 'Grant', formConfig: form5Config },
+    { label: 'Work Order', formConfig: form6Config },
+    { label: 'Inspection', formConfig: form7Config },
+    { label: 'Full Payment', formConfig: form8Config },
+    { label: 'UTC', formConfig: form9Config },
+    // Add Form10 if needed
+    // { label: 'Form 10', formConfig: form10Config },
+  ];
 
   constructor(private _formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    const groups = createFormGroups(this._formBuilder);
-    Object.assign(this, groups);
-
+    this.formGroups = createFormGroups(this._formBuilder, this.steps);
   }
 }

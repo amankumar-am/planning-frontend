@@ -1,6 +1,8 @@
 // src/app/services/generic.model.ts
 
-import { ReferenceSchema } from "./BaseReferenceUtilsService";
+import { ReferenceSchema } from "./utils/BaseReferenceUtilsService";
+
+
 
 export interface HasName {
     name: string;

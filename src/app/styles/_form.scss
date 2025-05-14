@@ -1,0 +1,561 @@
+// src/app/styles/_form.scss
+
+@use './variables' as *;
+@use './mixins' as *;
+
+// Form grid
+.form-grid {
+  background-color: #e0ffe0 !important; // Test style: green background
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $grid-gap;
+  padding: $padding-base;
+  border-radius: $border-radius;
+  border: $border-width solid $border-color;
+}
+
+// Form columns
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: $padding-small;
+}
+
+// Full-width fields
+.full-width {
+  width: 100% !important;
+  display: block !important;
+}
+
+// Compact form fields
+.compact-form-field {
+  margin-bottom: $padding-small;
+  width: 100% !important;
+
+  .mat-label {
+    font-size: $base-font-size;
+    font-weight: 500;
+    color: $text-color;
+    margin-bottom: 2px;
+    display: block;
+    line-height: 1.2;
+  }
+}
+
+// Material form fields
+mat-form-field {
+  width: 100% !important;
+  display: inline-flex !important;
+  position: relative !important;
+
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0.3em;
+    margin: 0 !important;
+    width: 100% !important;
+
+    .mat-form-field-flex {
+      @include form-field-border;
+      @include form-field-height;
+      padding: 0 8px 0 4px;
+      align-items: center;
+      display: flex;
+      width: 100% !important;
+      position: relative !important;
+    }
+
+    .mat-form-field-infix {
+      padding: 0 !important;
+      line-height: 1.1;
+      width: auto !important;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .mat-form-field-suffix {
+      @include flex-center;
+      height: 20px !important;
+      margin-left: 4px;
+      position: absolute !important;
+      right: 2px !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+    }
+
+    .mat-form-field-underline {
+      display: none;
+    }
+
+    .mat-form-field-subscript-wrapper {
+      margin-top: 2px !important;
+      padding: 0 !important;
+      line-height: 1.1;
+      width: 100% !important;
+
+      .mat-error {
+        font-size: $tiny-font-size !important;
+        color: $error-color;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1.1;
+        display: block;
+      }
+    }
+  }
+
+  input, textarea {
+    font-size: $base-font-size !important;
+    color: $text-color;
+    padding: 0 2px;
+    line-height: 1.1;
+    height: 20px !important;
+    min-height: 20px !important;
+    width: 100% !important;
+    box-sizing: border-box;
+
+    &[readonly] {
+      background-color: #f5f5f5;
+      cursor: not-allowed;
+    }
+  }
+
+  textarea {
+    min-height: 28px;
+    resize: vertical;
+  }
+
+  ::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
+    padding: 0 4px !important;
+  }
+
+  ::ng-deep .mat-datepicker-toggle {
+    width: $icon-size !important;
+    height: $icon-size !important;
+    line-height: $icon-size !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    @include flex-center;
+
+    .mat-icon {
+      font-size: 16px !important;
+      width: 16px !important;
+      height: 16px !important;
+      line-height: 16px !important;
+    }
+
+    .mat-button-wrapper {
+      @include flex-center;
+      height: $icon-size !important;
+    }
+  }
+}
+
+// Checkbox
+mat-checkbox {
+  .mat-checkbox-label {
+    font-size: $small-font-size !important;
+    color: $text-color;
+  }
+
+  &.mat-checkbox-checked {
+    .mat-checkbox-background {
+      background-color: $primary-color;
+    }
+  }
+
+  ::ng-deep .mat-checkbox-frame {
+    width: 10px !important;
+    height: 10px !important;
+  }
+
+  ::ng-deep .mat-checkbox-inner-container {
+    width: 10px !important;
+    height: 10px !important;
+    margin: 1px;
+  }
+}
+
+// Radio group
+mat-radio-group.horizontal-radio {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+
+  mat-radio-button {
+    .mat-radio-label {
+      font-size: $small-font-size !important;
+      color: $text-color !important;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    &.mat-radio-checked {
+      .mat-radio-outer-circle {
+        border-color: $primary-color;
+      }
+
+      .mat-radio-inner-circle {
+        background-color: $primary-color;
+      }
+    }
+
+    ::ng-deep .mat-radio-container {
+      width: 10px !important;
+      height: 10px !important;
+      margin-right: 4px;
+    }
+
+    ::ng-deep .mat-radio-outer-circle {
+      width: 10px !important;
+      height: 10px !important;
+    }
+
+    ::ng-deep .mat-radio-inner-circle {
+      width: 5px !important;
+      height: 5px !important;
+    }
+
+    ::ng-deep .mat-radio-label-content {
+      font-size: $small-font-size !important;
+      color: $text-color !important;
+    }
+  }
+}
+
+// Reference field
+app-reference-field {
+  width: 100% !important;
+  display: block !important;
+
+  ::ng-deep .mat-form-field {
+    width: 100% !important;
+    @include form-field-height;
+    font-size: $base-font-size !important;
+
+    .mat-form-field-wrapper {
+      padding-bottom: 0.3em;
+      margin: 0 !important;
+      width: 100% !important;
+    }
+
+    .mat-form-field-flex {
+      @include form-field-border;
+      @include form-field-height;
+      padding: 0 4px;
+      align-items: center;
+      display: flex;
+      width: 100% !important;
+    }
+
+    .mat-form-field-infix {
+      padding: 0 !important;
+      line-height: 1.1;
+      width: auto !important;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    input {
+      font-size: $base-font-size !important;
+      line-height: 1.1;
+      height: 20px !important;
+      width: 100% !important;
+      padding: 0 2px !important;
+      box-sizing: border-box;
+    }
+
+    mat-icon-button {
+      width: $icon-size !important;
+      height: $icon-size !important;
+      line-height: $icon-size !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      position: static !important;
+
+      .mat-icon {
+        font-size: 16px !important;
+        width: 16px !important;
+        height: 16px !important;
+        line-height: 16px !important;
+      }
+
+      .mat-button-wrapper {
+        @include flex-center;
+        height: $icon-size !important;
+      }
+    }
+
+    .mat-form-field-subscript-wrapper {
+      margin-top: 2px !important;
+      padding: 0 !important;
+      width: 100% !important;
+
+      .mat-error {
+        font-size: $tiny-font-size !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1.1;
+      }
+    }
+  }
+}
+
+// Button container
+.right-aligned-container {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: $padding-small;
+  margin-top: 6px;
+
+  button {
+    padding: 3px 6px;
+    font-size: $small-font-size;
+    font-weight: 500;
+    border-radius: 2px;
+    line-height: 1.3;
+
+    &.mat-button {
+      color: $primary-color;
+      &:hover {
+        background-color: color.adjust($primary-color, $lightness: 45%);
+      }
+    }
+
+    &.mat-raised-button {
+      background-color: $primary-color;
+      color: #fff;
+      &:hover {
+        background-color: color.adjust($primary-color, $lightness: -10%);
+      }
+    }
+  }
+}
+
+// MDC styles
+.mat-mdc-form-field.mat-mdc-form-field .mat-mdc-form-field-infix {
+  padding: 0 !important;
+  @include form-field-height;
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.mat-mdc-form-field-flex {
+  padding: 0 4px !important;
+  @include form-field-height;
+  display: flex;
+  align-items: center;
+}
+
+.mat-mdc-form-field-infix {
+  padding: 0 !important;
+  @include form-field-height;
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.mat-mdc-form-field {
+  display: inline-flex !important;
+  position: relative !important;
+
+  .mdc-line-ripple {
+    display: none !important;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    height: auto !important;
+    padding: 0 !important;
+    margin-top: 2px !important;
+  }
+
+  &.mat-mdc-form-field-type-mat-date-range-input,
+  &.mat-mdc-form-field-type-mat-date-input {
+    .mat-mdc-text-field-wrapper {
+      padding: 0 !important;
+      height: $field-height !important;
+      position: relative !important;
+    }
+
+    .mat-mdc-form-field-flex {
+      height: $field-height !important;
+      min-height: $field-height !important;
+      padding: 0 26px 0 4px !important;
+      display: flex !important;
+      align-items: center !important;
+      position: relative !important;
+    }
+  }
+}
+
+.mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: $base-font-size !important;
+}
+
+// Responsive design
+@media (max-width: 1024px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: $padding-small;
+    padding: 6px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mat-mdc-form-field-type-mat-date-range-input,
+  .mat-mdc-form-field-type-mat-date-input {
+    .mat-mdc-form-field-flex {
+      padding: 0 22px 0 4px !important;
+    }
+  }
+
+  mat-form-field {
+    ::ng-deep .mat-form-field-flex {
+      padding: 0 8px 0 4px !important;
+      @include form-field-height($field-height-small, 16px);
+    }
+
+    input, textarea {
+      font-size: 9px !important;
+      padding: 0 2px;
+      height: 16px !important;
+    }
+
+    ::ng-deep .mat-form-field-suffix {
+      height: 16px !important;
+      right: 1px !important;
+    }
+
+    ::ng-deep .mat-form-field-subscript-wrapper {
+      margin-top: 1px !important;
+
+      .mat-error {
+        font-size: 7px !important;
+        line-height: 1.1;
+      }
+    }
+
+    ::ng-deep .mat-datepicker-toggle {
+      width: 16px !important;
+      height: 16px !important;
+      line-height: 16px !important;
+
+      .mat-icon {
+        font-size: 14px !important;
+        width: 14px !important;
+        height: 14px !important;
+        line-height: 14px !important;
+      }
+
+      .mat-button-wrapper {
+        height: 16px !important;
+      }
+    }
+  }
+
+  app-reference-field {
+    ::ng-deep .mat-form-field {
+      @include form-field-height($field-height-small, 16px);
+      font-size: 9px !important;
+
+      .mat-form-field-flex {
+        @include form-field-height($field-height-small, 16px);
+      }
+
+      input {
+        font-size: 9px !important;
+        height: 16px !important;
+        padding: 0 2px !important;
+      }
+
+      mat-icon-button {
+        width: 16px !important;
+        height: 16px !important;
+        line-height: 16px !important;
+
+        .mat-icon {
+          font-size: 14px !important;
+          width: 14px !important;
+          height: 14px !important;
+          line-height: 14px !important;
+        }
+
+        .mat-button-wrapper {
+          height: 16px !important;
+        }
+      }
+
+      .mat-form-field-subscript-wrapper {
+        margin-top: 1px !important;
+
+        .mat-error {
+          font-size: 7px !important;
+        }
+      }
+    }
+  }
+
+  mat-checkbox, mat-radio-button {
+    ::ng-deep .mat-checkbox-frame, ::ng-deep .mat-radio-container {
+      width: 8px !important;
+      height: 8px !important;
+    }
+
+    ::ng-deep .mat-radio-inner-circle {
+      width: 4px !important;
+      height: 4px !important;
+    }
+
+    .mat-checkbox-label, .mat-radio-label {
+      font-size: 9px !important;
+    }
+
+    ::ng-deep .mat-radio-label-content {
+      font-size: 9px !important;
+    }
+  }
+
+  mat-radio-group.horizontal-radio {
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .right-aligned-container {
+    flex-direction: column;
+    align-items: stretch;
+
+    button {
+      width: 100%;
+      padding: 2px 4px;
+      font-size: 9px;
+    }
+  }
+
+  .mat-mdc-form-field.mat-mdc-form-field .mat-mdc-form-field-infix {
+    padding: 0 !important;
+    @include form-field-height($field-height-small, 16px);
+  }
+
+  .mat-mdc-form-field-flex {
+    padding: 0 4px !important;
+    @include form-field-height($field-height-small, 16px);
+  }
+
+  .mat-mdc-form-field-infix {
+    padding: 0 !important;
+    @include form-field-height($field-height-small, 16px);
+  }
+
+  .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    font-size: 9px !important;
+  }
+}

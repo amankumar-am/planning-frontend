@@ -1,0 +1,93 @@
+<form [formGroup]="formGroup" class="form-grid">
+  <div *ngFor="let column of columns; let i = index" class="form-column">
+    <ng-container *ngFor="let field of column.fields; let j = index">
+      <div class="compact-form-field" *ngIf="shouldShowField(field)">
+        <label class="mat-label" [for]="field.name">{{ field.label }}</label>
+        <ng-container [ngSwitch]="field.type">
+          <!-- Checkbox and Radio outside mat-form-field -->
+          <mat-checkbox
+            *ngSwitchCase="'checkbox'"
+            [formControlName]="field.name"
+            [id]="field.name"
+            >{{ field.label }}</mat-checkbox
+          >
+          <mat-radio-group
+            *ngSwitchCase="'radio'"
+            [formControlName]="field.name"
+            [id]="field.name"
+            class="horizontal-radio"
+          >
+            <mat-radio-button
+              *ngFor="let option of field.options"
+              [value]="option.value ?? option"
+              >{{ option.label ?? option }}</mat-radio-button
+            >
+          </mat-radio-group>
+          <!-- Reference field without external mat-error -->
+          <app-reference-field
+            *ngSwitchCase="'reference'"
+            [formControlName]="field.name"
+            [formGroup]="formGroup"
+            [labelField]="field.label"
+            [fetchData]="getService(field.options).loadItems"
+            class="full-width"
+          ></app-reference-field>
+          <!-- Other fields inside mat-form-field with mat-error -->
+          <mat-form-field *ngSwitchDefault appearance="outline">
+            <ng-container [ngSwitch]="field.type">
+              <input
+                *ngSwitchCase="'text'"
+                matInput
+                [formControlName]="field.name"
+                [id]="field.name"
+                [readonly]="field.readonly"
+              />
+              <input
+                *ngSwitchCase="'number'"
+                matInput
+                type="number"
+                [formControlName]="field.name"
+                [id]="field.name"
+              />
+              <textarea
+                *ngSwitchCase="'textarea'"
+                matInput
+                [formControlName]="field.name"
+                [id]="field.name"
+              ></textarea>
+              <ng-container *ngSwitchCase="'date'">
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  [formControlName]="field.name"
+                  [id]="field.name"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <ng-container
+                  *ngIf="registerDatePicker(field.name, picker)"
+                ></ng-container>
+              </ng-container>
+            </ng-container>
+
+            <mat-error
+              appValidationMessage
+              [formGroup]="formGroup"
+              [controlName]="field.name"
+            ></mat-error>
+          </mat-form-field>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+  <div class="right-aligned-container">
+    <button mat-button type="button" (click)="back()">Back</button>
+    <button mat-raised-button color="primary" type="button" (click)="next()">
+      Next
+    </button>
+    <button mat-button type="button" (click)="reset()">Reset</button>
+  </div>
+</form>

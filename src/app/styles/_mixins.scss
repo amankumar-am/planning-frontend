@@ -1,0 +1,32 @@
+// src/app/styles/_mixins.scss
+
+@use './variables' as *;
+
+// Mixin for form field borders
+@mixin form-field-border {
+  border: $border-width solid $border-color;
+  border-radius: $border-radius;
+  transition: border-color $transition-base;
+
+  &:focus-within {
+    border-color: $primary-color;
+  }
+}
+
+// Mixin for flex centering
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Mixin for responsive form field heights
+@mixin form-field-height($height: $field-height, $infix-height: 20px) {
+  height: $height !important;
+  min-height: $height !important;
+
+  .mat-form-field-infix {
+    height: $infix-height !important;
+    min-height: $infix-height !important;
+  }
+}

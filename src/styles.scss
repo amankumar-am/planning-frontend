@@ -9,3 +9,24 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.mat-mdc-form-field.mat-mdc-form-field .mat-mdc-form-field-infix {
+  padding: 0 !important;
+  height: 24px !important;
+  min-height: 24px !important;
+}
+.mat-mdc-form-field-flex {
+  padding: 0 !important;
+  height: 24px !important;
+  min-height: 24px !important;
+}
+
+.mat-mdc-form-field-infix {
+  padding: 0 !important;
+  height: 24px !important;
+  min-height: 24px !important;
+}
+
+.mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
+  top:50% !important;
+}

@@ -1,0 +1,33 @@
+// src/app/styles/_variables.scss
+
+@use 'sass:color';
+
+// Color palette
+$primary-color: #3f51b5;
+$accent-color: #ff4081;
+$text-color: #333;
+$border-color: #e0e0e0;
+$error-color: #d32f2f;
+
+// Typography
+$base-font-size: 14px;
+$small-font-size: 10px;
+$tiny-font-size: 8px;
+
+// Spacing
+$grid-gap: 10px;
+$padding-base: 8px;
+$padding-small: 4px;
+
+// Border
+$border-radius: 3px;
+$border-width: 1px;
+
+// Heights
+$field-height: 24px;
+$field-height-small: 20px;
+$icon-size: 20px;
+$icon-size-small: 16px;
+
+// Transitions
+$transition-base: 0.3s ease;
