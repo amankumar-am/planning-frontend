@@ -1,0 +1,44 @@
+// src/app/components/dashboard/overall-data/overall-data.component.scss
+
+.overall-container {
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin-bottom: 20px;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 16px;
+    color: #333;
+  }
+}
+
+.global-counts-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 20px;
+  padding: 10px;
+
+  &.countContainerBorder { // If you want a border like ServiceNow
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 16px;
+  }
+}
+
+.fy-selector-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+
+  .full-width {
+    width: 100%;
+    max-width: 400px; /* Or adjust as needed */
+  }
+}
+.loading-fy {
+    text-align: center;
+    padding: 10px;
+}

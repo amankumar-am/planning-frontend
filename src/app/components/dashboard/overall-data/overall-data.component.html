@@ -1,0 +1,45 @@
+<div class="overall-container">
+  <h2>Overall Ayojan Data</h2>
+  <div class="global-counts-container countContainerBorder">
+    <app-count-card
+      *ngFor="let count of globalCounts"
+      [countData]="count"
+    ></app-count-card>
+    <div *ngIf="globalCounts.length === 0 && !(isLoading$ | async)">
+      <!-- Changed here -->
+      No global data available.
+    </div>
+  </div>
+
+  <div class="fy-selector-container" *ngIf="(isLoading$ | async) === false">
+    <!-- Changed here -->
+    <mat-form-field
+      appearance="outline"
+      class="full-width"
+      *ngIf="financialYears.length > 0"
+    >
+      <mat-label>Select Financial Year</mat-label>
+      <mat-select
+        [(ngModel)]="selectedFinancialYearId"
+        (selectionChange)="onFinancialYearChange()"
+      >
+        <mat-option *ngFor="let year of financialYears" [value]="year.value">
+          {{ year.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div *ngIf="financialYears.length === 0 && !(isLoading$ | async)">
+      <!-- Changed here -->
+      No financial years available to select.
+    </div>
+  </div>
+  <div *ngIf="isLoading$ | async" class="loading-fy">
+    <!-- Changed here -->
+    Loading initial data...
+    <mat-progress-bar
+      mode="indeterminate"
+      *ngIf="isLoading$ | async"
+    ></mat-progress-bar>
+    <!-- Changed here -->
+  </div>
+</div>

@@ -1,3 +1,5 @@
+// src/app/components/materialConfig/material.module.ts
+
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';

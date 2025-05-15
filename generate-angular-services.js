@@ -211,35 +211,29 @@ const generateFiles = (entity, entityCode, projectPath) => {
 };
 
 // Example usage for fund
-const entity = 'gpVillage';
+const entity = 'ps1';
 const entityCode = `
-  @PrimaryGeneratedColumn({ name: 'MGPV_Id' })
+  @PrimaryGeneratedColumn({ name: 'PS1_Id' })
   id!: number;
 
-  @Column({ name: 'MGPV_LGDCode', length: 10, nullable: true })
-  lgdCode!: string;
+  @ManyToOne(() => FinancialYear, { onUpdate: 'CASCADE', onDelete: 'RESTRICT' })
+  @JoinColumn({ name: 'PS1_FinancialYear', referencedColumnName: 'id' })
+  financialYear!: FinancialYear;
 
-  @Column({ name: 'MGPV_Name_En', })
-  nameEn!: string;
+  @ManyToOne(() => FundEntity, { onUpdate: 'CASCADE', onDelete: 'RESTRICT' })
+  @JoinColumn({ name: 'PS1_Fund', referencedColumnName: 'id' })
+  fund!: FundEntity;
 
-  @Column({ name: 'MGPV_Name_En', })
-  name!: string;
+  @ManyToOne(() => TalukaEntity, { onUpdate: 'CASCADE', onDelete: 'RESTRICT' })
+  @JoinColumn({ name: 'PS1_Taluka', referencedColumnName: 'id' })
+  taluka!: TalukaEntity;
 
-  @Column({ name: 'MGPV_Name_Gu', length: 100, })
-  nameGu?: string;
+  @ManyToOne(() => SectorEntity, { onUpdate: 'CASCADE', onDelete: 'RESTRICT' })
+  @JoinColumn({ name: 'PS1_Sector', referencedColumnName: 'id' })
+  sector!: SectorEntity;
 
-  @Column({ name: 'MGPV_VillagesIncluded', length: 200, nullable: true })
-  villagesIncluded?: string;
-
-
-  @Column({ name: 'MGPV_Population(2011)', nullable: true })
-  population2011?: string;
-
-  @Column({ name: 'MGPV_District', })
-  district?: number;
-
-  @Column({ name: 'MGPV_Taluka', })
-  taluka?: number;
+  @Column({ name: 'PS1_Stage' })
+  stage!: number;
 `;
 const projectPath = 'D:/Angular/planning/planning-frontend';
 

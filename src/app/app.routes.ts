@@ -1,3 +1,10 @@
-import { Routes } from '@angular/router';
+// src/app/app.routes.ts
 
-export const routes: Routes = [];
+import { Routes } from '@angular/router';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { StepperComponent } from './components/common/stepper/stepper.component';
+
+export const routes: Routes = [
+    { path: '', component: StepperComponent },
+    { path: 'dashboard', component: DashboardComponent }
+];

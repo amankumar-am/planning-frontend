@@ -1,0 +1,52 @@
+// src/app/components/dashboard/tabs/tabs.component.scss
+
+.content-container {
+  padding: 1rem;
+}
+
+.count-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  app-count-card {
+    flex: 1 1 calc(20% - 1rem);
+    margin: 0.5rem;
+  }
+}
+
+.pending-section {
+  border: 2px dashing #888;
+  padding: 1rem;
+  position: relative;
+
+  .section-title {
+    position: absolute;
+    top: -1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0 0.5rem;
+    font-weight: bold;
+    color: #3f51b5;
+  }
+}
+
+.chart-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  app-chart {
+    flex: 1 1 calc(50% - 1rem);
+    margin: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .count-section app-count-card,
+  .chart-section app-chart {
+    flex: 1 1 100%;
+  }
+}
