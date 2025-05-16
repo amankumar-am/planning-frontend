@@ -6,7 +6,6 @@ import { routes } from './app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations'; // Import this
 import { MATERIAL_PROVIDERS } from './components/materialConfig/material.module';
 import { provideHttpClient } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LOCALE_ID } from '@angular/core';
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,7 +14,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     ...MATERIAL_PROVIDERS,
     provideHttpClient(),
-    BrowserAnimationsModule,
     { provide: LOCALE_ID, useValue: 'en-IN' },
   ],
 

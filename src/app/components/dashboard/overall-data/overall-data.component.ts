@@ -2,18 +2,17 @@
 
 import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.module';
 import { CountCardComponent } from '../count-card/count-card.component'; // Import CountCard
 import { Ps1UtilsService } from '../../../services/ps1/ps1-utils.service';
 import { CountData } from '../../../services/ps1/ps1.service';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { FinancialYearSelectorComponent } from '../financial-year-selector/financial-year-selector.component';
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-overall-data',
   standalone: true,
-  imports: [CommonModule, FormsModule, ...MATERIAL_STANDALONE_IMPORTS, CountCardComponent],
+  imports: [CommonModule, ...MATERIAL_STANDALONE_IMPORTS, CountCardComponent, FormsModule],
   templateUrl: './overall-data.component.html',
   styleUrls: ['./overall-data.component.scss']
 })

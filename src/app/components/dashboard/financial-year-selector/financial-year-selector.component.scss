@@ -1,11 +1,29 @@
+// src/app/components/dashboard/financial-year-selector/financial-year-selector.component.scss
+
 .selector-container {
   display: flex;
   justify-content: center;
-  margin: 2rem auto;
-  max-width: 600px;
-  padding: 0 1rem;
+  margin: 24px auto;
+  max-width: 500px;
+  padding: 0 16px;
 
-  mat-form-field {
+  .full-width {
     width: 100%;
+
+    mat-form-field {
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+      mat-select {
+        font-size: 1rem;
+        color: #1a2b4f;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    padding: 0 12px;
   }
 }

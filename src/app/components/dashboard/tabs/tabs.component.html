@@ -1,24 +1,35 @@
-<mat-tab-group mat-align-tabs="center" animationDuration="200ms">
+<mat-tab-group
+  mat-align-tabs="start"
+  animationDuration="200ms"
+  class="tabs-group"
+>
   <mat-tab label="Content">
     <div class="content-container">
       <div class="count-section">
-        <app-count-card
-          *ngFor="let count of contentCounts"
-          [countData]="count"
-        ></app-count-card>
+        <h3 class="section-title">Content Counts</h3>
+        <div class="count-grid">
+          <app-count-card
+            *ngFor="let count of contentCounts"
+            [countData]="count"
+          ></app-count-card>
+        </div>
       </div>
       <div class="count-section pending-section">
-        <span class="section-title">Pending in Stage</span>
-        <app-count-card
-          *ngFor="let count of pendingCounts"
-          [countData]="count"
-        ></app-count-card>
+        <h3 class="section-title">Pending in Stage</h3>
+        <div class="count-grid">
+          <app-count-card
+            *ngFor="let count of pendingCounts"
+            [countData]="count"
+          ></app-count-card>
+        </div>
       </div>
       <div class="chart-section">
-        <app-chart
-          *ngFor="let chart of charts"
-          [chartOptions]="chart"
-        ></app-chart>
+        <div class="chart-grid">
+          <app-chart
+            *ngFor="let chart of charts"
+            [chartOptions]="chart"
+          ></app-chart>
+        </div>
       </div>
     </div>
   </mat-tab>

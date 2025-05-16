@@ -1,29 +1,55 @@
 // src/app/components/dashboard/count-card/count-card.component.scss
 
 .count-card {
-  height: 15rem;
+  height: 180px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: transform 0.3s ease;
-  background-color: #e8eaf6;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 12px 20px rgba(0,0,0,0.12);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   }
 
   h3 {
-    color: #000000;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1a2b4f;
+    margin-bottom: 8px;
+    text-align: center;
   }
 
   a {
     text-decoration: none;
+
     h1 {
-      color: #000000;
-      font-size: 2rem;
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: #3f51b5;
+      text-align: center;
+    }
+  }
+}
+
+.spinner {
+  margin: 60px auto;
+}
+
+@media (max-width: 768px) {
+  .count-card {
+    height: 150px;
+
+    h3 {
+      font-size: 0.875rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
     }
   }
 }

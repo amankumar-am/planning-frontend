@@ -30,7 +30,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatGridListModule } from '@angular/material/grid-list';
-
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSidenav } from '@angular/material/sidenav';
 export const MATERIAL_STANDALONE_IMPORTS = [
     MatDialogModule,
     MatFormFieldModule,
@@ -62,6 +63,8 @@ export const MATERIAL_STANDALONE_IMPORTS = [
     MatSliderModule,
     MatStepperModule,
     MatGridListModule,
+    MatSidenavModule,
+    MatSidenav,
 ];
 
 import { Provider } from '@angular/core';

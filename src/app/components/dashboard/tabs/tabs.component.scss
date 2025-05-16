@@ -1,52 +1,61 @@
 // src/app/components/dashboard/tabs/tabs.component.scss
 
-.content-container {
-  padding: 1rem;
-}
-
-.count-section {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-
-  app-count-card {
-    flex: 1 1 calc(20% - 1rem);
-    margin: 0.5rem;
+.tabs-group {
+  .mat-tab-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1a2b4f;
+    padding: 0 24px;
   }
-}
 
-.pending-section {
-  border: 2px dashing #888;
-  padding: 1rem;
-  position: relative;
-
-  .section-title {
-    position: absolute;
-    top: -1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background: white;
-    padding: 0 0.5rem;
-    font-weight: bold;
-    color: #3f51b5;
+  .content-container {
+    padding: 24px;
   }
-}
 
-.chart-section {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  .count-section {
+    margin-bottom: 32px;
 
-  app-chart {
-    flex: 1 1 calc(50% - 1rem);
-    margin: 0.5rem;
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1a2b4f;
+      margin-bottom: 16px;
+    }
+
+    .count-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
   }
-}
 
-@media (max-width: 768px) {
-  .count-section app-count-card,
-  .chart-section app-chart {
-    flex: 1 1 100%;
+  .pending-section {
+    .section-title {
+      color: #d32f2f; // Red accent for pending items
+    }
+  }
+
+  .chart-section {
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .mat-tab-label {
+      font-size: 0.875rem;
+      padding: 0 16px;
+    }
+
+    .content-container {
+      padding: 16px;
+    }
+
+    .count-grid,
+    .chart-grid {
+      grid-template-columns: 1fr;
+    }
   }
 }

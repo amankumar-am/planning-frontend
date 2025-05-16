@@ -1,19 +1,19 @@
 // src/app/components/dashboard/dashboard.component.ts
 
-import { Component, OnInit } from '@angular/core'; // Added OnInit
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core'; // Added OnInit
 import { DashboardHeaderComponent } from "./dashboard-header/dashboard-header.component";
 import { OverallDataComponent } from "./overall-data/overall-data.component";
-import { FinancialYearSelectorComponent } from "./financial-year-selector/financial-year-selector.component";
 import { TabsComponent } from "./tabs/tabs.component";
 import { CommonModule } from '@angular/common';
 import { Ps1UtilsService } from '../../services/ps1/ps1-utils.service';
 import { Observable } from 'rxjs';
 import { DashboardData } from '../../services/ps1/ps1.service'; // Import DashboardData type
-
+import { MATERIAL_STANDALONE_IMPORTS } from '../materialConfig/material.module';
+import { MatSidenav } from '@angular/material/sidenav';
 @Component({
   selector: 'app-dashboard',
   standalone: true, // Assuming it's standalone
-  imports: [CommonModule, OverallDataComponent, TabsComponent], // Added missing imports
+  imports: [CommonModule, OverallDataComponent, TabsComponent, DashboardHeaderComponent, ...MATERIAL_STANDALONE_IMPORTS], // Added missing imports
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'] // Corrected styleUrl to styleUrls
 })
@@ -21,6 +21,8 @@ export class DashboardComponent implements OnInit {
   selectedFinancialYearId: string | null = null;
   dashboardData$: Observable<DashboardData>;
   isLoading$: Observable<boolean>;
+  @ViewChild('sidenav') sidenav!: MatSidenav;
+  isSidenavOpen: boolean = window.innerWidth > 768; // Open by default on larger screens
 
   constructor(private ps1UtilsService: Ps1UtilsService) {
     this.dashboardData$ = this.ps1UtilsService.data$;
@@ -39,5 +41,18 @@ export class DashboardComponent implements OnInit {
     if (this.selectedFinancialYearId) {
       this.ps1UtilsService.fetchPs1DashboardData(this.selectedFinancialYearId);
     }
+  }
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.isSidenavOpen = window.innerWidth > 768;
+    if (!this.isSidenavOpen) {
+      this.sidenav.close();
+    } else {
+      this.sidenav.open();
+    }
+  }
+  toggleSidenav() {
+    this.isSidenavOpen = !this.isSidenavOpen;
+    this.sidenav.toggle();
   }
 }

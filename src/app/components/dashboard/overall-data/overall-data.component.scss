@@ -1,44 +1,67 @@
 // src/app/components/dashboard/overall-data/overall-data.component.scss
 
 .overall-container {
-  padding: 16px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  padding: 24px;
+  background-color: #ffffff;
 
   h2 {
-    text-align: center;
-    margin-bottom: 16px;
-    color: #333;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1a2b4f;
+    text-align: left;
+    margin-bottom: 24px;
   }
-}
 
-.global-counts-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: center;
-  margin-bottom: 20px;
-  padding: 10px;
+  .global-counts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
 
-  &.countContainerBorder { // If you want a border like ServiceNow
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
+  .fy-selector-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+
+    .fy-selector {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 8px;
+
+      mat-select {
+        font-size: 1rem;
+        color: #1a2b4f;
+      }
+    }
+  }
+
+  .no-data {
+    text-align: center;
+    color: #666;
+    font-size: 1rem;
     padding: 16px;
   }
-}
 
-.fy-selector-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-
-  .full-width {
-    width: 100%;
-    max-width: 400px; /* Or adjust as needed */
-  }
-}
-.loading-fy {
+  .loading-container {
     text-align: center;
-    padding: 10px;
+    padding: 16px;
+    color: #666;
+
+    mat-progress-bar {
+      margin-top: 8px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 16px;
+
+    h2 {
+      font-size: 1.25rem;
+    }
+
+    .global-counts-container {
+      grid-template-columns: 1fr;
+    }
+  }
 }
