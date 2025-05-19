@@ -1,0 +1,38 @@
+// src/styles/_buttons.scss
+
+@use './variables' as v;
+
+.right-aligned-container {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid v.$gray-border;
+  button {
+    padding: 6px 16px;
+    font-size: v.$font-size;
+    font-weight: 500;
+    border-radius: v.$radius;
+    line-height: 1.4;
+    transition: v.$transition;
+    &.mat-button {
+      color: v.$text-placeholder;
+      &:hover { background-color: v.$gray-light; color: v.$primary; }
+    }
+    &.mat-raised-button {
+      background-color: v.$primary;
+      color: white;
+      &:hover { background-color: v.$primary-dark; }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .right-aligned-container {
+    flex-direction: column;
+    gap: 8px;
+    button { width: 100%; }
+  }
+} 

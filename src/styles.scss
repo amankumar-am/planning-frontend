@@ -1,26 +1,30 @@
 // src/styles.scss
 
 /* You can add global styles to this file, and also import other style files */
+@use './app/styles/variables' as v;
+@use './app/styles/mixins' as m;
+@use './styles/index' as *;
+
 html,
 body {
   height: 100%;
 }
 body {
   margin: 0;
+  background-color: v.$gray-bg;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: #f5f7fa;
 }
 
 /* Form Grid Layout */
 .form-grid {
   background-color: white !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: v.$radius;
+  padding: v.$padding-base;
+  gap: v.$grid-gap;
+  margin: 16px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  padding: 24px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  margin: 16px;
 }
 
 /* Form Columns */
@@ -32,13 +36,13 @@ body {
 
 /* Form Fields */
 .compact-form-field {
-  margin-bottom: 4px;
+  margin-bottom: v.$padding-small;
   width: 100% !important;
 
   .mat-label {
-    font-size: 13px;
+    font-size: v.$label-size;
     font-weight: 500;
-    color: #2c3e50;
+    color: v.$text-label;
     margin-bottom: 4px;
     display: block;
     line-height: 1.2;
@@ -65,48 +69,43 @@ body {
 }
 
 .mat-mdc-form-field-flex {
-  padding: 0 8px !important;
-  height: 32px !important;
-  min-height: 32px !important;
-  background: none !important;
-  border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+  @include m.no-bg-border;
   width: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-
-  &:hover {
-    border-color: #cbd5e1 !important;
-    background-color: white !important;
-  }
-
-  &:focus-within {
-    border-color: #3b82f6 !important;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
-    background-color: white !important;
-  }
+  @include m.flex-center;
+  height: v.$field-height !important;
+  transition: v.$transition;
+  &:hover { border-color: v.$gray-border; }
+  &:focus-within { border-color: v.$primary; }
 }
 
 /* Override Material's default infix styles */
 ::ng-deep .mat-mdc-form-field-infix {
+  min-height: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  width: 100% !important;
+  flex: 1 1 100% !important;
+  display: flex !important;
+  align-items: center !important;
   border: none !important;
   box-shadow: none !important;
   background: transparent !important;
   outline: none !important;
-  padding: 0 !important;
-  min-height: 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
 }
 
 ::ng-deep .mat-mdc-form-field-infix input,
 ::ng-deep .mat-mdc-form-field-infix textarea {
-  border: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  outline: none !important;
-  padding: 0 2px !important;
+  @include m.input-reset;
+  font-size: v.$font-size !important;
+  color: v.$text-main !important;
+  height: v.$input-height !important;
+  min-height: v.$input-height !important;
+  width: 100% !important;
+  box-sizing: border-box;
+  flex: 1 !important;
+  display: block !important;
+  &::placeholder { color: v.$text-placeholder !important; }
+  &[readonly] { background: none !important; }
 }
 
 .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
@@ -197,29 +196,29 @@ input, textarea {
   gap: 8px;
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid v.$gray-border;
 
   button {
     padding: 6px 16px;
-    font-size: 13px;
+    font-size: v.$font-size;
     font-weight: 500;
-    border-radius: 6px;
+    border-radius: v.$radius;
     line-height: 1.4;
-    transition: all 0.2s ease;
+    transition: v.$transition;
 
     &.mat-button {
-      color: #64748b;
+      color: v.$text-placeholder;
       &:hover {
-        background-color: #f1f5f9;
-        color: #3b82f6;
+        background-color: v.$gray-light;
+        color: v.$primary;
       }
     }
 
     &.mat-raised-button {
-      background-color: #3b82f6;
+      background-color: v.$primary;
       color: white;
       &:hover {
-        background-color: #2563eb;
+        background-color: v.$primary-dark;
       }
     }
   }
@@ -252,23 +251,6 @@ input, textarea {
   }
 }
 
-/* Fix for Angular Material MDC infix width */
-::ng-deep .mat-mdc-form-field-flex {
-  width: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-::ng-deep .mat-mdc-form-field-infix {
-  flex: 1 1 100% !important;
-  width: 100% !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  padding: 0 !important;
-}
-
 /* Remove background for readonly fields */
 ::ng-deep .mat-mdc-form-field-infix input[readonly],
 ::ng-deep .mat-mdc-form-field-infix textarea[readonly] {
@@ -280,10 +262,7 @@ input, textarea {
 ::ng-deep app-reference-field .mat-mdc-form-field-infix,
 ::ng-deep app-reference-field input,
 ::ng-deep app-reference-field textarea {
-  background: none !important;
-  border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+  @include m.no-bg-border;
 }
 
 /* Force infix to have no vertical padding or min-height */

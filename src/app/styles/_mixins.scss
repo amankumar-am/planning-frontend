@@ -1,15 +1,15 @@
 // src/app/styles/_mixins.scss
 
-@use './variables' as *;
+@use './variables' as v;
 
 // Mixin for form field borders
 @mixin form-field-border {
-  border: $border-width solid $border-color;
-  border-radius: $border-radius;
-  transition: border-color $transition-base;
+  border: v.$border-width solid v.$gray-border;
+  border-radius: v.$radius;
+  transition: border-color v.$transition;
 
   &:focus-within {
-    border-color: $primary-color;
+    border-color: v.$primary;
   }
 }
 
@@ -29,4 +29,19 @@
     height: $infix-height !important;
     min-height: $infix-height !important;
   }
+}
+
+@mixin no-bg-border {
+  background: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+@mixin input-reset {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 2px !important;
 }

@@ -1,0 +1,24 @@
+// src/styles/_layout.scss
+
+@use './variables' as v;
+
+body {
+  background-color: v.$gray-bg;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+@media (max-width: 1200px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 16px;
+    margin: 8px;
+  }
+} 

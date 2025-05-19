@@ -1,0 +1,28 @@
+// src/styles/_form.scss
+
+@use './variables' as v;
+@use './mixins' as m;
+
+.form-grid {
+  background-color: white !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: v.$radius;
+  padding: v.$padding-base;
+  gap: v.$grid-gap;
+  margin: 16px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.compact-form-field {
+  margin-bottom: v.$padding-small;
+  width: 100% !important;
+  .mat-label {
+    font-size: v.$label-size;
+    font-weight: 500;
+    color: v.$text-label;
+    margin-bottom: 4px;
+    display: block;
+    line-height: 1.2;
+  }
+} 
