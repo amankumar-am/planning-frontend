@@ -1,19 +1,19 @@
 // src/app/components/dashboard/overall-data/overall-data.component.ts
 
 import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+
 import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.module';
 import { CountCardComponent } from '../count-card/count-card.component'; // Import CountCard
 import { Ps1UtilsService } from '../../../services/ps1/ps1-utils.service';
 import { CountData } from '../../../services/ps1/ps1.service';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { FinancialYearSelectorComponent } from '../financial-year-selector/financial-year-selector.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-overall-data',
   standalone: true,
-  imports: [CommonModule, FormsModule, ...MATERIAL_STANDALONE_IMPORTS, CountCardComponent],
+  imports: [CommonModule, ...MATERIAL_STANDALONE_IMPORTS, CountCardComponent, FormsModule],
   templateUrl: './overall-data.component.html',
   styleUrls: ['./overall-data.component.scss']
 })
@@ -23,6 +23,8 @@ export class OverallDataComponent implements OnInit, OnDestroy {
   globalCounts: CountData[] = [];
   financialYears: { label: string; value: string }[] = [];
   selectedFinancialYearId: string | null = null;
+  isPanelOpen: boolean = true;
+  lastUpdated: Date | null = null;
 
   isLoading$: Observable<boolean>;
   private destroy$ = new Subject<void>();
@@ -36,6 +38,7 @@ export class OverallDataComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(counts => {
         this.globalCounts = counts;
+        this.lastUpdated = new Date();
       });
 
     this.ps1UtilsService.availableFinancialYears$
@@ -55,6 +58,10 @@ export class OverallDataComponent implements OnInit, OnDestroy {
     if (this.selectedFinancialYearId) {
       this.financialYearSelected.emit(this.selectedFinancialYearId);
     }
+  }
+
+  togglePanel(): void {
+    this.isPanelOpen = !this.isPanelOpen;
   }
 
   ngOnDestroy(): void {

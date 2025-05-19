@@ -1,45 +1,65 @@
 <div class="overall-container">
-  <h2>Overall Ayojan Data</h2>
-  <div class="global-counts-container countContainerBorder">
-    <app-count-card
-      *ngFor="let count of globalCounts"
-      [countData]="count"
-    ></app-count-card>
-    <div *ngIf="globalCounts.length === 0 && !(isLoading$ | async)">
-      <!-- Changed here -->
-      No global data available.
+  <div class="side-panel" [class.collapsed]="!isPanelOpen">
+    <div class="panel-header">
+      <h2>Overall Data</h2>
+      <div class="last-updated" *ngIf="lastUpdated">
+        {{ lastUpdated | date : "short" }}
+      </div>
+    </div>
+
+    <div class="global-counts-container">
+      <app-count-card
+        *ngFor="let count of globalCounts"
+        [countData]="count"
+      ></app-count-card>
+      <div
+        *ngIf="globalCounts.length === 0 && !(isLoading$ | async)"
+        class="no-data"
+      >
+        No data available
+      </div>
+    </div>
+
+    <div class="panel-footer">
+      <div class="refresh-info">
+        <mat-icon class="refresh-icon">refresh</mat-icon>
+        <span>Auto-refresh</span>
+      </div>
     </div>
   </div>
 
-  <div class="fy-selector-container" *ngIf="(isLoading$ | async) === false">
-    <!-- Changed here -->
-    <mat-form-field
-      appearance="outline"
-      class="full-width"
-      *ngIf="financialYears.length > 0"
-    >
-      <mat-label>Select Financial Year</mat-label>
-      <mat-select
-        [(ngModel)]="selectedFinancialYearId"
-        (selectionChange)="onFinancialYearChange()"
+  <div class="content-wrapper" [class.expanded]="!isPanelOpen">
+    <div class="dashboard-header">
+      <div class="header-left">
+        <button mat-icon-button (click)="togglePanel()" class="toggle-btn">
+          <mat-icon>{{ isPanelOpen ? "menu_open" : "menu" }}</mat-icon>
+        </button>
+        <h1>Dashboard</h1>
+      </div>
+      <mat-form-field
+        appearance="outline"
+        class="fy-selector"
+        *ngIf="financialYears.length > 0"
       >
-        <mat-option *ngFor="let year of financialYears" [value]="year.value">
-          {{ year.label }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <div *ngIf="financialYears.length === 0 && !(isLoading$ | async)">
-      <!-- Changed here -->
-      No financial years available to select.
+        <mat-select
+          [(ngModel)]="selectedFinancialYearId"
+          (selectionChange)="onFinancialYearChange()"
+          placeholder="Select Financial Year"
+        >
+          <mat-option *ngFor="let year of financialYears" [value]="year.value">
+            {{ year.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="main-content">
+      <ng-content></ng-content>
     </div>
   </div>
+
   <div *ngIf="isLoading$ | async" class="loading-fy">
-    <!-- Changed here -->
-    Loading initial data...
-    <mat-progress-bar
-      mode="indeterminate"
-      *ngIf="isLoading$ | async"
-    ></mat-progress-bar>
-    <!-- Changed here -->
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>Loading data...</span>
   </div>
 </div>

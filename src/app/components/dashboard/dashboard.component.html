@@ -1,5 +1,8 @@
 <!-- <app-dashboard-header></app-dashboard-header> -->
-<app-overall-data
-  (financialYearSelected)="onFinancialYearSelectedFromOverall($event)"
-></app-overall-data>
-<app-tabs *ngIf="selectedFinancialYearId"></app-tabs>
+<div class="dashboard-container">
+  <app-overall-data
+    (financialYearSelected)="onFinancialYearSelectedFromOverall($event)"
+  >
+    <app-tabs *ngIf="selectedFinancialYearId"></app-tabs>
+  </app-overall-data>
+</div>

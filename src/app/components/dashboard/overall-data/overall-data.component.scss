@@ -1,44 +1,248 @@
 // src/app/components/dashboard/overall-data/overall-data.component.scss
 
 .overall-container {
+  position: relative;
+  height: 100%;
+  display: flex;
+  background-color: #f5f7fa;
+  overflow: hidden;
+  margin-top: 64px;
+}
+
+.side-panel {
+  width: 240px;
+  min-width: 240px;
+  background-color: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+  z-index: 10;
+  border-right: 1px solid #e0e4e8;
+  transition: all 0.3s ease;
+
+  &.collapsed {
+    width: 0;
+    min-width: 0;
+    overflow: hidden;
+  }
+}
+
+.panel-header {
   padding: 16px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  border-bottom: 1px solid #eef0f5;
+  background-color: #f8f9fa;
 
   h2 {
-    text-align: center;
-    margin-bottom: 16px;
-    color: #333;
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  .last-updated {
+    font-size: 0.7rem;
+    color: #666;
+    margin-top: 4px;
   }
 }
 
 .global-counts-container {
+  padding: 16px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: center;
-  margin-bottom: 20px;
-  padding: 10px;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  overflow-y: auto;
+  background-color: #ffffff;
 
-  &.countContainerBorder { // If you want a border like ServiceNow
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    padding: 16px;
-  }
-}
-
-.fy-selector-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-
-  .full-width {
+  app-count-card {
     width: 100%;
-    max-width: 400px; /* Or adjust as needed */
+    max-width: 216px;
+    margin: 0 auto;
   }
 }
+
+.panel-footer {
+  padding: 12px 16px;
+  border-top: 1px solid #eef0f5;
+  background-color: #f8f9fa;
+
+  .refresh-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #666;
+    font-size: 0.75rem;
+
+    .refresh-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+  }
+}
+
+.content-wrapper {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f7fa;
+  transition: margin-left 0.3s ease;
+  height: calc(100% - 64px);
+  overflow: hidden;
+
+  &.expanded {
+    margin-left: 0;
+  }
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  z-index: 4;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 48px;
+
+    .toggle-btn {
+      position: absolute;
+      left: 0;
+      color: #2c3e50;
+      background-color: transparent;
+      
+      &:hover {
+        background-color: #f5f7fa;
+      }
+
+      .mat-icon {
+        color: #2c3e50;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+      }
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: #2c3e50;
+      white-space: nowrap;
+    }
+  }
+
+  ::ng-deep {
+    .fy-selector {
+      .mat-form-field-wrapper {
+        margin: 0;
+        padding: 0;
+      }
+
+      .mat-form-field-flex {
+        padding: 0 0.75em 0 0.75em;
+      }
+
+      .mat-form-field-infix {
+        padding: 0.5em 0;
+        border-top: 0;
+      }
+
+      .mat-form-field-outline {
+        color: rgba(0, 0, 0, 0.12);
+      }
+
+      .mat-select-value {
+        color: #2c3e50;
+      }
+
+      .mat-form-field-underline {
+        display: none;
+      }
+    }
+  }
+}
+
+.main-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  height: calc(100vh - 136px);
+  background-color: #f5f7fa;
+  padding-right: 32px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+
+  ::ng-deep {
+    .mat-tab-group {
+      height: 100%;
+    }
+
+    .mat-tab-body-wrapper {
+      height: 100%;
+    }
+
+    .mat-tab-body {
+      height: 100%;
+    }
+
+    .mat-tab-body-content {
+      height: 100%;
+      overflow-y: auto;
+    }
+  }
+}
+
+.no-data {
+  text-align: center;
+  color: #666;
+  padding: 12px;
+  font-style: italic;
+  font-size: 0.8rem;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
 .loading-fy {
-    text-align: center;
-    padding: 10px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: #666;
+  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
