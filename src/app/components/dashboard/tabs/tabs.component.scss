@@ -1,7 +1,7 @@
 // src/app/components/dashboard/tabs/tabs.component.scss
 
 .content-container {
-  padding: 1rem;
+  padding: 24px;
 }
 
 .count-section {
@@ -17,10 +17,10 @@
 }
 
 .pending-section {
-  border: 2px dashing #888;
+  border: 2px dashed #888;
   padding: 1rem;
   position: relative;
-
+  
   .section-title {
     position: absolute;
     top: -1rem;
@@ -33,20 +33,69 @@
   }
 }
 
+// Charts tab specific styles
 .chart-section {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.chart-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-around;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
 
-  app-chart {
-    flex: 1 1 calc(50% - 1rem);
-    margin: 0.5rem;
+.chart-item {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  height: 350px;
+  width: 45%;
+}
+
+@media screen and (max-width: 900px) {
+  .chart-item {
+    width: 100%;
+    min-width: 0;
+    margin: 8px 0;
   }
 }
 
-@media (max-width: 768px) {
-  .count-section app-count-card,
-  .chart-section app-chart {
-    flex: 1 1 100%;
+// Responsive adjustments for charts only
+@media screen and (max-width: 1200px) {
+  :host ::ng-deep .mat-tab-body-content {
+    .chart-section {
+      .chart-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        padding: 0 8px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  :host ::ng-deep .mat-tab-body-content {
+    .chart-section {
+      .chart-grid {
+        grid-template-columns: 1fr;
+        max-width: 600px;
+      }
+    }
+  }
+  
+  .content-container {
+    padding: 16px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .chart-item {
+    width: 100%;
+    min-width: 0;
+    margin: 8px 0;
   }
 }

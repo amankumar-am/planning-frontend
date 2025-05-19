@@ -72,11 +72,11 @@ export class Ps1UtilsService {
 
     // Fetch dashboard data for a specific financial year
     async fetchPs1DashboardData(financialYearId: string): Promise<void> {
-        const currentAvailableFys = this.availableFinancialYearsSubject.getValue(); // Get current value
+        const currentAvailableFys = this.availableFinancialYearsSubject.getValue();
 
         if (!financialYearId) {
             console.warn('Financial year ID is required to fetch dashboard data.');
-            this.dataSubject.next(this.getEmptyDashboardData(currentAvailableFys)); // Pass current FYs
+            this.dataSubject.next(this.getEmptyDashboardData(currentAvailableFys));
             return;
         }
 
@@ -84,8 +84,11 @@ export class Ps1UtilsService {
 
         try {
             const countRequests = [
-                this.ps1Service.getDashboardUniqueCount(financialYearId, 'taluka', 'Total Talukas Active (FY)'),
-                this.ps1Service.getDashboardUniqueCount(financialYearId, 'sector', 'Total Sectors Involved (FY)')
+                this.ps1Service.getDashboardUniqueCount(financialYearId, 'total_count', 'Total Records'),
+                this.ps1Service.getDashboardUniqueCount(financialYearId, 'taluka', 'Total Talukas Benefitted'),
+                this.ps1Service.getDashboardUniqueCount(financialYearId, 'sector', 'Total Sectors Addressed'),
+                this.ps1Service.getDashboardUniqueCount(financialYearId, 'fund', 'Type of Funds Utilized'),
+                this.ps1Service.getDashboardStageWiseCount(financialYearId, 12, 'Works Completed'),
             ];
 
             const chartRequests = [
@@ -93,12 +96,32 @@ export class Ps1UtilsService {
                 this.ps1Service.getDashboardChartData(financialYearId, 'stage', 'Stage Wise Distribution (FY)', 'Stages')
             ];
 
-            const [countResponses, chartResponses] = await Promise.all([
+            const pendingRequests = [
+                this.ps1Service.getDashboardStageWiseCount(financialYearId, 1, 'Draft Demands'),
+                this.ps1Service.getDashboardStageWiseCount(financialYearId, 2, 'Primary Sanction'),
+                this.ps1Service.getDashboardStageWiseCount(financialYearId, 3, 'Technical Sanction'),
+                this.ps1Service.getDashboardStageWiseCount(financialYearId, 4, 'Administrative Sanction'),
+                this.ps1Service.getDashboardStageWiseCount(financialYearId, 5, 'Grant'),
+                this.ps1Service.getDashboardStageWiseCount(financialYearId, 6, 'Work Order'),
+                this.ps1Service.getDashboardStageWiseCount(financialYearId, 7, 'Inspection'),
+                this.ps1Service.getDashboardStageWiseCount(financialYearId, 10, 'Final Payment'),
+                this.ps1Service.getDashboardStageWiseCount(financialYearId, 11, 'UTC'),
+            ]
+
+            const [countResponses, chartResponses, pendingResponses] = await Promise.all([
                 firstValueFrom(forkJoin(countRequests).pipe(catchError(err => of([] as any[])))),
-                firstValueFrom(forkJoin(chartRequests).pipe(catchError(err => of([] as any[]))))
+                firstValueFrom(forkJoin(chartRequests).pipe(catchError(err => of([] as any[])))),
+                firstValueFrom(forkJoin(pendingRequests).pipe(catchError(err => of([] as any[])))),
             ]);
 
             const processedCountData: CountData[] = (countResponses as any[])
+                .filter(res => res && res.uniqueCount !== undefined)
+                .map(res => ({
+                    title: res.title,
+                    uniqueCount: res.uniqueCount,
+                }));
+
+            const processedPendingData: CountData[] = (pendingResponses as any[])
                 .filter(res => res && res.uniqueCount !== undefined)
                 .map(res => ({
                     title: res.title,
@@ -121,6 +144,7 @@ export class Ps1UtilsService {
                 globalCountDataArray: [], // No longer part of this specific data emission
                 countDataArray: processedCountData,
                 chartDataArray: processedChartData,
+                pendingDataArray: processedPendingData,
                 geoJSON: null,
                 locations: [],
                 financialYears: currentAvailableFys // Use the dynamically fetched & current list
@@ -140,6 +164,7 @@ export class Ps1UtilsService {
             globalCountDataArray: [],
             countDataArray: [],
             chartDataArray: [],
+            pendingDataArray: [],
             geoJSON: null,
             locations: [],
             financialYears: financialYears
@@ -152,6 +177,8 @@ export class Ps1UtilsService {
         this.loadingSubject.next(true);
         try {
             const response = await firstValueFrom(this.ps1Service.getAllPs1s());
+            console.log(response);
+
             return {
                 data: response?.data || [],
                 schema: response?.schema || [], // Assuming your ReferenceDataResponse has schema

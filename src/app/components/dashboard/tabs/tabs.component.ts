@@ -33,16 +33,28 @@ export class TabsComponent implements OnInit, OnDestroy {
     this.ps1UtilsService.data$
       .pipe(takeUntil(this.destroy$)) // Automatically unsubscribe
       .subscribe((data: DashboardData) => { // Use DashboardData type for the emitted value
+        console.log('Received dashboard data:', {
+          countDataLength: data?.countDataArray?.length,
+          pendingDataLength: data?.pendingDataArray?.length,
+          chartDataLength: data?.chartDataArray?.length,
+          chartTitles: data?.chartDataArray?.map(chart => chart.title)
+        });
+
         if (data && data.countDataArray) {
-          this.contentCounts = data.countDataArray.filter(c => c.title && !c.title.toLowerCase().includes('pending'));
-          this.pendingCounts = data.countDataArray.filter(c => c.title && c.title.toLowerCase().includes('pending'));
+          this.contentCounts = data.countDataArray
         } else {
           this.contentCounts = [];
+        }
+
+        if (data && data.pendingDataArray) {
+          this.pendingCounts = data.pendingDataArray;
+        } else {
           this.pendingCounts = [];
         }
 
         if (data && data.chartDataArray) {
           this.charts = data.chartDataArray;
+          console.log('Charts array updated:', this.charts.map(chart => chart.title));
         } else {
           this.charts = [];
         }

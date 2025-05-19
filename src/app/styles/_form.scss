@@ -135,6 +135,10 @@ mat-form-field {
     padding: 0 !important;
     margin: 0 !important;
     @include flex-center;
+    position: absolute !important;
+    right: 0 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
 
     .mat-icon {
       font-size: 16px !important;

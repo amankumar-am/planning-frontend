@@ -36,6 +36,7 @@ export interface DashboardData {
   globalCountDataArray: CountData[];
   countDataArray: CountData[];
   chartDataArray: ChartData[];
+  pendingDataArray: CountData[];
   geoJSON: any;
   locations: MapData['locations'];
   financialYears: { label: string; value: string }[]; // Assuming this comes from somewhere else or is static
@@ -96,7 +97,7 @@ export class Ps1Service {
    */
   getDashboardUniqueCount(
     fyId: number | string,
-    columnName: 'fund' | 'taluka' | 'sector' | 'stage',
+    columnName: 'fund' | 'taluka' | 'sector' | 'stage' | 'total_count',
     title?: string
   ): Observable<ApiUniqueCountResponse> {
     let params = new HttpParams();
@@ -105,6 +106,21 @@ export class Ps1Service {
     }
     return this.http.get<ApiUniqueCountResponse>(
       `${this.apiUrl}/dashboard/count/${fyId}/${columnName}`,
+      { params }
+    ).pipe(catchError(this.handleError));
+  }
+
+  getDashboardStageWiseCount(
+    fyId: number | string,
+    stageId: number | string,
+    title?: string
+  ): Observable<ApiUniqueCountResponse> {
+    let params = new HttpParams();
+    if (title) {
+      params = params.set('title', title);
+    }
+    return this.http.get<ApiUniqueCountResponse>(
+      `${this.apiUrl}/dashboard/count/${fyId}/stage/${stageId}`,
       { params }
     ).pipe(catchError(this.handleError));
   }
