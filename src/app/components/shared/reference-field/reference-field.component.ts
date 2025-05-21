@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.module';
 import { ReferenceFieldModalComponent } from './reference-field-modal/reference-field-modal.component';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule, Validator, NG_VALIDATORS, ValidationErrors, AbstractControl, FormGroup } from '@angular/forms';
 import { HasName } from '../../../services/generic.model';
 
 @Component({
@@ -15,24 +15,36 @@ import { HasName } from '../../../services/generic.model';
   templateUrl: './reference-field.component.html',
   styleUrls: ['./reference-field.component.scss'],
   imports: [CommonModule, FormsModule, ...MATERIAL_STANDALONE_IMPORTS],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => ReferenceFieldComponent),
-    multi: true
-  }],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => ReferenceFieldComponent),
+      multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => ReferenceFieldComponent),
+      multi: true
+    }
+  ],
 })
-export class ReferenceFieldComponent<T extends HasName> implements OnInit, ControlValueAccessor {
+export class ReferenceFieldComponent<T extends HasName> implements OnInit, ControlValueAccessor, Validator {
   @Input() fetchData?: () => Promise<{ data: T[]; schema: { field: keyof T; label: string }[], defaultVisibleColumns: string[] }>;
   @Input() labelField: string = '';
   @Input() schema: { field: keyof T; label: string }[] = [];
   @Input() selectedItem: T | null = null;
   @Input() defaultVisibleColumns: string[] = [];
   @Input() field: any; // Add the field input (you can refine the type based on your FormConfig interface)
+  @Input() required: boolean = false;
+  @Input() formControlName: string = '';
+  @Input() formGroup: FormGroup | null = null;
 
   @Output() selectedItemChange = new EventEmitter<T | null>();
 
   data: T[] = [];
   isDataLoaded: boolean = false;
+  isRequired: boolean = false;
+  control: AbstractControl | null = null;
 
   constructor(
     private dialog: MatDialog,
@@ -42,6 +54,13 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
   ngOnInit(): void {
     if (!this.fetchData) {
       console.error(`fetchData function is not provided for ${this.labelField}`);
+    }
+    // Set required state based on field configuration
+    this.isRequired = this.field?.required ?? this.required;
+
+    // Get the form control if formGroup and formControlName are provided
+    if (this.formGroup && this.formControlName) {
+      this.control = this.formGroup.get(this.formControlName);
     }
   }
 
@@ -88,7 +107,7 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
   private openDialog(): void {
     const dialogRef = this.dialog.open(ReferenceFieldModalComponent, {
       width: '95vw',
-      height: '90vh',
+      height: '98vh',
       maxWidth: '100vw',
       panelClass: 'custom-modal-panel',
       data: {
@@ -141,5 +160,13 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
 
   setDisabledState?(isDisabled: boolean): void {
     // Handle disabled state if needed
+  }
+
+  // Validator methods
+  validate(control: AbstractControl): ValidationErrors | null {
+    if (this.isRequired && !this.selectedItem) {
+      return { required: true };
+    }
+    return null;
   }
 }

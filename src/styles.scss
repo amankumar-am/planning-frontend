@@ -1,8 +1,8 @@
 // src/styles.scss
 
 /* You can add global styles to this file, and also import other style files */
-@use './app/styles/variables' as v;
-@use './app/styles/mixins' as m;
+@use './styles/variables' as v;
+@use './styles/mixins' as m;
 @use './styles/index' as *;
 
 html,
@@ -71,7 +71,8 @@ body {
 .mat-mdc-form-field-flex {
   @include m.no-bg-border;
   width: 100% !important;
-  @include m.flex-center;
+  display: flex !important;
+  align-items: center !important;
   height: v.$field-height !important;
   transition: v.$transition;
   &:hover { border-color: v.$gray-border; }
@@ -107,12 +108,30 @@ body {
   &::placeholder { color: v.$text-placeholder !important; }
   &[readonly] { background: none !important; }
 }
+  
+/* Floating Label Styles */
+::ng-deep .mat-mdc-form-field {
+  .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    font-size: 13px !important;
+    color: #64748b !important;
+  }
 
-.mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  font-size: 13px !important;
-  color: #64748b !important;
+  &.mat-mdc-form-field-has-value .mat-mdc-floating-label,
+  &.mat-mdc-form-field-focused .mat-mdc-floating-label {
+    transform: translateY(-106%) scale(0.75) !important;
+    opacity: 0 !important;
+  }
+
+  .mat-mdc-form-field-has-value .mat-mdc-floating-label {
+    transform: translateY(-106%) scale(0.75) !important;
+    opacity: 0 !important;
+  }
+
+  input::placeholder {
+    opacity: 0 !important;
+  }
 }
 
 /* Input Styles */
@@ -153,6 +172,11 @@ input, textarea {
   justify-content: center !important;
   color: #64748b !important;
   transition: color 0.2s ease !important;
+  height: 24px !important;
+  width: 24px !important;
+  min-height: 24px !important;
+  min-width: 24px !important;
+  line-height: 24px !important;
 
   &:hover {
     color: #3b82f6 !important;
@@ -164,6 +188,11 @@ input, textarea {
   align-items: center !important;
   justify-content: center !important;
   height: 24px !important;
+  width: 24px !important;
+  min-height: 24px !important;
+  min-width: 24px !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .mat-datepicker-toggle .mat-icon {
@@ -171,6 +200,8 @@ input, textarea {
   width: 16px !important;
   height: 16px !important;
   line-height: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* Error Messages */
@@ -275,4 +306,27 @@ input, textarea {
 ::ng-deep .mdc-text-field--no-label .mat-mdc-form-field-infix {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+}
+
+/* Compact Angular Material Table in Dialogs */
+.cdk-overlay-container .mat-mdc-table {
+  --mat-table-row-item-height: 24px !important;
+  --mat-table-header-row-item-height: 24px !important;
+  --mat-table-cell-padding: 0 4px !important;
+  font-size: 12px !important;
+}
+
+.cdk-overlay-container .mat-mdc-header-cell,
+.cdk-overlay-container .mat-mdc-cell {
+  font-size: 12px !important;
+  padding: 0 4px !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  line-height: 24px !important;
+}
+
+.cdk-overlay-container .mat-mdc-row,
+.cdk-overlay-container .mat-mdc-header-row {
+  height: 24px !important;
+  min-height: 24px !important;
 }

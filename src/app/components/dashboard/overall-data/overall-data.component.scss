@@ -102,75 +102,26 @@
 
 .dashboard-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 16px 24px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  z-index: 4;
+  align-items: center;
+  padding: 1rem;
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0;
 
   .header-left {
     display: flex;
     align-items: center;
-    position: relative;
-    padding-left: 48px;
-
-    .toggle-btn {
-      position: absolute;
-      left: 0;
-      color: #2c3e50;
-      background-color: transparent;
-      
-      &:hover {
-        background-color: #f5f7fa;
-      }
-
-      .mat-icon {
-        color: #2c3e50;
-        font-size: 24px;
-        width: 24px;
-        height: 24px;
-        line-height: 24px;
-      }
-    }
+    gap: 1rem;
 
     h1 {
       margin: 0;
-      font-size: 1.8rem;
-      font-weight: 500;
-      color: #2c3e50;
-      white-space: nowrap;
+      font-size: 1.5rem;
     }
   }
 
-  ::ng-deep {
-    .fy-selector {
-      .mat-form-field-wrapper {
-        margin: 0;
-        padding: 0;
-      }
-
-      .mat-form-field-flex {
-        padding: 0 0.75em 0 0.75em;
-      }
-
-      .mat-form-field-infix {
-        padding: 0.5em 0;
-        border-top: 0;
-      }
-
-      .mat-form-field-outline {
-        color: rgba(0, 0, 0, 0.12);
-      }
-
-      .mat-select-value {
-        color: #2c3e50;
-      }
-
-      .mat-form-field-underline {
-        display: none;
-      }
-    }
+  .fy-selector {
+    width: 200px !important;
+    margin-left: auto;
   }
 }
 

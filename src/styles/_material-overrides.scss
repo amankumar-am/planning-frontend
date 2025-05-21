@@ -3,65 +3,117 @@
 @use './variables' as v;
 @use './mixins' as m;
 
+// Form field base styles
+%form-field-base {
+  width: 100% !important;
+  display: flex !important;
+}
+
+// Form field container
 .mat-mdc-form-field-flex {
   @include m.no-bg-border;
-  width: 100% !important;
-  @include m.flex-center;
+  @extend %form-field-base;
   height: v.$field-height !important;
   transition: v.$transition;
   &:hover { border-color: v.$gray-border; }
   &:focus-within { border-color: v.$primary; }
 }
 
-::ng-deep .mat-mdc-form-field-infix {
+// Form field infix
+::ng-deep {
+  // Override Material's form field styles
+  .mdc-text-field--outlined,
+  .mdc-text-field--filled {
+    .mat-mdc-form-field-flex {
+      display: flex !important;
+      text-align: left !important;
+      align-items: stretch !important;
+    }
+  }
+
+  // Datepicker specific overrides
+  .mat-mdc-form-field-type-mat-datepicker {
+    .mat-mdc-form-field-flex {
+      align-items: center !important;
+      text-align: left !important;
+      position: relative !important;
+    }
+    
+    .mat-mdc-form-field-infix {
+      padding: 0 !important;
+      min-height: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+    }
+
+    .mat-mdc-form-field-icon-suffix {
+      position: absolute !important;
+      right: 0 !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    input.mat-mdc-input-element {
+      padding-right: 32px !important; // Space for the calendar icon
+      height: v.$input-height !important;
+      line-height: v.$input-height !important;
+    }
+  }
+
+  // Input and textarea styles
+  .mat-mdc-form-field-infix {
+    input,
+    textarea {
+      @include m.input-reset;
+      font-size: v.$font-size !important;
+      color: v.$text-main !important;
+      height: v.$input-height !important;
+      min-height: v.$input-height !important;
+      width: 100% !important;
+      box-sizing: border-box;
+      flex: 1 !important;
+      display: block !important;
+      
+      &::placeholder { color: v.$text-placeholder !important; }
+      &[readonly] { background: none !important; }
+    }
+  }
+
+  // Outlined and no-label variants
+  .mdc-text-field--outlined .mat-mdc-form-field-infix,
+  .mdc-text-field--no-label .mat-mdc-form-field-infix {
+    padding: 0 !important;
+  }
+
+  // Reference field specific styles
+  app-reference-field {
+    .mat-mdc-form-field-flex,
+    .mat-mdc-form-field-infix,
+    input,
+    textarea {
+      @include m.no-bg-border;
+    }
+  }
+}
+
+/*
+.mat-mdc-form-field-infix {
   min-height: 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  width: 100% !important;
+  padding: 0 !important;
+  @extend %form-field-base;
   flex: 1 1 100% !important;
-  display: flex !important;
-  align-items: center !important;
   border: none !important;
   box-shadow: none !important;
   background: transparent !important;
   outline: none !important;
 }
 
-::ng-deep .mat-mdc-form-field-infix input,
-::ng-deep .mat-mdc-form-field-infix textarea {
-  @include m.input-reset;
-  font-size: v.$font-size !important;
-  color: v.$text-main !important;
-  height: v.$input-height !important;
-  min-height: v.$input-height !important;
-  width: 100% !important;
-  box-sizing: border-box;
-  flex: 1 !important;
-  display: block !important;
-  &::placeholder { color: v.$text-placeholder !important; }
-  &[readonly] { background: none !important; }
+.mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: 13px !important;
+  color: #64748b !important;
 }
-
-::ng-deep .mat-mdc-form-field-infix input[readonly],
-::ng-deep .mat-mdc-form-field-infix textarea[readonly] {
-  background: none !important;
-}
-
-::ng-deep .mat-mdc-form-field-flex {
-  width: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-::ng-deep .mdc-text-field--outlined .mat-mdc-form-field-infix,
-::ng-deep .mdc-text-field--no-label .mat-mdc-form-field-infix {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-::ng-deep app-reference-field .mat-mdc-form-field-flex,
-::ng-deep app-reference-field .mat-mdc-form-field-infix,
-::ng-deep app-reference-field input,
-::ng-deep app-reference-field textarea {
-  @include m.no-bg-border;
-} 
+*/ 

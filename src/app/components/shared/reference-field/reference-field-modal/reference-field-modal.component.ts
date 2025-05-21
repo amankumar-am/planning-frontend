@@ -77,6 +77,12 @@ export class ReferenceFieldModalComponent<T extends object> implements AfterView
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+    // Set default page size
+    if (this.paginator) {
+      this.paginator.pageSize = 15;
+      this.paginator.pageSizeOptions = [15, 30, 50, 100];
+    }
   }
 
   applyFilter(): void {

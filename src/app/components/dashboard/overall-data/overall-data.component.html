@@ -32,7 +32,7 @@
     <div class="dashboard-header">
       <div class="header-left">
         <button mat-icon-button (click)="togglePanel()" class="toggle-btn">
-          <mat-icon>{{ isPanelOpen ? "menu_open" : "menu" }}</mat-icon>
+          <mat-icon>{{ isPanelOpen ? "chevron_left" : "menu" }}</mat-icon>
         </button>
         <h1>Dashboard</h1>
       </div>
@@ -41,10 +41,10 @@
         class="fy-selector"
         *ngIf="financialYears.length > 0"
       >
+        <mat-label>Select Financial Year</mat-label>
         <mat-select
           [(ngModel)]="selectedFinancialYearId"
           (selectionChange)="onFinancialYearChange()"
-          placeholder="Select Financial Year"
         >
           <mat-option *ngFor="let year of financialYears" [value]="year.value">
             {{ year.label }}

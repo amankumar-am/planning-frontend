@@ -1,6 +1,8 @@
+// src/app/components/shared/reference-field/reference-field-modal/reference-field-modal.component.scss
+
 /* --- Dialog Header --- */
 .dialog-header {
-  padding: 8px 12px;
+  padding: 4px 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -9,29 +11,43 @@
 
 .dialog-header h2 {
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 /* --- Dialog Content --- */
 mat-dialog-content {
-  padding: 12px;
+  padding: 4px 8px;
   overflow: auto;
   flex: 1 1 auto;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 24px;
+  height: 100%;
 }
 
 /* --- Form Row Layout --- */
 .form-row.spaced-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 50px;
   width: 100%;
+  justify-content: space-between;
+  margin-top: 10px;
+  margin-bottom: -20px;
+}
+
+.form-row.spaced-row button[mat-stroked-button] {
+  margin-bottom: 0;
+  margin-top: -12px;
 }
 
 /* --- Search Field --- */
 .search-field {
-  width: 40%;
-  min-width: 160px;
+  width: 30% !important;
+  min-width: 80px;
+  margin: 2px 0 0 0;
+  display: block;
 }
+
 .search-field mat-form-field {
   width: 100%;
 }
@@ -40,58 +56,59 @@ mat-dialog-content {
 .table-wrapper {
   flex: 1;
   overflow: auto;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
-mat-header-cell {
-  font-weight: 500;
-  background: #f0f0f0;
-  padding: 4px;
-}
-
-mat-cell {
-  padding: 4px;
-}
-
-mat-row {
-  min-height: 36px;
-}
-
-mat-row:hover {
-  background-color: #f5f5f5;
-  cursor: pointer;
-}
-
-.radio-cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%; /* Ensures vertical centering */
-  padding: 10px !important; /* Optional: remove extra space if needed */
+::ng-deep {
+  .mat-mdc-table {
+    --mat-table-row-item-height: 16px !important;
+    --mat-table-header-row-item-height: 16px !important;
+    --mat-table-cell-padding: 0 1px !important;
+    font-size: 9px !important;
+  }
+  .mat-mdc-header-cell,
+  .mat-mdc-cell {
+    font-size: 9px !important;
+    padding: 0 1px !important;
+    height: 16px !important;
+    min-height: 16px !important;
+    line-height: 16px !important;
+  }
+  .mat-mdc-row,
+  .mat-mdc-header-row {
+    height: 16px !important;
+    min-height: 16px !important;
+  }
 }
 
 /* --- Dialog Footer --- */
 mat-dialog-actions {
-  padding: 8px 12px;
-  margin: 0;
+  position: absolute;
+  padding: 2px 4px !important;
   border-top: 1px solid #e0e0e0;
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 4px;
   background: white;
   flex-shrink: 0;
+  min-height: 24px;
+  z-index: 10;
 }
 
 mat-dialog-actions button {
-  font-size: 13px;
-  min-height: 30px;
-  padding: 2px 12px;
+  font-size: 9px !important;
+  min-height: 14px !important;
+  padding: 0 4px !important;
+}
+
+:host ::ng-deep .cdk-overlay-pane .mat-dialog-container {
+  padding-bottom: 32px !important;
 }
 
 /* --- Column Menu --- */
 .column-select-menu {
-  min-width: 300px;
-  max-height: 500px;
+  min-width: 250px;
+  max-height: 400px;
 }
 
 .column-select-menu .mat-menu-content {
@@ -101,21 +118,21 @@ mat-dialog-actions button {
 .column-select-menu .menu-container {
   display: flex;
   flex-direction: column;
-  padding: 8px;
+  padding: 4px;
 }
 
 .column-select-menu .menu-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
-  padding: 8px;
+  gap: 4px;
+  padding: 4px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .column-select-menu .menu-actions button.mat-flat-button {
-  font-size: 12px;
-  line-height: 28px;
-  padding: 0 12px;
+  font-size: 11px;
+  line-height: 24px;
+  padding: 0 8px;
   color: #6200ee;
   background-color: transparent;
 }
@@ -126,10 +143,10 @@ mat-dialog-actions button {
 
 .column-select-menu .checkbox-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Two columns */
-  gap: 8px 16px; /* Row and column gap */
-  padding: 8px 16px;
-  max-height: 400px;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 8px;
+  padding: 4px 8px;
+  max-height: 300px;
   overflow-y: auto;
 }
 
@@ -149,4 +166,115 @@ mat-dialog-actions button {
 /* --- Buttons --- */
 button[mat-stroked-button] {
   white-space: nowrap;
+}
+
+.mat-mdc-dialog-content {
+  max-height: 80vh;
+}
+
+.paginator-container {
+  margin-top: 4px;
+  
+  ::ng-deep {
+    .compact-paginator {
+      .mat-mdc-paginator-container {
+        min-height: 24px !important;
+        padding: 0 8px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        height: 24px !important;
+      }
+
+      .mat-mdc-paginator-page-size {
+        margin: 0 4px !important;
+        display: flex !important;
+        align-items: center !important;
+        height: 24px !important;
+        min-height: 24px !important;
+      }
+
+      .mat-mdc-paginator-page-size-label {
+        font-size: 9px !important;
+        margin: 0 2px !important;
+        line-height: 24px !important;
+        height: 24px !important;
+        display: flex !important;
+        align-items: center !important;
+      }
+
+      .mat-mdc-paginator-page-size-select {
+        width: 40px !important;
+        margin: 0 2px !important;
+        height: 24px !important;
+        min-height: 24px !important;
+        
+        .mat-mdc-select-value {
+          font-size: 9px !important;
+          line-height: 24px !important;
+          height: 24px !important;
+          display: flex !important;
+          align-items: center !important;
+        }
+
+        .mat-mdc-select-trigger {
+          height: 24px !important;
+          min-height: 24px !important;
+          display: flex !important;
+          align-items: center !important;
+        }
+      }
+
+      .mat-mdc-paginator-range-label {
+        font-size: 9px !important;
+        margin: 0 4px !important;
+        line-height: 24px !important;
+        height: 24px !important;
+        display: flex !important;
+        align-items: center !important;
+      }
+
+      .mat-mdc-paginator-navigation-previous,
+      .mat-mdc-paginator-navigation-next,
+      .mat-mdc-paginator-navigation-first,
+      .mat-mdc-paginator-navigation-last {
+        width: 20px !important;
+        height: 20px !important;
+        min-height: 20px !important;
+        line-height: 20px !important;
+        margin: 0 2px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        
+        .mat-mdc-paginator-icon {
+          width: 14px !important;
+          height: 14px !important;
+          line-height: 14px !important;
+        }
+      }
+
+      .mat-mdc-select-arrow {
+        width: 12px !important;
+        height: 12px !important;
+        line-height: 12px !important;
+      }
+
+      .mat-mdc-select-panel {
+        .mat-mdc-option {
+          font-size: 9px !important;
+          height: 24px !important;
+          min-height: 24px !important;
+          line-height: 24px !important;
+          display: flex !important;
+          align-items: center !important;
+        }
+      }
+
+      .mat-mdc-select-value-text {
+        font-size: 9px !important;
+        line-height: 24px !important;
+      }
+    }
+  }
 }

@@ -28,7 +28,6 @@ import { ReferenceFieldComponent } from '../../shared/reference-field/reference-
     CommonModule,
     ...MATERIAL_STANDALONE_IMPORTS,
     ReferenceFieldModule,
-    ValidationMessageDirective,
     ReferenceFieldComponent,
   ],
 })
@@ -40,6 +39,8 @@ export class GenericFormComponent implements OnInit {
 
   columns: any[] = [];
   datePickers: { [key: string]: any } = {};
+  currentField: any = null;
+
   constructor(
     public fyUtils: FinancialYearUtilsService,
     public bgUtils: BeneficiaryGroupUtilsService,
@@ -91,6 +92,7 @@ export class GenericFormComponent implements OnInit {
     }
     return control as FormControl;
   }
+
   shouldShowField(field: any): boolean {
     if (!field.conditional || !this.formGroup) return true;
 
@@ -101,6 +103,13 @@ export class GenericFormComponent implements OnInit {
     const normalizedExpectedValue = expectedValue === 'true' ? true :
       expectedValue === 'false' ? false :
         expectedValue;
+
+    // Handle boolean values properly
+    if (typeof control.value === 'boolean') {
+      return control.value === normalizedExpectedValue;
+    }
+
+    // Handle string values
     const normalizedControlValue = typeof control.value === 'string'
       ? control.value.toLowerCase()
       : control.value;
@@ -152,22 +161,16 @@ export class GenericFormComponent implements OnInit {
     if (this.stepIndex !== 0) return;
 
     const trustControl = this.formGroup.get('demand_isTrust');
-    trustControl?.valueChanges.subscribe((isTrust: boolean) => {
-      const trustFields = [
-        'demand_trustName',
-        'demand_trustAddress',
-        'demand_trustRegistrationNumber',
-        'demand_trustRegistrationDate',
-      ];
-      trustFields.forEach((field) => {
-        const control = this.formGroup.get(field);
-        if (control) {
-          control.setValidators(isTrust ? [Validators.required] : null);
-          control.updateValueAndValidity();
-        }
+    if (trustControl) {
+      // Initial setup
+      this.updateTrustFieldsValidation(trustControl.value);
+
+      // Subscribe to changes
+      trustControl.valueChanges.subscribe((isTrust: boolean) => {
+        this.updateTrustFieldsValidation(isTrust);
+        this.cdr.detectChanges();
       });
-      this.cdr.detectChanges();
-    });
+    }
 
     const areaTypeControl = this.formGroup.get('demand_beneficiaryAreaType');
     areaTypeControl?.valueChanges.subscribe((areaType: string) => {
@@ -186,6 +189,30 @@ export class GenericFormComponent implements OnInit {
       villageControl?.updateValueAndValidity();
       nagarpalikaControl?.updateValueAndValidity();
       this.cdr.detectChanges();
+    });
+  }
+
+  private updateTrustFieldsValidation(isTrust: boolean) {
+    const trustFields = [
+      'demand_trustName',
+      'demand_trustAddress',
+      'demand_trustRegistrationNumber',
+      'demand_trustRegistrationDate',
+    ];
+
+    trustFields.forEach((field) => {
+      const control = this.formGroup.get(field);
+      if (control) {
+        if (isTrust) {
+          control.setValidators([Validators.required]);
+          control.enable();
+        } else {
+          control.clearValidators();
+          control.disable();
+          control.setValue(null);
+        }
+        control.updateValueAndValidity({ emitEvent: false });
+      }
     });
   }
 
@@ -218,5 +245,22 @@ export class GenericFormComponent implements OnInit {
       }
       this.cdr.detectChanges();
     });
+  }
+
+  getControl(fieldName: string): FormControl | null {
+    return this.formGroup.get(fieldName) as FormControl;
+  }
+
+  getFieldLabel(fieldName: string): string {
+    const field = this.findFieldByName(fieldName);
+    return field?.label || fieldName;
+  }
+
+  private findFieldByName(fieldName: string): any {
+    for (const column of this.columns) {
+      const field = column.fields.find((f: any) => f.name === fieldName);
+      if (field) return field;
+    }
+    return null;
   }
 }

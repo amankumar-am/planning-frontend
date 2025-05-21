@@ -5,34 +5,56 @@
         <label class="mat-label" [for]="field.name">{{ field.label }}</label>
         <ng-container [ngSwitch]="field.type">
           <!-- Checkbox and Radio outside mat-form-field -->
-          <mat-checkbox
-            *ngSwitchCase="'checkbox'"
-            [formControlName]="field.name"
-            [id]="field.name"
-            >{{ field.label }}</mat-checkbox
-          >
-          <mat-radio-group
-            *ngSwitchCase="'radio'"
-            [formControlName]="field.name"
-            [id]="field.name"
-            class="horizontal-radio"
-          >
-            <mat-radio-button
-              *ngFor="let option of field.options"
-              [value]="option.value ?? option"
-              >{{ option.label ?? option }}</mat-radio-button
+          <div class="checkbox-container" *ngSwitchCase="'checkbox'">
+            <mat-checkbox [formControlName]="field.name" [id]="field.name">{{
+              field.label
+            }}</mat-checkbox>
+            <mat-error
+              *ngIf="getControl(field.name)?.errors?.['required'] && getControl(field.name)?.touched"
             >
-          </mat-radio-group>
-          <!-- Reference field without external mat-error -->
-          <app-reference-field
+              {{ getFieldLabel(field.name) }} is required
+            </mat-error>
+          </div>
+          <div class="radio-container" *ngSwitchCase="'radio'">
+            <mat-radio-group
+              [formControlName]="field.name"
+              [id]="field.name"
+              class="horizontal-radio"
+            >
+              <mat-radio-button
+                *ngFor="let option of field.options"
+                [value]="option.value ?? option"
+                >{{ option.label ?? option }}</mat-radio-button
+              >
+            </mat-radio-group>
+            <mat-error
+              *ngIf="getControl(field.name)?.errors?.['required'] && getControl(field.name)?.touched"
+            >
+              {{ getFieldLabel(field.name) }} is required
+            </mat-error>
+          </div>
+          <!-- Reference field -->
+          <div
+            class="reference-field-error-wrapper full-width"
             *ngSwitchCase="'reference'"
-            [formControlName]="field.name"
-            [formGroup]="formGroup"
-            [labelField]="field.label"
-            [fetchData]="getService(field.options).loadItems"
-            class="full-width"
-          ></app-reference-field>
-          <!-- Other fields inside mat-form-field with mat-error -->
+          >
+            <app-reference-field
+              [formControlName]="field.name"
+              [formGroup]="formGroup"
+              [labelField]="field.label"
+              [fetchData]="getService(field.options).loadItems"
+              class="full-width"
+            ></app-reference-field>
+            <div class="mat-form-field-subscript-wrapper">
+              <mat-error
+                *ngIf="getControl(field.name)?.errors?.['required'] && getControl(field.name)?.touched"
+              >
+                {{ getFieldLabel(field.name) }} is required
+              </mat-error>
+            </div>
+          </div>
+
+          <!-- Other fields inside mat-form-field -->
           <mat-form-field *ngSwitchDefault appearance="outline">
             <ng-container [ngSwitch]="field.type">
               <input
@@ -74,10 +96,10 @@
             </ng-container>
 
             <mat-error
-              appValidationMessage
-              [formGroup]="formGroup"
-              [controlName]="field.name"
-            ></mat-error>
+              *ngIf="getControl(field.name)?.errors?.['required'] && getControl(field.name)?.touched"
+            >
+              {{ getFieldLabel(field.name) }} is required
+            </mat-error>
           </mat-form-field>
         </ng-container>
       </div>

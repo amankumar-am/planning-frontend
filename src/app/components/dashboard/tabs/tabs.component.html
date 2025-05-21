@@ -12,7 +12,6 @@
   <mat-tab label="Pending">
     <div class="content-container">
       <div class="count-section pending-section">
-        <span class="section-title">Pending in Stage</span>
         <app-count-card
           *ngFor="let count of pendingCounts"
           [countData]="count"
