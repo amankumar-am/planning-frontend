@@ -3,26 +3,68 @@
 @use './variables' as v;
 @use './mixins' as m;
 
+/* Form Grid Layout */
 .form-grid {
   background-color: white !important;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   border-radius: v.$radius;
-  padding: v.$padding-base;
-  gap: v.$grid-gap;
-  margin: 16px;
+  padding: 8px;
+  gap: 6px;
+  margin: 8px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 }
 
+/* Form Columns */
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Form Fields */
 .compact-form-field {
-  margin-bottom: v.$padding-small;
+  margin-bottom: 2px;
   width: 100% !important;
+
   .mat-label {
     font-size: v.$label-size;
     font-weight: 500;
     color: v.$text-label;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     display: block;
     line-height: 1.2;
   }
-} 
+}
+
+.reference-field-error-wrapper {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+mat-radio-group.horizontal-radio {
+  min-height: 24px;
+  height: 24px;
+  margin-bottom: 2px;
+
+  mat-radio-button {
+    min-height: 24px;
+    height: 24px;
+    .mat-radio-label,
+    ::ng-deep .mat-radio-label-content {
+      min-height: 24px;
+      height: 24px;
+      line-height: 24px;
+    }
+    ::ng-deep .mat-radio-container,
+    ::ng-deep .mat-radio-outer-circle,
+    ::ng-deep .mat-radio-inner-circle {
+      height: 14px !important;
+      width: 14px !important;
+    }
+  }
+}
+
+.mat-error {
+  margin-top: 2px !important;
+}

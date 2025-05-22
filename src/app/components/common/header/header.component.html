@@ -4,7 +4,43 @@
   <nav class="nav-links">
     <button mat-button routerLink="/">Home</button>
     <button mat-button routerLink="/dashboard">Dashboard</button>
-    <button mat-button routerLink="/services">Services</button>
+
+    <!-- Tables menu trigger -->
+    <button mat-button [matMenuTriggerFor]="tablesMenu">Tables</button>
+    <mat-menu #tablesMenu="matMenu">
+      <button mat-menu-item [matMenuTriggerFor]="sectorsMenu">Sectors</button>
+      <button mat-menu-item [matMenuTriggerFor]="fundsMenu">Funds</button>
+      <button mat-menu-item [matMenuTriggerFor]="districtsMenu">
+        Districts
+      </button>
+      <button mat-menu-item [matMenuTriggerFor]="talukasMenu">Talukas</button>
+    </mat-menu>
+
+    <!-- Sectors submenu -->
+    <mat-menu #sectorsMenu="matMenu">
+      <button mat-menu-item routerLink="/tables/sectors/view">View</button>
+      <button mat-menu-item routerLink="/tables/sectors/add">Add</button>
+      <button mat-menu-item routerLink="/tables/sectors/edit">Edit</button>
+    </mat-menu>
+    <!-- Funds submenu -->
+    <mat-menu #fundsMenu="matMenu">
+      <button mat-menu-item routerLink="/tables/funds/view">View</button>
+      <button mat-menu-item routerLink="/tables/funds/add">Add</button>
+      <button mat-menu-item routerLink="/tables/funds/edit">Edit</button>
+    </mat-menu>
+    <!-- Districts submenu -->
+    <mat-menu #districtsMenu="matMenu">
+      <button mat-menu-item routerLink="/tables/districts/view">View</button>
+      <button mat-menu-item routerLink="/tables/districts/add">Add</button>
+      <button mat-menu-item routerLink="/tables/districts/edit">Edit</button>
+    </mat-menu>
+    <!-- Talukas submenu -->
+    <mat-menu #talukasMenu="matMenu">
+      <button mat-menu-item routerLink="/tables/talukas/view">View</button>
+      <button mat-menu-item routerLink="/tables/talukas/add">Add</button>
+      <button mat-menu-item routerLink="/tables/talukas/edit">Edit</button>
+    </mat-menu>
+
     <button mat-button routerLink="/contact">Contact</button>
   </nav>
 

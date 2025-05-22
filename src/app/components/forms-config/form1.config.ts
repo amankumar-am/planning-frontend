@@ -30,10 +30,10 @@ export const form1Config = {
                 { name: 'demand_subSector', type: 'reference', label: 'Sub-Sector', required: true, options: 'subSectors' },
                 { name: 'demand_beneficiaryDistrict', type: 'reference', label: 'Beneficiary District', required: true, options: 'districts' },
                 { name: 'demand_beneficiaryTaluka', type: 'reference', label: 'Beneficiary Taluka', required: true, options: 'talukas' },
+                { name: 'demand_beneficiaryGroup', type: 'reference', label: 'Beneficiary Group', required: false, options: 'beneficiaryGroups' },
                 { name: 'demand_beneficiaryAreaType', type: 'radio', label: 'Beneficiary Area Type', required: true, options: ['urban', 'village'] },
                 { name: 'demand_beneficiaryVillage', type: 'reference', label: 'Beneficiary Village', conditional: 'demand_beneficiaryAreaType:village', options: 'villages' },
                 { name: 'demand_beneficiaryNagarpalika', type: 'text', label: 'Beneficiary Nagarpalika', conditional: 'demand_beneficiaryAreaType:urban' },
-                { name: 'demand_beneficiaryGroup', type: 'reference', label: 'Beneficiary Group', required: true, options: 'beneficiaryGroups' },
             ],
         },
         {

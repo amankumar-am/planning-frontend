@@ -1,58 +1,51 @@
-// src/app/components/dashboard/chart/chart.component.ts
+// src/app/components/dashboard/reports/chart/chart.component.ts
 
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as Highcharts from 'highcharts';
-import { ChartData } from '../../../services/ps1/ps1.service';
+import { ChartData } from '../../../../services/ps1/ps1.service';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { MATERIAL_STANDALONE_IMPORTS } from '../../../materialConfig/material.module';
 
 @Component({
   selector: 'app-chart',
   standalone: true,
-  imports: [CommonModule, HighchartsChartModule],
-  template: `
-    <div class="chart-container">
-      <highcharts-chart
-        [Highcharts]="Highcharts"
-        [options]="highchartsOptions"
-        style="width: 100%; height: 100%; display: block;"
-      ></highcharts-chart>
-    </div>
-  `,
-  styles: [`
-    .chart-container {
-      width: 100%;
-      height: 100%;
-      min-height: 300px;
-    }
-  `]
+  imports: [CommonModule, HighchartsChartModule, ...MATERIAL_STANDALONE_IMPORTS],
+  templateUrl: './chart.component.html',
+  styleUrls: ['./chart.component.scss']
 })
 export class ChartComponent implements OnInit {
   @Input() chartData!: ChartData;
+  /**
+   * Chart type (e.g. 'column', 'line', 'bar', 'pie', 'area', 'scatter', etc.)
+   */
+  @Input() chartType: string = 'column';
+  loading: boolean = true;
   Highcharts: typeof Highcharts = Highcharts;
   highchartsOptions: Highcharts.Options = {};
 
   constructor() { }
 
   ngOnInit() {
-    console.log('Chart Component Initialized with data:', this.chartData);
     this.initChart();
   }
 
   private initChart() {
+    this.loading = true;
     if (!this.chartData || !this.chartData.data) {
       console.warn('No chart data provided');
+      this.loading = false;
       return;
     }
 
-    // Always use column chart
     this.highchartsOptions = {
       chart: {
-        type: 'column',
+        type: this.chartType,
         style: {
           fontFamily: 'Roboto, "Helvetica Neue", sans-serif'
         },
-        marginLeft: 80
+        marginLeft: 80,
+        marginRight: 40,
       },
       title: {
         text: this.chartData.title,
@@ -115,7 +108,7 @@ export class ChartComponent implements OnInit {
         min: 0
       },
       series: [{
-        type: 'column',
+        type: this.chartType as any,
         name: this.chartData.title,
         data: this.chartData.data.map(item => ({
           y: Number(item.value),
@@ -156,5 +149,6 @@ export class ChartComponent implements OnInit {
         }
       }
     };
+    this.loading = false;
   }
 }

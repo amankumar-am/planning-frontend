@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.module';
 import { ReferenceFieldModalComponent } from './reference-field-modal/reference-field-modal.component';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule, Validator, NG_VALIDATORS, ValidationErrors, AbstractControl, FormGroup } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule, Validator, NG_VALIDATORS, ValidationErrors, AbstractControl, FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { HasName } from '../../../services/generic.model';
 
 @Component({
@@ -14,7 +14,7 @@ import { HasName } from '../../../services/generic.model';
   standalone: true,
   templateUrl: './reference-field.component.html',
   styleUrls: ['./reference-field.component.scss'],
-  imports: [CommonModule, FormsModule, ...MATERIAL_STANDALONE_IMPORTS],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ...MATERIAL_STANDALONE_IMPORTS],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -38,13 +38,13 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
   @Input() required: boolean = false;
   @Input() formControlName: string = '';
   @Input() formGroup: FormGroup | null = null;
+  @Input() controlName: string = '';
 
   @Output() selectedItemChange = new EventEmitter<T | null>();
 
   data: T[] = [];
   isDataLoaded: boolean = false;
   isRequired: boolean = false;
-  control: AbstractControl | null = null;
 
   constructor(
     private dialog: MatDialog,
@@ -57,11 +57,6 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
     }
     // Set required state based on field configuration
     this.isRequired = this.field?.required ?? this.required;
-
-    // Get the form control if formGroup and formControlName are provided
-    if (this.formGroup && this.formControlName) {
-      this.control = this.formGroup.get(this.formControlName);
-    }
   }
 
   openModal(): void {
@@ -123,6 +118,10 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
         this.selectedItemChange.emit(result);
         this.onChange(result);
         this.onTouched();
+        // Ensure the form control value is updated
+        if (this.formGroup && this.controlName) {
+          this.formGroup.get(this.controlName)?.setValue(result);
+        }
       }
     });
   }
@@ -168,5 +167,9 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
       return { required: true };
     }
     return null;
+  }
+
+  get control(): FormControl {
+    return (this.formGroup?.get(this.controlName) as FormControl) || new FormControl();
   }
 }

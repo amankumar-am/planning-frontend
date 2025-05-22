@@ -1,0 +1,30 @@
+// src/styles/_datepicker.scss
+
+@use './variables' as v;
+
+.mat-mdc-form-field {
+  position: relative !important;
+}
+
+.mat-datepicker-toggle {
+  position: absolute !important;
+  right: 8px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 2;
+  height: v.$icon-size !important;
+  width: v.$icon-size !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  margin-bottom: 0 !important;
+  pointer-events: auto;
+}
+
+.mat-mdc-form-field-infix input[matinput][matdatepicker],
+.mat-mdc-form-field-infix input[matinput][matDatepicker] {
+  padding-right: calc(#{v.$icon-size} + 12px) !important;
+} 

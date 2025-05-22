@@ -15,10 +15,9 @@
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
     "paths": {
-      "reference-field": [
-        "./dist/reference-field"
-      ]
+      "reference-field": ["./dist/reference-field"]
     },
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022"

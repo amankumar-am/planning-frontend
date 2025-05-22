@@ -1,7 +1,7 @@
 // src/app/components/common/generic-form/generic-form.component.ts
 
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormBuilder } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { CommonModule } from '@angular/common';
 import { ReferenceFieldModule } from '../../shared/reference-field/reference-field.module';
@@ -16,7 +16,15 @@ import { TalukaUtilsService } from '../../../services/utils/taluka-utils.service
 import { GpVillageUtilsService } from '../../../services/utils/gp-village-utils.service';
 import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.module';
 import { ReferenceFieldComponent } from '../../shared/reference-field/reference-field.component';
-
+import { Router, ActivatedRoute } from '@angular/router';
+import { MENU_CONFIG, MenuItem } from '../../../config/menu.config';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-generic-form',
@@ -29,6 +37,14 @@ import { ReferenceFieldComponent } from '../../shared/reference-field/reference-
     ...MATERIAL_STANDALONE_IMPORTS,
     ReferenceFieldModule,
     ReferenceFieldComponent,
+    ValidationMessageDirective,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatCheckboxModule,
+    MatIconModule,
   ],
 })
 export class GenericFormComponent implements OnInit {
@@ -36,10 +52,14 @@ export class GenericFormComponent implements OnInit {
   @Input() formConfig!: any;
   @Input() stepper!: MatStepper;
   @Input() stepIndex!: number;
+  @Input() title?: string;
+  @Input() menuItemId?: string;
+  @Input() mode: 'add' | 'edit' = 'add';
 
   columns: any[] = [];
   datePickers: { [key: string]: any } = {};
   currentField: any = null;
+  menuItem?: MenuItem;
 
   constructor(
     public fyUtils: FinancialYearUtilsService,
@@ -50,7 +70,10 @@ export class GenericFormComponent implements OnInit {
     public districtUtils: DistrictUtilsService,
     public talukaUtils: TalukaUtilsService,
     public gpVillageUtils: GpVillageUtilsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -62,6 +85,13 @@ export class GenericFormComponent implements OnInit {
 
     this.setupConditionalValidators();
     this.setupDynamicOptions();
+
+    if (this.menuItemId) {
+      this.menuItem = this.findMenuItem(this.menuItemId);
+      if (this.menuItem && !this.formGroup) {
+        this.initForm();
+      }
+    }
   }
 
   back() {
@@ -262,5 +292,47 @@ export class GenericFormComponent implements OnInit {
       if (field) return field;
     }
     return null;
+  }
+
+  private findMenuItem(id: string): MenuItem | undefined {
+    const findInItems = (items: MenuItem[]): MenuItem | undefined => {
+      for (const item of items) {
+        if (item.id === id) return item;
+        if (item.children) {
+          const found = findInItems(item.children);
+          if (found) return found;
+        }
+      }
+      return undefined;
+    };
+    return findInItems(MENU_CONFIG);
+  }
+
+  private initForm() {
+    const group: { [key: string]: any } = {};
+    this.menuItem?.columns?.forEach(column => {
+      const validators = [];
+      if (column.validators) {
+        if (column.validators.required) validators.push(Validators.required);
+        if (column.validators.min !== undefined) validators.push(Validators.min(column.validators.min));
+        if (column.validators.max !== undefined) validators.push(Validators.max(column.validators.max));
+        if (column.validators.pattern) validators.push(Validators.pattern(column.validators.pattern));
+        if (column.validators.email) validators.push(Validators.email);
+      }
+      group[column.field] = [column.defaultValue || '', validators];
+    });
+    this.formGroup = this.fb.group(group);
+  }
+
+  onSubmit() {
+    if (this.formGroup.valid) {
+      // TODO: Implement save logic based on mode
+      console.log(this.formGroup.value);
+      this.router.navigate([this.menuItem?.viewRoute]);
+    }
+  }
+
+  onCancel() {
+    this.router.navigate([this.menuItem?.viewRoute]);
   }
 }

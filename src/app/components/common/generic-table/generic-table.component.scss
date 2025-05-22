@@ -1,0 +1,129 @@
+// src/app/components/common/generic-table/generic-table.component.scss
+
+@use '../../../../styles/material-overrides' as *;
+@use '../../../../styles/_form.scss' as *;
+@use '../../../../styles/table' as *;
+// Use global compact table overrides
+.generic-table-container {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 4px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafbfc;
+  border-radius: 8px 8px 0 0;
+}
+
+.table-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  flex: 1 1 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+
+
+.table-content {
+  padding: 0 8px 8px 8px;
+  background: #fff;
+  border-radius: 0 0 8px 8px;
+}
+
+// Action column horizontal layout
+::ng-deep td.mat-cell:first-child, ::ng-deep th.mat-header-cell:first-child {
+  min-width: 80px;
+  max-width: 100px;
+  width: 80px;
+}
+::ng-deep td.mat-cell:first-child {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  padding: 0 2px !important;
+}
+
+
+
+// Remove or minimize local font-size and padding rules
+::ng-deep .mat-table {
+  width: 100%;
+  background: #fff;
+  border-radius: 8px;
+}
+
+::ng-deep .mat-header-row, ::ng-deep .mat-row {
+  height: 18px !important;
+  min-height: 18px !important;
+}
+
+::ng-deep .mat-header-cell, ::ng-deep .mat-cell {
+  padding: 0 4px !important;
+  font-size: 11px !important;
+  height: 18px !important;
+  min-height: 18px !important;
+  line-height: 18px !important;
+}
+
+::ng-deep .mat-header-cell {
+  font-weight: 600;
+  color: #374151;
+  background: #f5f7fa;
+}
+
+::ng-deep .mat-cell {
+  color: #1e293b;
+}
+
+::ng-deep .mat-paginator {
+  margin-top: 4px;
+}
+
+::ng-deep .mat-icon {
+  font-size: 16px !important;
+}
+
+.column-select-menu {
+  min-width: 220px;
+  max-width: 400px;
+  padding: 8px 12px 8px 12px;
+}
+
+.column-checkbox-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.column-checkbox-grid.two-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 12px;
+}
+
+.ok-btn {
+  margin-top: 8px;
+  width: 100%;
+  font-weight: 500;
+  color: #3f51b5;
+} 

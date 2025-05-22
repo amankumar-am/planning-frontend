@@ -1,8 +1,9 @@
 <mat-form-field appearance="outline" class="full-width">
   <input
     matInput
-    [value]="getName(selectedItem)"
-    readonly
+    [formControl]="control"
+    [readonly]="true"
+    [value]="getName(control.value)"
     (click)="onInputClick($event)"
     (focus)="blurInput($event)"
     tabindex="-1"
@@ -16,4 +17,5 @@
   >
     <mat-icon>search</mat-icon>
   </button>
+  <ng-content select="mat-error"></ng-content>
 </mat-form-field>

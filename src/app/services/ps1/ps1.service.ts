@@ -48,7 +48,9 @@ export interface DashboardData {
 })
 export class Ps1Service {
   private apiUrl = `${environment.apiBaseUrl}/ps1`;
-
+  private talukaApiUrl = `${environment.apiBaseUrl}/talukas`;
+  private sectorApiUrl = `${environment.apiBaseUrl}/sectors`;
+  private fundApiUrl = `${environment.apiBaseUrl}/funds`;
   constructor(private http: HttpClient) { }
 
   // Get all Ps1s
@@ -164,6 +166,21 @@ export class Ps1Service {
 
   getAvailableFinancialYearsFromApi(): Observable<ApiAvailableFinancialYear[]> {
     return this.http.get<ApiAvailableFinancialYear[]>(`${this.apiUrl}/dashboard/available-financial-years`)
+      .pipe(catchError(this.handleError));
+  }
+
+  getTotalTalukaFromApi(): Observable<ApiUniqueCountResponse> {
+    return this.http.get<ApiUniqueCountResponse>(`${this.talukaApiUrl}/dashboard/global/district/2/total-talukas`)
+      .pipe(catchError(this.handleError));
+  }
+
+  getTotalSectorsFromApi(): Observable<ApiUniqueCountResponse> {
+    return this.http.get<ApiUniqueCountResponse>(`${this.sectorApiUrl}/dashboard/global/total-sectors`)
+      .pipe(catchError(this.handleError));
+  }
+
+  getTotalFundsFromApi(): Observable<ApiUniqueCountResponse> {
+    return this.http.get<ApiUniqueCountResponse>(`${this.fundApiUrl}/dashboard/global/total-funds`)
       .pipe(catchError(this.handleError));
   }
 

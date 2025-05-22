@@ -19,6 +19,76 @@
   &:focus-within { border-color: v.$primary; }
 }
 
+// Ensure the input fills the field
+.mat-mdc-input-element {
+  height: 100% !important;
+  min-height: 20px !important;
+  box-sizing: border-box;
+  width: 100% !important;
+  display: block !important;
+  padding: 0 8px !important;
+}
+
+// Ensure the infix is tall enough
+.mat-mdc-form-field-infix {
+  min-height: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-direction: column !important;
+}
+
+// Material Form Fields
+.mat-mdc-form-field {
+  width: 100% !important;
+  display: inline-flex !important;
+  position: relative !important;
+}
+
+// Error message below the field
+.mat-mdc-form-field-subscript-wrapper {
+  height: 0 !important;
+}
+
+// Input and textarea styles
+.mat-mdc-form-field-infix input,
+.mat-mdc-form-field-infix textarea {
+  @include m.input-reset;
+  font-size: v.$font-size !important;
+  color: v.$text-main !important;
+  height: v.$input-height !important;
+  min-height: v.$input-height !important;
+  width: 100% !important;
+  box-sizing: border-box;
+  flex: 1 !important;
+  display: block !important;
+  &::placeholder { color: v.$text-placeholder !important; }
+  &[readonly] { background: none !important; }
+}
+
+// Floating Label Styles
+.mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
+  top: 50% !important;
+  font-size: 15px !important;
+  color: #64748b !important;
+}
+
+.mat-mdc-form-field.mat-mdc-form-field-has-value .mat-mdc-floating-label,
+.mat-mdc-form-field.mat-mdc-form-field-focused .mat-mdc-floating-label {
+  top: 0 !important;
+}
+
+.mat-mdc-form-field input::placeholder {
+  opacity: 0 !important;
+}
+
+// Reference field specific styles
+app-reference-field .mat-mdc-form-field-flex,
+app-reference-field .mat-mdc-form-field-infix,
+app-reference-field input,
+app-reference-field textarea {
+  @include m.no-bg-border;
+}
+
 // Form field infix
 ::ng-deep {
   // Override Material's form field styles
@@ -62,58 +132,44 @@
     }
   }
 
-  // Input and textarea styles
-  .mat-mdc-form-field-infix {
-    input,
-    textarea {
-      @include m.input-reset;
-      font-size: v.$font-size !important;
-      color: v.$text-main !important;
-      height: v.$input-height !important;
-      min-height: v.$input-height !important;
-      width: 100% !important;
-      box-sizing: border-box;
-      flex: 1 !important;
-      display: block !important;
-      
-      &::placeholder { color: v.$text-placeholder !important; }
-      &[readonly] { background: none !important; }
-    }
-  }
-
   // Outlined and no-label variants
   .mdc-text-field--outlined .mat-mdc-form-field-infix,
   .mdc-text-field--no-label .mat-mdc-form-field-infix {
     padding: 0 !important;
   }
-
-  // Reference field specific styles
-  app-reference-field {
-    .mat-mdc-form-field-flex,
-    .mat-mdc-form-field-infix,
-    input,
-    textarea {
-      @include m.no-bg-border;
-    }
-  }
 }
 
-/*
-.mat-mdc-form-field-infix {
+// /* Override Material's default infix styles */
+// ::ng-deep .mat-mdc-form-field-infix {
+//   min-height: 0 !important;
+//   padding-top: 0 !important;
+//   padding-bottom: 0 !important;
+//   width: 100% !important;
+//   flex: 1 1 100% !important;
+//   display: flex !important;
+//   align-items: center !important;
+//   border: none !important;
+//   box-shadow: none !important;
+//   background: transparent !important;
+//   outline: none !important;
+//   flex-direction: column !important;
+// }
+
+// Hide empty subscript wrappers and their hint wrappers
+.mat-mdc-form-field-subscript-wrapper:empty,
+.mat-mdc-form-field-subscript-wrapper .mat-mdc-form-field-hint-wrapper:empty,
+.mat-mdc-form-field-subscript-wrapper .mat-mdc-form-field-hint-wrapper:empty + .mat-mdc-form-field-hint-spacer {
+  display: none !important;
+  height: 0 !important;
   min-height: 0 !important;
+  margin: 0 !important;
   padding: 0 !important;
-  @extend %form-field-base;
-  flex: 1 1 100% !important;
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  outline: none !important;
 }
 
-.mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  font-size: 13px !important;
-  color: #64748b !important;
+// Global Material overrides
+
+// Ensure search field label floats above input area
+::ng-deep .mat-mdc-form-field {
+  appearance: outline;
+  floatLabel: always;
 }
-*/ 

@@ -1,8 +1,8 @@
-// src/app/components/dashboard/count-card/count-card.component.ts
+// src/app/components/dashboard/reports/count-card/count-card.component.ts
 
 import { Component, Input } from '@angular/core';
-import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.module';
 import { CommonModule } from '@angular/common';
+import { MATERIAL_STANDALONE_IMPORTS } from '../../../materialConfig/material.module';
 
 export interface CountData {
   title: string;

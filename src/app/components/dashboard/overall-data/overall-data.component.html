@@ -1,56 +1,30 @@
 <div class="overall-container">
-  <div class="side-panel" [class.collapsed]="!isPanelOpen">
-    <div class="panel-header">
-      <h2>Overall Data</h2>
-      <div class="last-updated" *ngIf="lastUpdated">
-        Last Updated: {{ lastUpdated | date : "short" }}
-      </div>
-    </div>
-
-    <div class="global-counts-container">
-      <app-count-card
-        *ngFor="let count of globalCounts"
-        [countData]="count"
-      ></app-count-card>
-      <div
-        *ngIf="globalCounts.length === 0 && !(isLoading$ | async)"
-        class="no-data"
-      >
-        No data available
-      </div>
-    </div>
-
-    <div class="panel-footer">
-      <div class="refresh-info">
-        <mat-icon class="refresh-icon">refresh</mat-icon>
-        <span>Auto-refresh</span>
-      </div>
-    </div>
-  </div>
-
   <div class="content-wrapper" [class.expanded]="!isPanelOpen">
     <div class="dashboard-header">
-      <div class="header-left">
-        <button mat-icon-button (click)="togglePanel()" class="toggle-btn">
-          <mat-icon>{{ isPanelOpen ? "chevron_left" : "menu" }}</mat-icon>
-        </button>
+      <div class="header-center">
         <h1>Dashboard</h1>
       </div>
-      <mat-form-field
-        appearance="outline"
-        class="fy-selector"
-        *ngIf="financialYears.length > 0"
-      >
-        <mat-label>Select Financial Year</mat-label>
-        <mat-select
-          [(ngModel)]="selectedFinancialYearId"
-          (selectionChange)="onFinancialYearChange()"
+      <div class="financialSelector">
+        <label for="financialYear">Financial Year</label>
+        <mat-form-field
+          appearance="outline"
+          floatLabel="always"
+          class="fy-selector"
+          *ngIf="financialYears.length > 0"
         >
-          <mat-option *ngFor="let year of financialYears" [value]="year.value">
-            {{ year.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+          <mat-select
+            [(ngModel)]="selectedFinancialYearId"
+            (selectionChange)="onFinancialYearChange()"
+          >
+            <mat-option
+              *ngFor="let year of financialYears"
+              [value]="year.value"
+            >
+              {{ year.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </div>
 
     <div class="main-content">

@@ -1,7 +1,6 @@
 // src/app/components/dashboard/dashboard.component.ts
 
 import { Component, OnInit } from '@angular/core';
-import { DashboardHeaderComponent } from "./dashboard-header/dashboard-header.component";
 import { OverallDataComponent } from "./overall-data/overall-data.component";
 import { TabsComponent } from "./tabs/tabs.component";
 import { Ps1UtilsService } from '../../services/ps1/ps1-utils.service';

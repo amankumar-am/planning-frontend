@@ -9,11 +9,6 @@
             <mat-checkbox [formControlName]="field.name" [id]="field.name">{{
               field.label
             }}</mat-checkbox>
-            <mat-error
-              *ngIf="getControl(field.name)?.errors?.['required'] && getControl(field.name)?.touched"
-            >
-              {{ getFieldLabel(field.name) }} is required
-            </mat-error>
           </div>
           <div class="radio-container" *ngSwitchCase="'radio'">
             <mat-radio-group
@@ -27,11 +22,6 @@
                 >{{ option.label ?? option }}</mat-radio-button
               >
             </mat-radio-group>
-            <mat-error
-              *ngIf="getControl(field.name)?.errors?.['required'] && getControl(field.name)?.touched"
-            >
-              {{ getFieldLabel(field.name) }} is required
-            </mat-error>
           </div>
           <!-- Reference field -->
           <div
@@ -39,21 +29,13 @@
             *ngSwitchCase="'reference'"
           >
             <app-reference-field
-              [formControlName]="field.name"
               [formGroup]="formGroup"
+              [controlName]="field.name"
               [labelField]="field.label"
               [fetchData]="getService(field.options).loadItems"
               class="full-width"
             ></app-reference-field>
-            <div class="mat-form-field-subscript-wrapper">
-              <mat-error
-                *ngIf="getControl(field.name)?.errors?.['required'] && getControl(field.name)?.touched"
-              >
-                {{ getFieldLabel(field.name) }} is required
-              </mat-error>
-            </div>
           </div>
-
           <!-- Other fields inside mat-form-field -->
           <mat-form-field *ngSwitchDefault appearance="outline">
             <ng-container [ngSwitch]="field.type">
@@ -94,14 +76,13 @@
                 ></ng-container>
               </ng-container>
             </ng-container>
-
-            <mat-error
-              *ngIf="getControl(field.name)?.errors?.['required'] && getControl(field.name)?.touched"
-            >
-              {{ getFieldLabel(field.name) }} is required
-            </mat-error>
           </mat-form-field>
         </ng-container>
+        <mat-error
+          appValidationMessage
+          [formGroup]="formGroup"
+          [controlName]="field.name"
+        ></mat-error>
       </div>
     </ng-container>
   </div>

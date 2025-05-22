@@ -1,0 +1,19 @@
+<mat-card
+  *ngIf="!loading; else loadingTemplate"
+  class="count-card"
+  tabindex="0"
+>
+  <mat-card-content class="card-content">
+    <div class="card-title-area">
+      <h3 class="card-title">{{ countData.title }}</h3>
+    </div>
+    <div class="card-count-area">
+      <a [href]="countData.url || '#'" target="_blank">
+        <h1 class="card-count">{{ countData.uniqueCount }}</h1>
+      </a>
+    </div>
+  </mat-card-content>
+</mat-card>
+<ng-template #loadingTemplate>
+  <mat-spinner diameter="50"></mat-spinner>
+</ng-template>

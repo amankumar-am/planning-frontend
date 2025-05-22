@@ -5,7 +5,6 @@ import { BehaviorSubject, catchError, forkJoin, Observable, of } from 'rxjs';
 import { firstValueFrom } from 'rxjs';
 import { Ps1Service, DashboardData, CountData, ChartData, MapData, ApiAvailableFinancialYear } from './ps1.service';
 import { Ps1 } from '../../models/ps1.model';
-import { ApiChartDataPoint } from '../../models/dashboard.model';
 
 @Injectable({
     providedIn: 'root'
@@ -35,11 +34,17 @@ export class Ps1UtilsService {
             const [
                 totalRecordsRes,
                 distinctFyRes,
-                availableFysRes
+                availableFysRes,
+                totalTalukasRes,
+                totalSectorsRes,
+                totalFundRes,
             ] = await Promise.all([
                 firstValueFrom(this.ps1Service.getGlobalTotalRecords().pipe(catchError(err => of(null)))),
                 firstValueFrom(this.ps1Service.getGlobalDistinctFinancialYearsCount().pipe(catchError(err => of(null)))),
-                firstValueFrom(this.ps1Service.getAvailableFinancialYearsFromApi().pipe(catchError(err => of([]))))
+                firstValueFrom(this.ps1Service.getAvailableFinancialYearsFromApi().pipe(catchError(err => of([])))),
+                firstValueFrom(this.ps1Service.getTotalTalukaFromApi().pipe(catchError(err => of([])))),
+                firstValueFrom(this.ps1Service.getTotalSectorsFromApi().pipe(catchError(err => of([])))),
+                firstValueFrom(this.ps1Service.getTotalFundsFromApi().pipe(catchError(err => of([]))))
             ]);
 
             const globalCounts: CountData[] = [];
@@ -49,6 +54,20 @@ export class Ps1UtilsService {
             if (distinctFyRes) {
                 globalCounts.push({ title: distinctFyRes.title, uniqueCount: distinctFyRes.uniqueCount });
             }
+
+            if (totalTalukasRes && !Array.isArray(totalTalukasRes)) {
+                globalCounts.push({ title: totalTalukasRes.title, uniqueCount: totalTalukasRes.uniqueCount });
+            }
+
+            if (totalSectorsRes && !Array.isArray(totalSectorsRes)) {
+                globalCounts.push({ title: totalSectorsRes.title, uniqueCount: totalSectorsRes.uniqueCount });
+            }
+
+            if (totalFundRes && !Array.isArray(totalFundRes)) {
+                globalCounts.push({ title: totalFundRes.title, uniqueCount: totalFundRes.uniqueCount });
+            }
+
+
             this.globalCountsSubject.next(globalCounts);
 
             if (availableFysRes && availableFysRes.length > 0) {
@@ -177,8 +196,6 @@ export class Ps1UtilsService {
         this.loadingSubject.next(true);
         try {
             const response = await firstValueFrom(this.ps1Service.getAllPs1s());
-            console.log(response);
-
             return {
                 data: response?.data || [],
                 schema: response?.schema || [], // Assuming your ReferenceDataResponse has schema
