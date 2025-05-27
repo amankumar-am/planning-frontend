@@ -3,16 +3,22 @@
 import { Routes } from '@angular/router';
 import { MENU_CONFIG } from './config/menu.config';
 import { GenericFormComponent } from './components/common/generic-form/generic-form.component';
+import { GenericViewComponent } from './components/tables/generic-view/generic-view.component';
+import { AuthGuard } from './guards/auth.guard';
 
 // Helper function to generate routes from menu config
 function generateRoutesFromMenu(items: any[]): Routes {
     const routes: Routes = [];
 
     items.forEach(item => {
-        if (item.route) {
+        if (item.viewRoute) {
             routes.push({
-                path: item.route.substring(1), // Remove leading slash
-                loadComponent: () => import(`./components/tables/${item.id}/${item.id}View.component`).then(m => m[item.component])
+                path: item.viewRoute.substring(1), // Remove leading slash
+                component: GenericViewComponent,
+                data: {
+                    menuItemId: item.id
+                },
+                canActivate: [AuthGuard]
             });
         }
 
@@ -24,7 +30,8 @@ function generateRoutesFromMenu(items: any[]): Routes {
                     menuItemId: item.id,
                     mode: 'add',
                     title: `Add ${item.label}`
-                }
+                },
+                canActivate: [AuthGuard]
             });
         }
 
@@ -36,7 +43,8 @@ function generateRoutesFromMenu(items: any[]): Routes {
                     menuItemId: item.id,
                     mode: 'edit',
                     title: `Edit ${item.label}`
-                }
+                },
+                canActivate: [AuthGuard]
             });
         }
 
@@ -50,13 +58,21 @@ function generateRoutesFromMenu(items: any[]): Routes {
 
 export const routes: Routes = [
     {
+        path: 'login',
+        loadComponent: () => import('./components/common/login/login.component').then(m => m.LoginComponent)
+    },
+    {
+        path: 'register',
+        loadComponent: () => import('./components/common/register/register.component').then(m => m.RegisterComponent)
+    },
+    {
         path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
+        loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
     },
     {
         path: 'dashboard',
-        loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent)
+        loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent),
+        canActivate: [AuthGuard]
     },
     ...generateRoutesFromMenu(MENU_CONFIG)
 ];

@@ -1,3 +1,5 @@
+// src/app/config/menu.config.ts
+
 export interface MenuItem {
     id: string;
     label: string;
@@ -27,57 +29,135 @@ export interface MenuItem {
 
 export const MENU_CONFIG: MenuItem[] = [
     {
-        id: 'master-data',
-        label: 'Master Data',
-        icon: 'database',
+        id: 'home',
+        label: 'Home',
+        icon: 'home',
+        route: '/'
+    },
+    {
+        id: 'dashboard',
+        label: 'Dashboard',
+        icon: 'dashboard',
+        route: '/dashboard'
+    },
+    {
+        id: 'tables',
+        label: 'Tables',
+        icon: 'table_chart',
         children: [
             {
                 id: 'sectors',
                 label: 'Sectors',
                 icon: 'category',
-                route: '/tables/sectors/view',
-                viewRoute: '/tables/sectors/view',
-                addRoute: '/tables/sectors/add',
-                editRoute: '/tables/sectors/edit',
-                component: 'SectorViewComponent',
                 columns: [
-                    { field: 'id', label: 'ID', type: 'number', validators: { required: true } },
-                    { field: 'name', label: 'Name', type: 'text', validators: { required: true } },
-                    { field: 'description', label: 'Description', type: 'text' },
-                    { field: 'isActive', label: 'Active', type: 'boolean', defaultValue: true },
-                    { field: 'createdBy', label: 'Created By', type: 'text', validators: { required: true } },
-                    { field: 'createdAt', label: 'Created At', type: 'date', validators: { required: true } },
-                    { field: 'modifiedBy', label: 'Modified By', type: 'text' },
-                    { field: 'modifiedAt', label: 'Modified At', type: 'date' }
+                    { field: 'name', label: 'Name', type: 'text' },
+                    { field: 'description', label: 'Description', type: 'text' }
+                ],
+                children: [
+                    {
+                        id: 'sectors-view',
+                        label: 'View',
+                        viewRoute: '/tables/sectors/view'
+                    },
+                    {
+                        id: 'sectors-add',
+                        label: 'Add',
+                        addRoute: '/tables/sectors/add'
+                    },
+                    {
+                        id: 'sectors-edit',
+                        label: 'Edit',
+                        editRoute: '/tables/sectors/edit'
+                    }
                 ]
             },
             {
                 id: 'funds',
                 label: 'Funds',
                 icon: 'payments',
-                route: '/tables/funds/view',
-                viewRoute: '/tables/funds/view',
-                addRoute: '/tables/funds/add',
-                editRoute: '/tables/funds/edit',
-                component: 'FundsViewComponent',
                 columns: [
-                    { field: 'id', label: 'ID', type: 'number', validators: { required: true } },
-                    { field: 'name', label: 'Name', type: 'text', validators: { required: true } },
-                    { field: 'fundingGroup', label: 'Funding Group', type: 'text', validators: { required: true } },
-                    { field: 'fundingSource_En', label: 'Funding Source (En)', type: 'text', validators: { required: true } },
-                    { field: 'fundingSource_Gu', label: 'Funding Source (Gu)', type: 'text', validators: { required: true } },
-                    { field: 'financialYear', label: 'Financial Year', type: 'text', validators: { required: true } },
-                    { field: 'grantValue', label: 'Grant Value', type: 'number', validators: { required: true, min: 0 } },
-                    { field: 'act', label: 'Act', type: 'text', validators: { required: true } },
-                    { field: 'isActive', label: 'Active', type: 'boolean', defaultValue: true },
-                    { field: 'createdBy', label: 'Created By', type: 'text', validators: { required: true } },
-                    { field: 'createdAt', label: 'Created At', type: 'date', validators: { required: true } },
-                    { field: 'modifiedBy', label: 'Modified By', type: 'text' },
-                    { field: 'modifiedAt', label: 'Modified At', type: 'date' }
+                    { field: 'name', label: 'Name', type: 'text' },
+                    { field: 'amount', label: 'Amount', type: 'number' },
+                    { field: 'description', label: 'Description', type: 'text' }
+                ],
+                children: [
+                    {
+                        id: 'funds-view',
+                        label: 'View',
+                        viewRoute: '/tables/funds/view'
+                    },
+                    {
+                        id: 'funds-add',
+                        label: 'Add',
+                        addRoute: '/tables/funds/add'
+                    },
+                    {
+                        id: 'funds-edit',
+                        label: 'Edit',
+                        editRoute: '/tables/funds/edit'
+                    }
+                ]
+            },
+            {
+                id: 'districts',
+                label: 'Districts',
+                icon: 'location_city',
+                columns: [
+                    { field: 'name', label: 'Name', type: 'text' },
+                    { field: 'code', label: 'Code', type: 'text' },
+                    { field: 'description', label: 'Description', type: 'text' }
+                ],
+                children: [
+                    {
+                        id: 'districts-view',
+                        label: 'View',
+                        viewRoute: '/tables/districts/view'
+                    },
+                    {
+                        id: 'districts-add',
+                        label: 'Add',
+                        addRoute: '/tables/districts/add'
+                    },
+                    {
+                        id: 'districts-edit',
+                        label: 'Edit',
+                        editRoute: '/tables/districts/edit'
+                    }
+                ]
+            },
+            {
+                id: 'talukas',
+                label: 'Talukas',
+                icon: 'location_on',
+                columns: [
+                    { field: 'name', label: 'Name', type: 'text' },
+                    { field: 'district', label: 'District', type: 'reference', referenceType: 'districts' },
+                    { field: 'description', label: 'Description', type: 'text' }
+                ],
+                children: [
+                    {
+                        id: 'talukas-view',
+                        label: 'View',
+                        viewRoute: '/tables/talukas/view'
+                    },
+                    {
+                        id: 'talukas-add',
+                        label: 'Add',
+                        addRoute: '/tables/talukas/add'
+                    },
+                    {
+                        id: 'talukas-edit',
+                        label: 'Edit',
+                        editRoute: '/tables/talukas/edit'
+                    }
                 ]
             }
-            // Add more menu items here
         ]
+    },
+    {
+        id: 'contact',
+        label: 'Contact',
+        icon: 'contact_support',
+        route: '/contact'
     }
-    // Add more top-level menu items here
 ]; 

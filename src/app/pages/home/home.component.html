@@ -1,0 +1,28 @@
+<div class="home-container">
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Welcome to Planning Management</h1>
+      <p class="subtitle">
+        Streamline your planning and management processes with our comprehensive
+        solution
+      </p>
+      <button mat-raised-button color="primary" routerLink="/dashboard">
+        Go to Dashboard
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+  </section>
+
+  <section class="features-section">
+    <h2>Key Features</h2>
+    <div class="features-grid">
+      <mat-card *ngFor="let feature of features" class="feature-card">
+        <mat-card-content>
+          <mat-icon class="feature-icon">{{ feature.icon }}</mat-icon>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+</div>

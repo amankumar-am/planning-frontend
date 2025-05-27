@@ -1,52 +1,89 @@
 <mat-toolbar color="primary">
-  <span class="logo">Planning</span>
+  <span>Planning System</span>
 
-  <nav class="nav-links">
-    <button mat-button routerLink="/">Home</button>
-    <button mat-button routerLink="/dashboard">Dashboard</button>
+  <ng-container *ngIf="authService.isAuthenticated()">
+    <nav class="nav-links">
+      <!-- Direct route items (Home, Dashboard, Contact) -->
+      <ng-container *ngFor="let item of menuItems">
+        <button *ngIf="!item.children" mat-button [routerLink]="item.route">
+          <mat-icon *ngIf="item.icon">{{ item.icon }}</mat-icon>
+          {{ item.label }}
+        </button>
+      </ng-container>
 
-    <!-- Tables menu trigger -->
-    <button mat-button [matMenuTriggerFor]="tablesMenu">Tables</button>
-    <mat-menu #tablesMenu="matMenu">
-      <button mat-menu-item [matMenuTriggerFor]="sectorsMenu">Sectors</button>
-      <button mat-menu-item [matMenuTriggerFor]="fundsMenu">Funds</button>
-      <button mat-menu-item [matMenuTriggerFor]="districtsMenu">
-        Districts
+      <!-- Tables menu -->
+      <button mat-button [matMenuTriggerFor]="tablesMenu">
+        <mat-icon>table_chart</mat-icon>
+        Tables
       </button>
-      <button mat-menu-item [matMenuTriggerFor]="talukasMenu">Talukas</button>
-    </mat-menu>
+      <mat-menu #tablesMenu="matMenu">
+        <!-- Sectors -->
+        <button mat-menu-item [matMenuTriggerFor]="sectorsMenu">
+          <mat-icon>category</mat-icon>
+          <span>Sectors</span>
+        </button>
+        <mat-menu #sectorsMenu="matMenu">
+          <button mat-menu-item routerLink="/tables/sectors/view">View</button>
+          <button mat-menu-item routerLink="/tables/sectors/add">Add</button>
+          <button mat-menu-item routerLink="/tables/sectors/edit">Edit</button>
+        </mat-menu>
 
-    <!-- Sectors submenu -->
-    <mat-menu #sectorsMenu="matMenu">
-      <button mat-menu-item routerLink="/tables/sectors/view">View</button>
-      <button mat-menu-item routerLink="/tables/sectors/add">Add</button>
-      <button mat-menu-item routerLink="/tables/sectors/edit">Edit</button>
-    </mat-menu>
-    <!-- Funds submenu -->
-    <mat-menu #fundsMenu="matMenu">
-      <button mat-menu-item routerLink="/tables/funds/view">View</button>
-      <button mat-menu-item routerLink="/tables/funds/add">Add</button>
-      <button mat-menu-item routerLink="/tables/funds/edit">Edit</button>
-    </mat-menu>
-    <!-- Districts submenu -->
-    <mat-menu #districtsMenu="matMenu">
-      <button mat-menu-item routerLink="/tables/districts/view">View</button>
-      <button mat-menu-item routerLink="/tables/districts/add">Add</button>
-      <button mat-menu-item routerLink="/tables/districts/edit">Edit</button>
-    </mat-menu>
-    <!-- Talukas submenu -->
-    <mat-menu #talukasMenu="matMenu">
-      <button mat-menu-item routerLink="/tables/talukas/view">View</button>
-      <button mat-menu-item routerLink="/tables/talukas/add">Add</button>
-      <button mat-menu-item routerLink="/tables/talukas/edit">Edit</button>
-    </mat-menu>
+        <!-- Funds -->
+        <button mat-menu-item [matMenuTriggerFor]="fundsMenu">
+          <mat-icon>payments</mat-icon>
+          <span>Funds</span>
+        </button>
+        <mat-menu #fundsMenu="matMenu">
+          <button mat-menu-item routerLink="/tables/funds/view">View</button>
+          <button mat-menu-item routerLink="/tables/funds/add">Add</button>
+          <button mat-menu-item routerLink="/tables/funds/edit">Edit</button>
+        </mat-menu>
 
-    <button mat-button routerLink="/contact">Contact</button>
-  </nav>
+        <!-- Districts -->
+        <button mat-menu-item [matMenuTriggerFor]="districtsMenu">
+          <mat-icon>location_city</mat-icon>
+          <span>Districts</span>
+        </button>
+        <mat-menu #districtsMenu="matMenu">
+          <button mat-menu-item routerLink="/tables/districts/view">
+            View
+          </button>
+          <button mat-menu-item routerLink="/tables/districts/add">Add</button>
+          <button mat-menu-item routerLink="/tables/districts/edit">
+            Edit
+          </button>
+        </mat-menu>
+
+        <!-- Talukas -->
+        <button mat-menu-item [matMenuTriggerFor]="talukasMenu">
+          <mat-icon>location_on</mat-icon>
+          <span>Talukas</span>
+        </button>
+        <mat-menu #talukasMenu="matMenu">
+          <button mat-menu-item routerLink="/tables/talukas/view">View</button>
+          <button mat-menu-item routerLink="/tables/talukas/add">Add</button>
+          <button mat-menu-item routerLink="/tables/talukas/edit">Edit</button>
+        </mat-menu>
+      </mat-menu>
+    </nav>
+  </ng-container>
 
   <span class="spacer"></span>
 
-  <button mat-icon-button aria-label="Profile">
-    <mat-icon>account_circle</mat-icon>
-  </button>
+  <ng-container *ngIf="authService.isAuthenticated(); else authButtons">
+    <button mat-icon-button [matMenuTriggerFor]="userMenu">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item (click)="onLogout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  </ng-container>
+
+  <ng-template #authButtons>
+    <button mat-button routerLink="/login">Login</button>
+    <button mat-button routerLink="/register">Register</button>
+  </ng-template>
 </mat-toolbar>
