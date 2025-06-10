@@ -1,6 +1,6 @@
 // src/app/components/common/generic-table/generic-table.component.ts
 
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -23,7 +23,7 @@ import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.modul
     templateUrl: './generic-table.component.html',
     styleUrls: ['./generic-table.component.scss']
 })
-export class GenericTableComponent implements OnInit {
+export class GenericTableComponent implements OnInit, OnChanges {
     @Input() data: any[] = [];
     @Input() columns: { field: string; label: string }[] = [];
     @Input() title: string = '';
@@ -34,6 +34,7 @@ export class GenericTableComponent implements OnInit {
     @Input() showAddButton: boolean = true;
     @Input() addRoute: string = '';
     @Input() storageKey?: string;
+    @Input() defaultVisibleColumns: string[] = [];
 
     @Output() delete = new EventEmitter<any>();
     @Output() visibleColumnsChange = new EventEmitter<string[]>();
@@ -43,10 +44,22 @@ export class GenericTableComponent implements OnInit {
     allColumnFields: string[] = [];
     visibleColumns: string[] = [];
     pageIndex: number = 0;
-    pageSize: number = this.defaultPageSize;
+    pageSize: number = 10;
     sort: Sort = { active: '', direction: '' };
 
     ngOnInit() {
+        this.pageSize = this.defaultPageSize;
+        this.initializeColumns();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        // Reinitialize columns when the columns input changes
+        if (changes['columns'] && !changes['columns'].firstChange) {
+            this.initializeColumns();
+        }
+    }
+
+    private initializeColumns() {
         this.allColumnFields = this.columns.map(col => col.field);
         this.visibleColumns = this.getInitialVisibleColumns();
         this.updateDisplayedColumns();
@@ -56,10 +69,25 @@ export class GenericTableComponent implements OnInit {
     getInitialVisibleColumns(): string[] {
         const key = this.getStorageKey();
         const saved = localStorage.getItem(key);
+
+        // Priority 1: Use saved user preferences from localStorage
         if (saved) {
             const parsed = JSON.parse(saved);
-            return parsed.filter((col: string) => this.allColumnFields.includes(col));
+            const validColumns = parsed.filter((col: string) => this.allColumnFields.includes(col));
+            if (validColumns.length > 0) {
+                return validColumns;
+            }
         }
+
+        // Priority 2: Use defaultVisibleColumns if provided
+        if (this.defaultVisibleColumns && this.defaultVisibleColumns.length > 0) {
+            const validDefaultColumns = this.defaultVisibleColumns.filter((col: string) => this.allColumnFields.includes(col));
+            if (validDefaultColumns.length > 0) {
+                return validDefaultColumns;
+            }
+        }
+
+        // Priority 3: Fall back to showing all columns
         return [...this.allColumnFields];
     }
 
@@ -100,6 +128,7 @@ export class GenericTableComponent implements OnInit {
 
     get filteredData() {
         let filtered = this.data;
+
         if (this.searchTerm) {
             filtered = filtered.filter(row =>
                 this.visibleColumns.some(col =>
@@ -117,12 +146,14 @@ export class GenericTableComponent implements OnInit {
                 return (aValue > bValue ? 1 : -1) * (this.sort.direction === 'asc' ? 1 : -1);
             });
         }
+
         return filtered;
     }
 
     get pagedData() {
         const start = this.pageIndex * this.pageSize;
-        return this.filteredData.slice(start, start + this.pageSize);
+        const result = this.filteredData.slice(start, start + this.pageSize);
+        return result;
     }
 
     onPage(event: PageEvent) {

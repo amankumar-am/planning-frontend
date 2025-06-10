@@ -1,142 +1,83 @@
 // src/app/components/tables/generic-view/generic-view.component.ts
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Injector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule, PageEvent, MatPaginator } from '@angular/material/paginator';
-import { MatSortModule, Sort, MatSort } from '@angular/material/sort';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { RouterLink } from '@angular/router';
 import { MENU_CONFIG, MenuItem } from '../../../config/menu.config';
-import { MatTableDataSource } from '@angular/material/table';
+import { GenericTableComponent } from '../../common/generic-table/generic-table.component';
+
+// Import all the services
+import { SectorService } from '../../../services/sector/sector.service';
+import { FundService } from '../../../services/fund/fund.service';
+import { DistrictService } from '../../../services/district/district.service';
+import { TalukaService } from '../../../services/taluka/taluka.service';
+import { GpVillageService } from '../../../services/gp-village/gp-village.service';
 
 @Component({
     selector: 'app-generic-view',
     standalone: true,
     imports: [
         CommonModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatButtonModule,
-        MatIconModule,
-        MatMenuModule,
-        RouterLink
+        GenericTableComponent
     ],
     template: `
-        <div class="container">
-            <div class="header">
-                <h1>{{ title }}</h1>
-                <button mat-raised-button color="primary" [routerLink]="addRoute">
-                    <mat-icon>add</mat-icon>
-                    Add New
-                </button>
-            </div>
-
-            <mat-table [dataSource]="dataSource" matSort>
-                <ng-container *ngFor="let column of columns" [matColumnDef]="column.field">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>{{ column.label }}</mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                        <ng-container [ngSwitch]="column.type">
-                            <ng-container *ngSwitchCase="'reference'">
-                                {{ getReferenceLabel(element[column.field]) }}
-                            </ng-container>
-                            <ng-container *ngSwitchDefault>
-                                {{ element[column.field] }}
-                            </ng-container>
-                        </ng-container>
-                    </mat-cell>
-                </ng-container>
-
-                <ng-container matColumnDef="actions">
-                    <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                        <button mat-icon-button [matMenuTriggerFor]="menu">
-                            <mat-icon>more_vert</mat-icon>
-                        </button>
-                        <mat-menu #menu="matMenu">
-                            <button mat-menu-item [routerLink]="[editRoute, element.id]">
-                                <mat-icon>edit</mat-icon>
-                                <span>Edit</span>
-                            </button>
-                            <button mat-menu-item (click)="onDelete(element)">
-                                <mat-icon>delete</mat-icon>
-                                <span>Delete</span>
-                            </button>
-                        </mat-menu>
-                    </mat-cell>
-                </ng-container>
-
-                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-            </mat-table>
-
-            <mat-paginator
-                [pageSize]="10"
-                [pageSizeOptions]="[5, 10, 25, 100]"
-                (page)="onPageChange($event)"
-                aria-label="Select page">
-            </mat-paginator>
-        </div>
+        <app-generic-table
+            [data]="data"
+            [columns]="columns"
+            [title]="title"
+            [baseEditRoute]="editRoute"
+            [addRoute]="addRoute"
+            [showAddButton]="true"
+            [pageSizeOptions]="[5, 10, 25, 50, 100]"
+            [defaultPageSize]="10"
+            [storageKey]="storageKey"
+            [defaultVisibleColumns]="defaultVisibleColumns"
+            (delete)="onDelete($event)"
+            (visibleColumnsChange)="onVisibleColumnsChange($event)">
+        </app-generic-table>
     `,
     styles: [`
-        .container {
+        :host {
+            display: block;
             padding: 20px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-
-            h1 {
-                margin: 0;
-                color: #2c3e50;
-            }
-        }
-
-        mat-table {
-            width: 100%;
-            background: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        mat-header-cell {
-            background-color: #f5f7fa;
-            color: #2c3e50;
-            font-weight: 600;
-        }
-
-        mat-row:hover {
-            background-color: #f8f9fa;
-        }
-
-        .mat-column-actions {
-            width: 120px;
-            text-align: center;
         }
     `]
 })
 export class GenericViewComponent implements OnInit {
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
-    @ViewChild(MatSort) sort!: MatSort;
-
     title: string = '';
     columns: any[] = [];
-    displayedColumns: string[] = [];
-    dataSource: MatTableDataSource<any> = new MatTableDataSource();
+    data: any[] = [];
     addRoute: string = '';
     editRoute: string = '';
+    storageKey: string = '';
     parentMenuItem: MenuItem | undefined;
+    visibleColumns: string[] = [];
+    loading: boolean = false;
+    defaultVisibleColumns: string[] = [];
+
+    // Service mapping based on menu item ID
+    private serviceMapping: { [key: string]: any } = {};
 
     constructor(
         private route: ActivatedRoute,
-        private router: Router
-    ) { }
+        private router: Router,
+        private injector: Injector,
+        private sectorService: SectorService,
+        private fundService: FundService,
+        private districtService: DistrictService,
+        private talukaService: TalukaService,
+        private gpVillageService: GpVillageService
+    ) {
+        // Initialize service mapping
+        this.serviceMapping = {
+            'sectors': this.sectorService,
+            'funds': this.fundService,
+            'districts': this.districtService,
+            'talukas': this.talukaService,
+            'gpVillages': this.gpVillageService,
+            'villages': this.gpVillageService, // alias
+        };
+    }
 
     ngOnInit() {
         const menuItemId = this.route.snapshot.data['menuItemId'];
@@ -148,20 +89,20 @@ export class GenericViewComponent implements OnInit {
 
             if (this.parentMenuItem) {
                 this.title = this.parentMenuItem.label;
+
+                // Set initial columns from MENU_CONFIG, but we'll update them when data loads
                 this.columns = this.parentMenuItem.columns || [];
-                this.displayedColumns = [...this.columns.map(col => col.field), 'actions'];
+
                 this.addRoute = menuItem.addRoute || '';
                 this.editRoute = menuItem.editRoute?.split('/:')[0] || '';
+                this.storageKey = `generic_view_${menuItemId}`;
 
-                // TODO: Load data from service
-                this.loadData();
+                // Load real data from service
+                this.loadDataFromService();
             }
+        } else {
+            console.error('Menu item not found for ID:', menuItemId);
         }
-    }
-
-    ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
     }
 
     private findMenuItem(items: MenuItem[], id: string): MenuItem | undefined {
@@ -189,28 +130,220 @@ export class GenericViewComponent implements OnInit {
         return undefined;
     }
 
-    private loadData() {
-        // TODO: Implement data loading from service
-        // For now, using mock data
-        const mockData = [
-            { id: 1, name: 'Test 1', description: 'Description 1' },
-            { id: 2, name: 'Test 2', description: 'Description 2' },
-            { id: 3, name: 'Test 3', description: 'Description 3' }
-        ];
-        this.dataSource.data = mockData;
+    private loadDataFromService() {
+        if (!this.parentMenuItem) {
+            return;
+        }
+
+        this.loading = true;
+
+        // Get the appropriate service based on the parent menu item ID
+        const service = this.getServiceForMenuItem(this.parentMenuItem.id);
+
+        if (!service) {
+            this.loading = false;
+            return;
+        }
+
+        // Call the appropriate method to fetch all data
+        const methodName = this.getServiceMethodName(this.parentMenuItem.id);
+        const serviceMethod = service[methodName];
+
+        if (!serviceMethod) {
+            this.loading = false;
+            return;
+        }
+
+        serviceMethod.call(service).subscribe({
+            next: (response: any) => {
+                let newColumns = this.columns; // Keep existing columns as default
+                let newDefaultVisibleColumns: string[] = [];
+
+                // Handle different response formats and discover columns
+                if (response?.data) {
+                    this.data = response.data;
+                    // Extract defaultVisibleColumns from response
+                    if (response.defaultVisibleColumns && Array.isArray(response.defaultVisibleColumns)) {
+                        newDefaultVisibleColumns = response.defaultVisibleColumns;
+                    }
+
+                    // Use schema from response if available
+                    if (response.schema && Array.isArray(response.schema)) {
+                        newColumns = this.mapSchemaToColumns(response.schema);
+                    } else if (this.data.length > 0) {
+                        // Auto-discover columns from the actual data if MENU_CONFIG is limited
+                        const menuConfigColumns = this.parentMenuItem?.columns || [];
+                        if (menuConfigColumns.length <= 2) {
+                            newColumns = this.autoDiscoverColumns(this.data[0]);
+                        }
+                    }
+                } else if (Array.isArray(response)) {
+                    this.data = response;
+
+                    // Auto-discover columns from the actual data
+                    if (this.data.length > 0) {
+                        const menuConfigColumns = this.parentMenuItem?.columns || [];
+                        if (menuConfigColumns.length <= 2) {
+                            newColumns = this.autoDiscoverColumns(this.data[0]);
+                        }
+                    }
+                } else {
+                    this.data = [];
+                }
+
+                // Update columns only if they changed
+                if (JSON.stringify(newColumns) !== JSON.stringify(this.columns)) {
+                    this.columns = [...newColumns]; // Create new array reference to trigger change detection
+                }
+
+                // Update defaultVisibleColumns
+                this.defaultVisibleColumns = newDefaultVisibleColumns;
+
+                this.loading = false;
+            },
+            error: (error: any) => {
+                this.loading = false;
+
+                // Fallback to empty array
+                this.data = [];
+                this.defaultVisibleColumns = [];
+
+                // Optionally show user-friendly error message
+                // You could emit an event or show a snackbar here
+            }
+        });
     }
 
-    getReferenceLabel(value: any): string {
-        // TODO: Implement reference label lookup
-        return value?.name || value;
+    private getServiceForMenuItem(menuItemId: string): any {
+        // Map menu item IDs to services
+        const serviceMap: { [key: string]: any } = {
+            'sectors': this.sectorService,
+            'funds': this.fundService,
+            'districts': this.districtService,
+            'talukas': this.talukaService,
+            'gpVillages': this.gpVillageService,
+            'villages': this.gpVillageService,
+        };
+
+        return serviceMap[menuItemId];
     }
 
-    onPageChange(event: PageEvent) {
-        // TODO: Implement pagination
+    private getServiceMethodName(menuItemId: string): string {
+        // Map menu item IDs to their service method names
+        const methodMap: { [key: string]: string } = {
+            'sectors': 'getAllSectors',
+            'funds': 'getAllFunds',
+            'districts': 'getAllDistricts',
+            'talukas': 'getAllTalukas',
+            'gpVillages': 'getAllGpVillages',
+            'villages': 'getAllGpVillages',
+        };
+
+        return methodMap[menuItemId] || 'getAll';
+    }
+
+    onVisibleColumnsChange(columns: string[]) {
+        this.visibleColumns = columns;
+
+        // TODO: If you need to reload data with only visible columns for performance
+        // You could implement selective data loading here
     }
 
     onDelete(element: any) {
-        // TODO: Implement delete functionality
-        console.log('Delete', element);
+        if (!this.parentMenuItem) {
+            return;
+        }
+
+        // Show confirmation dialog
+        const itemName = element.name || element.nameEn || element.id;
+        const confirmed = confirm(`Are you sure you want to delete "${itemName}"?`);
+
+        if (confirmed) {
+            const service = this.getServiceForMenuItem(this.parentMenuItem.id);
+            const deleteMethodName = this.getDeleteMethodName(this.parentMenuItem.id);
+
+            if (service && service[deleteMethodName]) {
+                service[deleteMethodName].call(service, element.id).subscribe({
+                    next: () => {
+                        // Remove from local data immediately for better UX
+                        const index = this.data.findIndex(item => item.id === element.id);
+                        if (index > -1) {
+                            this.data.splice(index, 1);
+                            this.data = [...this.data]; // Trigger change detection
+                        }
+
+                        // Optionally show success message
+                        // You could emit an event or show a snackbar here
+                    },
+                    error: (error: any) => {
+                        // Optionally show error message
+                        alert('Error deleting item. Please try again.');
+                    }
+                });
+            } else {
+                alert('Delete functionality not available for this item type.');
+            }
+        }
+    }
+
+    private getDeleteMethodName(menuItemId: string): string {
+        // Map menu item IDs to their delete method names
+        const deleteMethodMap: { [key: string]: string } = {
+            'sectors': 'deleteSector',
+            'funds': 'deleteFund',
+            'districts': 'deleteDistrict',
+            'talukas': 'deleteTaluka',
+            'gpVillages': 'deleteGpVillage',
+            'villages': 'deleteGpVillage',
+        };
+
+        return deleteMethodMap[menuItemId] || 'delete';
+    }
+
+    private mapSchemaToColumns(schema: any[]): any[] {
+        return schema.map(schemaItem => ({
+            field: schemaItem.field || schemaItem.name,
+            label: schemaItem.label || this.formatFieldName(schemaItem.field || schemaItem.name),
+            type: schemaItem.type || 'text'
+        }));
+    }
+
+    private autoDiscoverColumns(sampleData: any): any[] {
+        if (!sampleData) return this.columns; // Return existing columns if no sample data
+
+        // Get all properties from the sample data
+        const discoveredFields = Object.keys(sampleData);
+
+        // Create columns from discovered fields
+        return discoveredFields.map(field => ({
+            field: field,
+            label: this.formatFieldName(field),
+            type: this.guessFieldType(sampleData[field])
+        }));
+    }
+
+    private formatFieldName(field: string): string {
+        // Convert camelCase/snake_case to readable labels
+        return field
+            .replace(/([A-Z])/g, ' $1') // Add space before capital letters
+            .replace(/_/g, ' ') // Replace underscores with spaces
+            .replace(/^./, str => str.toUpperCase()) // Capitalize first letter
+            .trim();
+    }
+
+    private guessFieldType(value: any): string {
+        if (value === null || value === undefined) return 'text';
+
+        if (typeof value === 'boolean') return 'boolean';
+        if (typeof value === 'number') return 'number';
+        if (value instanceof Date) return 'date';
+        if (typeof value === 'string') {
+            // Check if it looks like a date string
+            if (value.match(/^\d{4}-\d{2}-\d{2}/) || value.includes('T')) {
+                return 'date';
+            }
+        }
+
+        return 'text';
     }
 } 

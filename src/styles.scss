@@ -13,3 +13,19 @@ body {
   background-color: v.$gray-bg;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+// Snackbar notification styles
+::ng-deep .success-snackbar {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+::ng-deep .error-snackbar {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+::ng-deep .warning-snackbar {
+  background-color: #ff9800 !important;
+  color: white !important;
+}

@@ -41,6 +41,12 @@ export const MENU_CONFIG: MenuItem[] = [
         route: '/dashboard'
     },
     {
+        id: 'planning-stepper',
+        label: 'Planning Form',
+        icon: 'assignment',
+        route: '/stepper'
+    },
+    {
         id: 'tables',
         label: 'Tables',
         icon: 'table_chart',

@@ -74,5 +74,15 @@ export const routes: Routes = [
         loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent),
         canActivate: [AuthGuard]
     },
+    {
+        path: 'stepper',
+        loadComponent: () => import('./components/common/stepper/stepper.component').then(m => m.StepperComponent),
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'form',
+        loadComponent: () => import('./components/common/stepper/stepper.component').then(m => m.StepperComponent),
+        canActivate: [AuthGuard]
+    },
     ...generateRoutesFromMenu(MENU_CONFIG)
 ];
