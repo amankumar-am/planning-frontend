@@ -5,6 +5,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
 import { CreateBeneficiaryGroupDto, BeneficiaryGroup, UpdateBeneficiaryGroupDto } from '../../models/beneficiaryGroup.model';
+import { QueryOptions, QueryHelper } from '../../core/query.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,14 @@ export class BeneficiaryGroupService {
   // Get all beneficiary groups
   getAllBeneficiaryGroups(): Observable<ReferenceDataResponse<BeneficiaryGroup>> {
     return this.http.get<ReferenceDataResponse<BeneficiaryGroup>>(this.apiUrl);
+  }
+
+  // Get beneficiary groups with query (filtering, sorting, pagination)
+  getBeneficiaryGroupsWithQuery(options: QueryOptions): Observable<ReferenceDataResponse<BeneficiaryGroup>> {
+    const params = QueryHelper.buildQueryParams(options);
+    return this.http.get<ReferenceDataResponse<BeneficiaryGroup>>(`${this.apiUrl}/query`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get beneficiary group by ID

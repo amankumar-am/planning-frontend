@@ -1,10 +1,10 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
 import { CreateEmploymentTypeDto, EmploymentType, UpdateEmploymentTypeDto } from '../../models/employment-type.model';
+import { QueryOptions, QueryHelper } from '../../core/query.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,14 @@ export class EmploymentTypeService {
   // Get all employment-types
   getAllEmploymentTypes(): Observable<ReferenceDataResponse<EmploymentType>> {
     return this.http.get<ReferenceDataResponse<EmploymentType>>(this.apiUrl);
+  }
+
+  // Get employment types with query (filtering, sorting, pagination)
+  getEmploymentTypesWithQuery(options: QueryOptions): Observable<ReferenceDataResponse<EmploymentType>> {
+    const params = QueryHelper.buildQueryParams(options);
+    return this.http.get<ReferenceDataResponse<EmploymentType>>(`${this.apiUrl}/query`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get employment-type by ID

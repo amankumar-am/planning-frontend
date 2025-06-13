@@ -1,10 +1,10 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
 import { CreateAcDto, Ac, UpdateAcDto } from '../../models/ac.model';
+import { QueryOptions, QueryHelper } from '../../core/query.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,14 @@ export class AcService {
   // Get all acs
   getAllAcs(): Observable<ReferenceDataResponse<Ac>> {
     return this.http.get<ReferenceDataResponse<Ac>>(this.apiUrl);
+  }
+
+  // Get acs with query (filtering, sorting, pagination)
+  getAcsWithQuery(options: QueryOptions): Observable<ReferenceDataResponse<Ac>> {
+    const params = QueryHelper.buildQueryParams(options);
+    return this.http.get<ReferenceDataResponse<Ac>>(`${this.apiUrl}/query`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get ac by ID

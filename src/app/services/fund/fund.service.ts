@@ -7,6 +7,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
 import { CreateFundDto, Fund, UpdateFundDto } from '../../models/fund.model';
+import { QueryOptions, QueryHelper } from '../../core/query.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,14 @@ export class FundService {
   // Get all funds
   getAllFunds(): Observable<ReferenceDataResponse<Fund>> {
     return this.http.get<ReferenceDataResponse<Fund>>(this.apiUrl);
+  }
+
+  // Get funds with query (filtering, sorting, pagination)
+  getFundsWithQuery(options: QueryOptions): Observable<ReferenceDataResponse<Fund>> {
+    const params = QueryHelper.buildQueryParams(options);
+    return this.http.get<ReferenceDataResponse<Fund>>(`${this.apiUrl}/query`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get fund by ID

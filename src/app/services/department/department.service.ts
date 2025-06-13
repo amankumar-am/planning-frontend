@@ -1,10 +1,10 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
 import { CreateDepartmentDto, Department, UpdateDepartmentDto } from '../../models/department.model';
+import { QueryOptions, QueryHelper } from '../../core/query.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,14 @@ export class DepartmentService {
   // Get all departments
   getAllDepartments(): Observable<ReferenceDataResponse<Department>> {
     return this.http.get<ReferenceDataResponse<Department>>(this.apiUrl);
+  }
+
+  // Get departments with query (filtering, sorting, pagination)
+  getDepartmentsWithQuery(options: QueryOptions): Observable<ReferenceDataResponse<Department>> {
+    const params = QueryHelper.buildQueryParams(options);
+    return this.http.get<ReferenceDataResponse<Department>>(`${this.apiUrl}/query`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get department by ID

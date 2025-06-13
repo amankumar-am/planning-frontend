@@ -1,10 +1,10 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
 import { CreateOfficerClassDto, OfficerClass, UpdateOfficerClassDto } from '../../models/officer-class.model';
+import { QueryOptions, QueryHelper } from '../../core/query.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,14 @@ export class OfficerClassService {
   // Get all officer-classs
   getAllOfficerClasss(): Observable<ReferenceDataResponse<OfficerClass>> {
     return this.http.get<ReferenceDataResponse<OfficerClass>>(this.apiUrl);
+  }
+
+  // Get officer classes with query (filtering, sorting, pagination)
+  getOfficerClasssWithQuery(options: QueryOptions): Observable<ReferenceDataResponse<OfficerClass>> {
+    const params = QueryHelper.buildQueryParams(options);
+    return this.http.get<ReferenceDataResponse<OfficerClass>>(`${this.apiUrl}/query`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get officer-class by ID

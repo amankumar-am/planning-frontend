@@ -29,7 +29,7 @@ import { HasName } from '../../../services/generic.model';
   ],
 })
 export class ReferenceFieldComponent<T extends HasName> implements OnInit, ControlValueAccessor, Validator {
-  @Input() fetchData?: () => Promise<{ data: T[]; schema: { field: keyof T; label: string }[], defaultVisibleColumns: string[] }>;
+  @Input() fetchData?: (options?: any) => Promise<{ data: T[]; schema: { field: keyof T; label: string }[], defaultVisibleColumns: string[] }>;
   @Input() labelField: string = '';
   @Input() displayField: string | string[] = 'name'; // Field(s) to display in the input - can be single field or array for concatenation
   @Input() displayFieldSeparator: string = ' '; // Separator for concatenated fields (default: space)
@@ -72,7 +72,7 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
       const parentControl = this.formGroup.get(this.dependsOn);
       if (parentControl) {
         parentControl.valueChanges.subscribe((value) => {
-          // Reset cache when parent changes
+          // Reset cache when parent changes - data will be reloaded with new dependency filter
           this.resetDataCache();
           // Clear current selection
           this.selectedItem = null;
@@ -93,6 +93,43 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
     this.defaultVisibleColumns = [];
   }
 
+  // Build query options for backend API call
+  private buildQueryOptions(): any {
+    const options: any = {};
+
+    // Add existing filters as object (not array)
+    if (this.filters && Object.keys(this.filters).length > 0) {
+      options.filters = { ...this.filters };
+      console.debug(`[${this.labelField}] Applied filters:`, options.filters);
+    }
+
+    // Add dependency filter
+    if (this.dependsOn && this.formGroup) {
+      const parentControl = this.formGroup.get(this.dependsOn);
+      if (parentControl?.value) {
+        // Extract the ID value if it's an object
+        const parentValue = typeof parentControl.value === 'object' ? parentControl.value?.id : parentControl.value;
+        if (parentValue) {
+          options.dependsOn = {
+            field: this.dependsOn,
+            value: parentValue
+          };
+          console.debug(`[${this.labelField}] Applied dependency filter:`, options.dependsOn);
+        }
+      }
+    }
+
+    // Add sorting
+    if (this.sortBy) {
+      options.sortBy = this.sortBy;
+      options.sortOrder = this.sortOrder;
+      console.debug(`[${this.labelField}] Applied sorting:`, { sortBy: options.sortBy, sortOrder: options.sortOrder });
+    }
+
+    console.debug(`[${this.labelField}] Final query options:`, options);
+    return options;
+  }
+
   openModal(): void {
     if (!this.fetchData || typeof this.fetchData !== 'function') {
       console.error(`No valid fetchData function provided for ${this.labelField}`);
@@ -105,12 +142,10 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
 
     console.debug(`Opening modal for ${this.labelField}`);
 
-    if (this.isDataLoaded) {
-      this.openDialog();
-      return;
-    }
+    // Build query options for backend filtering/sorting
+    const queryOptions = this.buildQueryOptions();
 
-    this.fetchData().then((response) => {
+    this.fetchData(queryOptions).then((response) => {
       if (!response || !response.data || !response.schema || !response.defaultVisibleColumns) {
         console.error(`Invalid response for ${this.labelField}:`, response);
         this.snackBar.open(`Failed to load ${this.labelField}: Invalid data received`, 'Close', {
@@ -120,16 +155,8 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
         return;
       }
 
-      // Apply filtering and sorting to the data
-      let processedData = response.data;
-
-      // Apply filters
-      processedData = this.applyFilters(processedData);
-
-      // Apply sorting
-      processedData = this.applySorting(processedData);
-
-      this.data = processedData;
+      // Data comes pre-filtered and sorted from backend
+      this.data = response.data;
       this.schema = response.schema;
       this.defaultVisibleColumns = response.defaultVisibleColumns;
       this.isDataLoaded = true;
@@ -222,9 +249,41 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
     } else if (value) {
       // Try to find the item by the value field
       const foundItem = this.data.find(item => this.getFieldValue(item, this.valueField) === value);
-      this.selectedItem = foundItem || null;
+      if (foundItem) {
+        this.selectedItem = foundItem;
+      } else {
+        // If data is not loaded yet, store the value and try to load data
+        this.selectedItem = null;
+        this.loadDataAndSetValue(value);
+      }
     } else {
       this.selectedItem = null;
+    }
+  }
+
+  private async loadDataAndSetValue(value: any): Promise<void> {
+    if (!this.fetchData || this.isDataLoaded) {
+      return;
+    }
+
+    try {
+      const queryOptions = this.buildQueryOptions();
+      const response = await this.fetchData(queryOptions);
+
+      if (response?.data) {
+        this.data = response.data;
+        this.schema = response.schema || [];
+        this.defaultVisibleColumns = response.defaultVisibleColumns || [];
+        this.isDataLoaded = true;
+
+        // Now try to find the item again
+        const foundItem = this.data.find(item => this.getFieldValue(item, this.valueField) === value);
+        if (foundItem) {
+          this.selectedItem = foundItem;
+        }
+      }
+    } catch (error) {
+      console.error(`Failed to load data for ${this.labelField}:`, error);
     }
   }
 
@@ -252,66 +311,5 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
     return (this.formGroup?.get(this.controlName) as FormControl) || new FormControl();
   }
 
-  // Apply filters to the data
-  private applyFilters(data: T[]): T[] {
-    if (!this.filters || Object.keys(this.filters).length === 0) {
-      return data;
-    }
 
-    return data.filter(item => {
-      return Object.entries(this.filters).every(([field, filterValue]) => {
-        if (filterValue === null || filterValue === undefined || filterValue === '') {
-          return true; // Skip empty filters
-        }
-
-        const itemValue = this.getFieldValue(item, field);
-
-        // Handle different filter types
-        if (typeof filterValue === 'string') {
-          // Case-insensitive string matching
-          return String(itemValue).toLowerCase().includes(filterValue.toLowerCase());
-        } else if (typeof filterValue === 'boolean') {
-          return itemValue === filterValue;
-        } else if (typeof filterValue === 'number') {
-          return itemValue === filterValue;
-        } else if (Array.isArray(filterValue)) {
-          // Array filter - check if item value is in the array
-          return filterValue.includes(itemValue);
-        } else {
-          // Exact match for other types
-          return itemValue === filterValue;
-        }
-      });
-    });
-  }
-
-  // Apply sorting to the data
-  private applySorting(data: T[]): T[] {
-    if (!this.sortBy) {
-      return data;
-    }
-
-    return [...data].sort((a, b) => {
-      const aValue = this.getFieldValue(a, this.sortBy);
-      const bValue = this.getFieldValue(b, this.sortBy);
-
-      // Handle null/undefined values
-      if (aValue == null && bValue == null) return 0;
-      if (aValue == null) return this.sortOrder === 'asc' ? 1 : -1;
-      if (bValue == null) return this.sortOrder === 'asc' ? -1 : 1;
-
-      // Convert to strings for comparison if needed
-      const aStr = String(aValue);
-      const bStr = String(bValue);
-
-      let comparison = 0;
-      if (aStr < bStr) {
-        comparison = -1;
-      } else if (aStr > bStr) {
-        comparison = 1;
-      }
-
-      return this.sortOrder === 'desc' ? -comparison : comparison;
-    });
-  }
 }

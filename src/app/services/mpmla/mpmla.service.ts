@@ -1,10 +1,10 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
 import { CreateMpmlaDto, Mpmla, UpdateMpmlaDto } from '../../models/mpmla.model';
+import { QueryOptions, QueryHelper } from '../../core/query.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,14 @@ export class MpmlaService {
   // Get all mpmlas
   getAllMpmlas(): Observable<ReferenceDataResponse<Mpmla>> {
     return this.http.get<ReferenceDataResponse<Mpmla>>(this.apiUrl);
+  }
+
+  // Get mpmlas with query (filtering, sorting, pagination)
+  getMpmlasWithQuery(options: QueryOptions): Observable<ReferenceDataResponse<Mpmla>> {
+    const params = QueryHelper.buildQueryParams(options);
+    return this.http.get<ReferenceDataResponse<Mpmla>>(`${this.apiUrl}/query`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get mpmla by ID

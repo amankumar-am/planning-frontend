@@ -28,7 +28,7 @@ export const form1Config = {
             fields: [
                 { name: 'demand_sector', type: 'reference', label: 'Sector', required: true, options: 'sectors', displayField: 'nameGu', valueField: 'id' },
                 { name: 'demand_subSector', type: 'reference', label: 'Sub-Sector', required: true, options: 'subSectors', dependsOn: 'demand_sector', displayField: 'nameGu', valueField: 'id' },
-                { name: 'demand_beneficiaryDistrict', type: 'reference', label: 'Beneficiary District', required: true, options: 'districts', displayField: 'nameGu', valueField: 'id' },
+                { name: 'demand_beneficiaryDistrict', type: 'reference', label: 'Beneficiary District', required: true, options: 'districts', displayField: 'nameGu', valueField: 'id', defaultValue: { nameEn: 'Mehsana' } },
                 { name: 'demand_beneficiaryTaluka', type: 'reference', label: 'Beneficiary Taluka', required: true, options: 'talukas', dependsOn: 'demand_beneficiaryDistrict', displayField: 'nameGu', valueField: 'id' },
                 { name: 'demand_beneficiaryGroup', type: 'reference', label: 'Beneficiary Group', required: false, options: 'beneficiaryGroups', displayField: 'name_gu', valueField: 'id' },
                 { name: 'demand_beneficiaryAreaType', type: 'radio', label: 'Beneficiary Area Type', required: true, options: ['urban', 'village'] },
@@ -38,9 +38,9 @@ export const form1Config = {
         },
         {
             fields: [
-                { name: 'demand_officer', type: 'reference', label: 'Demand Officer', required: true, options: 'userProfiles', displayField: ['firstName', 'lastName'], displayFieldSeparator: ' ', valueField: 'id', sortBy: 'firstName', sortOrder: 'asc' },
-                { name: 'demand_assignPSTo', type: 'reference', label: 'Assign PS To', required: true, options: 'userProfiles', displayField: ['firstName', 'lastName', 'username'], displayFieldSeparator: ' - ', valueField: 'id', filters: { isActive: true }, sortBy: 'firstName', sortOrder: 'asc' },
-                { name: 'demand_implementationOfficer', type: 'reference', label: 'Implementation Officer', required: true, options: 'userProfiles', displayField: 'username', valueField: 'id', filters: { isActive: true }, sortBy: 'username', sortOrder: 'desc' },
+                { name: 'demand_officer', type: 'reference', label: 'Demand Officer', required: true, options: 'userProfiles', displayField: ['firstName', 'lastName'], displayFieldSeparator: ' ', valueField: 'id', filters: { isActive: true }, sortBy: 'firstName', sortOrder: 'asc' },
+                { name: 'demand_assignPSTo', type: 'reference', label: 'Assign PS To', required: true, options: 'userProfiles', displayField: ['firstName', 'lastName'], displayFieldSeparator: ' - ', valueField: 'id', filters: { isActive: true }, sortBy: 'firstName', sortOrder: 'asc' },
+                { name: 'demand_implementationOfficer', type: 'reference', label: 'Implementation Officer', required: true, options: 'userProfiles', displayField: ['firstName', 'lastName'], displayFieldSeparator: ' - ', valueField: 'id', filters: { isActive: true }, sortBy: 'username', sortOrder: 'asc' },
                 { name: 'demand_isTrust', type: 'checkbox', label: 'Trust?', defaultValue: false },
                 { name: 'demand_trustName', type: 'text', label: 'Trust Name', conditional: 'demand_isTrust:true' },
                 { name: 'demand_trustAddress', type: 'text', label: 'Trust Address', conditional: 'demand_isTrust:true' },

@@ -1,500 +1,50 @@
 # Planning Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.5.
+A comprehensive Angular application for government planning and project management with advanced form handling, reference field components, and multilingual support.
 
-## Development server
-
-To start a local development server, run:
+## Quick Start
 
 ```bash
+# Install dependencies
+npm install
+
+# Start development server
 ng serve
-```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
+# Build for production
 ng build
-```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
+# Run tests
 ng test
 ```
 
-## Running end-to-end tests
+The application will be available at `http://localhost:4200/`.
 
-For end-to-end (e2e) testing, run:
+## Project Overview
 
-```bash
-ng e2e
-```
+This Angular 19 application provides:
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+- **Dynamic Form System** with configurable fields and validation
+- **Reference Field Components** for data selection with filtering and sorting
+- **Cascading Dropdowns** with dependency management
+- **Multilingual Support** (English/Gujarati)
+- **Backend Query Integration** with filtering, sorting, and pagination
+- **Responsive Design** with Material UI components
 
-## Additional Resources
+## Key Features
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### 1. Reference Field Component
 
----
-
-# Reference Field Component Documentation
-
-A powerful, reusable Angular component for handling reference data selection with advanced filtering, sorting, and dependency management capabilities.
-
-## Table of Contents
-
-1. [Reference Field Overview](#reference-field-overview)
-2. [Basic Configuration](#basic-configuration)
-3. [Properties Reference](#properties-reference)
-4. [Advanced Features](#advanced-features)
-5. [Real-World Examples from form1.config.ts](#real-world-examples-from-form1configts)
-6. [Complete Examples](#complete-examples)
-7. [Troubleshooting](#troubleshooting)
-
-## Reference Field Overview
-
-The Reference Field Component allows users to select data from external sources (APIs) through a modal interface. It supports:
-
-- **Dynamic data loading** from configurable services
-- **Custom display and value fields**
-- **Advanced filtering** with multiple criteria
-- **Flexible sorting** (ascending/descending)
-- **Dependency management** (cascading dropdowns)
-- **Type-safe configuration** with TypeScript interfaces
-
-## Basic Configuration
-
-### Minimal Setup
+A powerful, reusable component for handling reference data selection:
 
 ```typescript
 {
   name: 'demand_officer',
   type: 'reference',
   label: 'Demand Officer',
-  options: 'userProfiles'
-}
-```
-
-### With Display and Value Fields
-
-```typescript
-{
-  name: 'demand_officer',
-  type: 'reference',
-  label: 'Demand Officer',
-  options: 'userProfiles',
-  displayField: 'username',    // What users see
-  valueField: 'id'            // What gets submitted
-}
-```
-
-### With Multiple Display Fields (Concatenation)
-
-```typescript
-{
-  name: 'demand_officer',
-  type: 'reference',
-  label: 'Demand Officer',
-  options: 'userProfiles',
-  displayField: ['firstName', 'lastName'],    // Concatenate multiple fields
-  displayFieldSeparator: ' ',                 // Join with space (default)
-  valueField: 'id'
-}
-```
-
-### With Custom Separator
-
-```typescript
-{
-  name: 'user_info',
-  type: 'reference',
-  label: 'User Information',
-  options: 'userProfiles',
-  displayField: ['username', 'department.name', 'designation.name'],
-  displayFieldSeparator: ' - ',               // Join with " - "
-  valueField: 'id'
-}
-```
-
-## Properties Reference
-
-### Core Properties
-
-| Property  | Type          | Required | Default | Description                 |
-| --------- | ------------- | -------- | ------- | --------------------------- |
-| `name`    | `string`      | ✅       | -       | Form control name           |
-| `type`    | `'reference'` | ✅       | -       | Field type identifier       |
-| `label`   | `string`      | ✅       | -       | Display label for the field |
-| `options` | `string`      | ✅       | -       | Service key from serviceMap |
-
-### Display Properties
-
-| Property                | Type                 | Required | Default  | Description                               |
-| ----------------------- | -------------------- | -------- | -------- | ----------------------------------------- |
-| `displayField`          | `string \| string[]` | ❌       | `'name'` | Field(s) to show in UI (single or array)  |
-| `displayFieldSeparator` | `string`             | ❌       | `' '`    | Separator for concatenated fields (space) |
-| `valueField`            | `string`             | ❌       | `'id'`   | Field to submit in form                   |
-
-### Validation Properties
-
-| Property   | Type      | Required | Default | Description               |
-| ---------- | --------- | -------- | ------- | ------------------------- |
-| `required` | `boolean` | ❌       | `false` | Whether field is required |
-
-### Dependency Properties
-
-| Property    | Type     | Required | Default | Description                     |
-| ----------- | -------- | -------- | ------- | ------------------------------- |
-| `dependsOn` | `string` | ❌       | `''`    | Parent field name for cascading |
-
-### Filtering Properties
-
-| Property  | Type     | Required | Default | Description            |
-| --------- | -------- | -------- | ------- | ---------------------- |
-| `filters` | `object` | ❌       | `{}`    | Filter criteria object |
-
-### Sorting Properties
-
-| Property    | Type              | Required | Default | Description           |
-| ----------- | ----------------- | -------- | ------- | --------------------- |
-| `sortBy`    | `string`          | ❌       | `''`    | Field name to sort by |
-| `sortOrder` | `'asc' \| 'desc'` | ❌       | `'asc'` | Sort direction        |
-
-### Conditional Properties
-
-| Property      | Type     | Required | Default | Description                             |
-| ------------- | -------- | -------- | ------- | --------------------------------------- |
-| `conditional` | `string` | ❌       | `''`    | Show/hide logic (e.g., `'field:value'`) |
-
-## Advanced Features
-
-### 1. Field Concatenation
-
-Reference fields support displaying multiple fields concatenated together, which is useful when you want to show comprehensive information in the selection dropdown.
-
-#### Basic Concatenation
-
-```typescript
-{
-  name: 'full_name_user',
-  type: 'reference',
-  label: 'Select User',
   options: 'userProfiles',
   displayField: ['firstName', 'lastName'],
-  valueField: 'id'
-}
-```
-
-**Result:** Displays "John Doe" instead of just "John" or "Doe"
-
-#### With Custom Separator
-
-```typescript
-{
-  name: 'detailed_user',
-  type: 'reference',
-  label: 'Select User',
-  options: 'userProfiles',
-  displayField: ['firstName', 'lastName', 'username'],
-  displayFieldSeparator: ' | ',
-  valueField: 'id'
-}
-```
-
-**Result:** Displays "John Doe | johndoe123"
-
-#### With Nested Fields
-
-```typescript
-{
-  name: 'comprehensive_user',
-  type: 'reference',
-  label: 'Select User',
-  options: 'userProfiles',
-  displayField: ['firstName', 'lastName', 'department.name', 'designation.name'],
-  displayFieldSeparator: ' - ',
-  valueField: 'id'
-}
-```
-
-**Result:** Displays "John Doe - Engineering - Senior Developer"
-
-#### Common Use Cases
-
-**Employee Selection with Department:**
-
-```typescript
-{
-  name: 'employee',
-  type: 'reference',
-  label: 'Select Employee',
-  options: 'userProfiles',
-  displayField: ['firstName', 'lastName', 'employeeId'],
-  displayFieldSeparator: ' (',
-  valueField: 'id'
-}
-// Note: You might want to add closing parenthesis in a custom format
-```
-
-**Location with Hierarchy:**
-
-```typescript
-{
-  name: 'location',
-  type: 'reference',
-  label: 'Select Location',
-  options: 'villages',
-  displayField: ['nameEn', 'taluka.nameEn', 'district.nameEn'],
-  displayFieldSeparator: ', ',
-  valueField: 'id'
-}
-```
-
-**Result:** Displays "Village Name, Taluka Name, District Name"
-
-#### Handling Empty Values
-
-The concatenation automatically handles empty, null, or undefined values by filtering them out:
-
-```typescript
-{
-  name: 'user_with_optional_fields',
-  type: 'reference',
-  label: 'Select User',
-  options: 'userProfiles',
-  displayField: ['firstName', 'middleName', 'lastName'],  // middleName might be empty
   displayFieldSeparator: ' ',
-  valueField: 'id'
-}
-```
-
-**Result:**
-
-- If middleName exists: "John Michael Doe"
-- If middleName is empty: "John Doe" (no extra spaces)
-
-### 2. Filtering
-
-Reference fields support multiple filter types with AND logic between different fields.
-
-#### String Filters (Case-insensitive partial matching)
-
-```typescript
-{
-  name: 'user_field',
-  type: 'reference',
-  options: 'userProfiles',
-  filters: {
-    firstName: 'john'  // Matches 'John', 'Johnny', 'Johnson'
-  }
-}
-```
-
-#### Boolean Filters (Exact matching)
-
-```typescript
-{
-  name: 'active_users',
-  type: 'reference',
-  options: 'userProfiles',
-  filters: {
-    isActive: true  // Only active users
-  }
-}
-```
-
-#### Number Filters (Exact matching)
-
-```typescript
-{
-  name: 'age_filter',
-  type: 'reference',
-  options: 'userProfiles',
-  filters: {
-    age: 25  // Users with age exactly 25
-  }
-}
-```
-
-#### Array Filters (Inclusion matching)
-
-```typescript
-{
-  name: 'gender_filter',
-  type: 'reference',
-  options: 'userProfiles',
-  filters: {
-    gender: ['Male', 'Female']  // Users with gender in array
-  }
-}
-```
-
-#### Multiple Filters (AND logic)
-
-```typescript
-{
-  name: 'complex_filter',
-  type: 'reference',
-  options: 'userProfiles',
-  filters: {
-    isActive: true,
-    gender: 'Male',
-    firstName: 'john'
-  }
-}
-```
-
-#### Nested Field Filters (Dot notation)
-
-```typescript
-{
-  name: 'department_filter',
-  type: 'reference',
-  options: 'userProfiles',
-  filters: {
-    'department.name': 'Engineering',
-    'office.location': 'Mumbai'
-  }
-}
-```
-
-### 3. Sorting
-
-Control the order of items in the reference modal.
-
-#### Basic Sorting
-
-```typescript
-{
-  name: 'sorted_users',
-  type: 'reference',
-  options: 'userProfiles',
-  sortBy: 'username',
-  sortOrder: 'asc'
-}
-```
-
-#### Descending Sort
-
-```typescript
-{
-  name: 'reverse_sorted',
-  type: 'reference',
-  options: 'userProfiles',
-  sortBy: 'dateOfJoining',
-  sortOrder: 'desc'
-}
-```
-
-#### Sort by Nested Fields
-
-```typescript
-{
-  name: 'dept_sorted',
-  type: 'reference',
-  options: 'userProfiles',
-  sortBy: 'department.name',
-  sortOrder: 'asc'
-}
-```
-
-### 4. Dependencies (Cascading Dropdowns)
-
-Create parent-child relationships between reference fields.
-
-```typescript
-// Parent field
-{
-  name: 'demand_beneficiaryDistrict',
-  type: 'reference',
-  label: 'District',
-  options: 'districts',
-  displayField: 'nameEn',
-  valueField: 'id'
-},
-
-// Child field (depends on district)
-{
-  name: 'demand_beneficiaryTaluka',
-  type: 'reference',
-  label: 'Taluka',
-  options: 'talukas',
-  dependsOn: 'demand_beneficiaryDistrict',  // 👈 Key property
-  displayField: 'nameEn',
-  valueField: 'id'
-}
-```
-
-### 5. Conditional Display
-
-Show/hide fields based on other field values.
-
-```typescript
-{
-  name: 'demand_beneficiaryVillage',
-  type: 'reference',
-  label: 'Village',
-  options: 'villages',
-  conditional: 'demand_beneficiaryAreaType:village',  // Show only if area type is 'village'
-  dependsOn: 'demand_beneficiaryTaluka'
-}
-```
-
-## Real-World Examples from form1.config.ts
-
-These examples are currently implemented in the actual form configuration:
-
-### Example 1: Basic Officer Selection with Sorting
-
-```typescript
-{
-  name: 'demand_officer',
-  type: 'reference',
-  label: 'Demand Officer',
-  required: true,
-  options: 'userProfiles',
-  displayField: 'username',
-  valueField: 'id',
-  sortBy: 'username',
-  sortOrder: 'asc'
-}
-```
-
-**Result:** Displays all user profiles sorted alphabetically by username. Users see usernames in the selection modal, but the form submits the user ID.
-
-### Example 2: Filtered Active Users for Assignment
-
-```typescript
-{
-  name: 'demand_assignPSTo',
-  type: 'reference',
-  label: 'Assign PS To',
-  required: true,
-  options: 'userProfiles',
-  displayField: 'firstName',
   valueField: 'id',
   filters: { isActive: true },
   sortBy: 'firstName',
@@ -502,96 +52,146 @@ These examples are currently implemented in the actual form configuration:
 }
 ```
 
-**Result:** Shows only active users, displays their first names, sorted alphabetically. Perfect for assignment scenarios where only active users should be selectable.
+**Features:**
 
-### Example 3: Implementation Officer with Descending Sort
+- Dynamic data loading from configurable services
+- Custom display and value fields
+- Field concatenation with custom separators
+- Advanced filtering with multiple criteria
+- Flexible sorting (ascending/descending)
+- Dependency management (cascading dropdowns)
+- Backend query integration
+
+### 2. Default Values for Reference Fields
+
+Enhanced default value system supporting both simple values and object-based specifications:
 
 ```typescript
+// Simple value (backward compatible)
+{ defaultValue: 'mehsana' }
+
+// Object-based field/value specification
+{ defaultValue: { nameEn: 'Mehsana' } }
+{ defaultValue: { nameGu: 'મહેસાણા' } }
+
+// Multiple field fallback
+{ defaultValue: { nameEn: 'Mehsana', nameGu: 'મહેસાણા', code: 'MHS' } }
+```
+
+### 3. Form Validation System
+
+Consistent validation using Angular Reactive Forms with custom directive:
+
+```html
+<mat-error appValidationMessage [formGroup]="formGroup" [controlName]="field.name"></mat-error>
+```
+
+**Validation Features:**
+
+- Custom validation message directive
+- Field-specific error messages
+- Consistent error display across all components
+- Integration with reference fields
+
+### 4. Backend Query System
+
+Efficient data loading with backend filtering, sorting, and pagination:
+
+```typescript
+// Query options automatically built from field configuration
 {
-  name: 'demand_implementationOfficer',
-  type: 'reference',
-  label: 'Implementation Officer',
-  required: true,
-  options: 'userProfiles',
-  displayField: 'username',
-  valueField: 'id',
-  filters: { isActive: true },
-  sortBy: 'username',
-  sortOrder: 'desc'
+  filters: [
+    { field: 'isActive', operator: 'eq', value: true },
+    { field: 'department', operator: 'eq', value: 'Engineering' }
+  ],
+  sortBy: 'firstName',
+  sortOrder: 'asc',
+  page: 1,
+  limit: 50
 }
 ```
 
-**Result:** Shows only active users, displays usernames, sorted in reverse alphabetical order (Z to A). Useful when you want recent or priority users to appear first.
+## Form Configuration
 
-### Example 4: Cascading Location Selection
+### Basic Field Types
 
 ```typescript
-// Level 1: Sector
-{
-  name: 'demand_sector',
-  type: 'reference',
-  label: 'Sector',
-  required: true,
-  options: 'sectors',
-  displayField: 'nameGu',
-  valueField: 'id'
-},
+export const formConfig = {
+  columns: [
+    {
+      fields: [
+        // Text field
+        { name: "workId", type: "text", label: "Work ID", required: true },
 
-// Level 2: Sub-sector (depends on sector)
-{
-  name: 'demand_subSector',
-  type: 'reference',
-  label: 'Sub-Sector',
-  required: true,
-  options: 'subSectors',
-  dependsOn: 'demand_sector',
-  displayField: 'nameGu',
-  valueField: 'id'
-},
+        // Number field
+        { name: "amount", type: "number", label: "Amount", required: true },
 
-// Level 3: District
-{
-  name: 'demand_beneficiaryDistrict',
-  type: 'reference',
-  label: 'Beneficiary District',
-  required: true,
-  options: 'districts',
-  displayField: 'nameGu',
-  valueField: 'id'
-},
+        // Date field
+        { name: "requestDate", type: "date", label: "Request Date", required: true },
 
-// Level 4: Taluka (depends on district)
+        // Textarea
+        { name: "description", type: "textarea", label: "Description", minLength: 10 },
+
+        // Checkbox
+        { name: "isTrust", type: "checkbox", label: "Trust?", defaultValue: false },
+
+        // Radio buttons
+        { name: "areaType", type: "radio", label: "Area Type", options: ["urban", "village"] },
+      ],
+    },
+  ],
+};
+```
+
+### Reference Field Examples
+
+```typescript
+// Basic reference field
+{
+  name: 'demand_officer',
+  type: 'reference',
+  label: 'Demand Officer',
+  options: 'userProfiles',
+  displayField: 'username',
+  valueField: 'id'
+}
+
+// With field concatenation
+{
+  name: 'assigned_officer',
+  type: 'reference',
+  label: 'Assigned Officer',
+  options: 'userProfiles',
+  displayField: ['firstName', 'lastName', 'username'],
+  displayFieldSeparator: ' - ',
+  valueField: 'id'
+}
+
+// With filtering and sorting
+{
+  name: 'active_engineer',
+  type: 'reference',
+  label: 'Active Engineer',
+  options: 'userProfiles',
+  displayField: 'firstName',
+  valueField: 'id',
+  filters: { isActive: true, 'department.name': 'Engineering' },
+  sortBy: 'firstName',
+  sortOrder: 'asc'
+}
+
+// With dependencies (cascading dropdown)
 {
   name: 'demand_beneficiaryTaluka',
   type: 'reference',
   label: 'Beneficiary Taluka',
-  required: true,
   options: 'talukas',
   dependsOn: 'demand_beneficiaryDistrict',
   displayField: 'nameGu',
   valueField: 'id'
 }
-```
 
-**Result:** Creates a multi-level cascading dropdown system where:
-
-- Selecting a sector filters available sub-sectors
-- Selecting a district filters available talukas
-- Each field resets when its parent changes
-
-### Example 5: Conditional Village Selection
-
-```typescript
-// Radio button for area type
-{
-  name: 'demand_beneficiaryAreaType',
-  type: 'radio',
-  label: 'Beneficiary Area Type',
-  required: true,
-  options: ['urban', 'village']
-},
-
-// Village field (only shows for village areas)
+// With conditional display
 {
   name: 'demand_beneficiaryVillage',
   type: 'reference',
@@ -601,365 +201,206 @@ These examples are currently implemented in the actual form configuration:
   dependsOn: 'demand_beneficiaryTaluka',
   displayField: 'nameGu',
   valueField: 'id'
-},
+}
 
-// Text field (only shows for urban areas)
+// With default values
 {
-  name: 'demand_beneficiaryNagarpalika',
-  type: 'text',
-  label: 'Beneficiary Nagarpalika',
-  conditional: 'demand_beneficiaryAreaType:urban'
+  name: 'demand_beneficiaryDistrict',
+  type: 'reference',
+  label: 'Beneficiary District',
+  options: 'districts',
+  displayField: 'nameGu',
+  valueField: 'id',
+  defaultValue: { nameEn: 'Mehsana' }
 }
 ```
 
-**Result:**
+## Available Services
 
-- User selects area type (urban/village)
-- If "village" is selected, village dropdown appears
-- If "urban" is selected, text field for Nagarpalika appears
-- Village dropdown depends on selected taluka
+| Service Key        | Data Type       | Description                       |
+| ------------------ | --------------- | --------------------------------- |
+| `'userProfiles'`   | User Profiles   | System users and officers         |
+| `'districts'`      | Districts       | Administrative districts          |
+| `'talukas'`        | Talukas         | Sub-district administrative units |
+| `'villages'`       | Villages        | Village/GP data                   |
+| `'sectors'`        | Sectors         | Government sectors                |
+| `'subSectors'`     | Sub-sectors     | Sector subdivisions               |
+| `'funds'`          | Funds           | Funding sources                   |
+| `'financialYears'` | Financial Years | Fiscal year data                  |
+| `'departments'`    | Departments     | Government departments            |
+| `'designations'`   | Designations    | Job designations                  |
+| `'offices'`        | Offices         | Office locations                  |
+| `'mpmlas'`         | MP/MLAs         | Elected representatives           |
 
-## Complete Examples
+## Development Guidelines
 
-### Example 1: Field Concatenation Examples
+### Adding New Fields
 
-#### Full Name Display
+1. **Add to form configuration:**
 
-```typescript
-{
-  name: 'assigned_officer',
-  type: 'reference',
-  label: 'Assigned Officer',
-  required: true,
-  options: 'userProfiles',
-  displayField: ['firstName', 'lastName'],
-  displayFieldSeparator: ' ',
-  valueField: 'id',
-  sortBy: 'firstName',
-  sortOrder: 'asc'
-}
+   ```typescript
+   { name: 'newField', type: 'text', label: 'New Field', required: true }
+   ```
+
+2. **Add validation messages (if needed):**
+
+   ```typescript
+   // In validation-message.directive.ts
+   private validationMessages = {
+     newField: { required: 'New Field is required.' }
+   };
+   ```
+
+3. **Use standard error directive:**
+   ```html
+   <mat-error appValidationMessage [formGroup]="formGroup" [controlName]="field.name"></mat-error>
+   ```
+
+### Adding New Reference Services
+
+1. **Create service in appropriate directory**
+2. **Implement BaseReferenceUtilsService**
+3. **Add to service map in GenericFormComponent**
+4. **Configure backend query support (optional)**
+
+### Form Validation Best Practices
+
+- Use the `appValidationMessage` directive for consistent error display
+- Define field-specific validation messages in `validation-message.directive.ts`
+- Ensure custom components update form control values properly
+- Use global SCSS for styling, local SCSS only for component-specific overrides
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── components/
+│   │   ├── common/
+│   │   │   ├── generic-form/          # Main form component
+│   │   │   └── generic-table/         # Data table component
+│   │   ├── shared/
+│   │   │   └── reference-field/       # Reference field component
+│   │   └── forms-config/              # Form configurations
+│   ├── services/
+│   │   ├── utils/                     # Reference utility services
+│   │   └── [entity]/                  # Entity-specific services
+│   ├── models/                        # TypeScript interfaces
+│   ├── core/                          # Core utilities (QueryHelper)
+│   └── directives/                    # Custom directives
 ```
 
-**Result:** Shows "John Doe" instead of just "John", sorted by first name.
+## Backend Integration
 
-#### Comprehensive User Information
-
-```typescript
-{
-  name: 'detailed_user',
-  type: 'reference',
-  label: 'Select User',
-  required: true,
-  options: 'userProfiles',
-  displayField: ['firstName', 'lastName', 'username', 'department.name'],
-  displayFieldSeparator: ' | ',
-  valueField: 'id',
-  filters: { isActive: true },
-  sortBy: 'firstName'
-}
-```
-
-**Result:** Shows "John Doe | johndoe123 | Engineering" for active users only.
-
-#### Location Hierarchy
-
-```typescript
-{
-  name: 'village_location',
-  type: 'reference',
-  label: 'Select Village',
-  required: true,
-  options: 'villages',
-  displayField: ['nameEn', 'taluka.nameEn', 'district.nameEn'],
-  displayFieldSeparator: ', ',
-  valueField: 'id',
-  dependsOn: 'selected_taluka',
-  sortBy: 'nameEn'
-}
-```
-
-**Result:** Shows "Village Name, Taluka Name, District Name" with proper hierarchy.
-
-### Example 2: Basic User Selection
-
-```typescript
-{
-  name: 'assigned_officer',
-  type: 'reference',
-  label: 'Assigned Officer',
-  required: true,
-  options: 'userProfiles',
-  displayField: 'username',
-  valueField: 'id',
-  sortBy: 'username',
-  sortOrder: 'asc'
-}
-```
-
-**Result:** Shows a modal with all users, sorted by username, displaying usernames in the list.
-
-### Example 3: Filtered Active Users Only
-
-```typescript
-{
-  name: 'active_engineer',
-  type: 'reference',
-  label: 'Active Engineer',
-  required: true,
-  options: 'userProfiles',
-  displayField: 'firstName',
-  valueField: 'id',
-  filters: {
-    isActive: true,
-    'department.name': 'Engineering'
-  },
-  sortBy: 'firstName',
-  sortOrder: 'asc'
-}
-```
-
-**Result:** Shows only active users from Engineering department, sorted by first name.
-
-### Example 4: Multi-level Dependency Chain
-
-```typescript
-// Level 1: Sector
-{
-  name: 'demand_sector',
-  type: 'reference',
-  label: 'Sector',
-  required: true,
-  options: 'sectors',
-  displayField: 'nameEn',
-  valueField: 'id',
-  sortBy: 'nameEn'
-},
-
-// Level 2: Sub-sector (depends on sector)
-{
-  name: 'demand_subSector',
-  type: 'reference',
-  label: 'Sub-Sector',
-  required: true,
-  options: 'subSectors',
-  dependsOn: 'demand_sector',
-  displayField: 'nameEn',
-  valueField: 'id',
-  sortBy: 'nameEn'
-},
-
-// Level 3: Category (depends on sub-sector)
-{
-  name: 'demand_category',
-  type: 'reference',
-  label: 'Category',
-  required: true,
-  options: 'categories',
-  dependsOn: 'demand_subSector',
-  displayField: 'nameEn',
-  valueField: 'id',
-  sortBy: 'nameEn'
-}
-```
-
-**Result:** Creates a three-level cascading dropdown where each level depends on the previous selection.
-
-### Example 5: Complex Filtering with Multiple Criteria
-
-```typescript
-{
-  name: 'qualified_officer',
-  type: 'reference',
-  label: 'Qualified Officer',
-  required: true,
-  options: 'userProfiles',
-  displayField: 'username',
-  valueField: 'id',
-  filters: {
-    isActive: true,
-    gender: ['Male', 'Female'],
-    'employmentType.name': 'Permanent',
-    'officerClass.level': ['Class-1', 'Class-2'],
-    firstName: 'A'  // Names starting with 'A'
-  },
-  sortBy: 'username',
-  sortOrder: 'desc'
-}
-```
-
-**Result:** Shows only:
-
-- Active users
-- Any gender (Male or Female)
-- Permanent employees
-- Class-1 or Class-2 officers
-- First names containing 'A'
-- Sorted by username in descending order
-
-### Example 6: Conditional Field with Dependencies
-
-```typescript
-{
-  name: 'village_representative',
-  type: 'reference',
-  label: 'Village Representative',
-  required: true,
-  options: 'userProfiles',
-  conditional: 'beneficiary_area_type:village',  // Only show for village areas
-  dependsOn: 'selected_village',
-  displayField: 'firstName',
-  valueField: 'id',
-  filters: {
-    isActive: true,
-    'designation.name': 'Village Representative'
-  },
-  sortBy: 'firstName'
-}
-```
-
-**Result:**
-
-- Only appears when area type is 'village'
-- Resets when selected village changes
-- Shows only active Village Representatives
-- Sorted by first name
-
-## Available Service Options
-
-The `options` property maps to these available services:
-
-| Option Key            | Service                      | Data Type          | Description                        |
-| --------------------- | ---------------------------- | ------------------ | ---------------------------------- |
-| `'financialYears'`    | FinancialYearUtilsService    | Financial Years    | Fiscal year data                   |
-| `'funds'`             | FundUtilsService             | Funds              | Funding sources                    |
-| `'sectors'`           | SectorUtilsService           | Sectors            | Government sectors                 |
-| `'subSectors'`        | SubsectorUtilsService        | Sub-sectors        | Sector subdivisions                |
-| `'districts'`         | DistrictUtilsService         | Districts          | Administrative districts           |
-| `'talukas'`           | TalukaUtilsService           | Talukas            | Sub-district units                 |
-| `'villages'`          | GpVillageUtilsService        | Villages           | Village data                       |
-| `'beneficiaryGroups'` | BeneficiaryGroupUtilsService | Beneficiary Groups | Target groups                      |
-| `'userProfiles'`      | UserProfileUtilsService      | User Profiles      | System users                       |
-| `'officerClasses'`    | OfficerClassUtilsService     | Officer Classes    | Government officer classifications |
-| `'departments'`       | DepartmentUtilsService       | Departments        | Government departments             |
-| `'employmentTypes'`   | EmploymentTypeUtilsService   | Employment Types   | Employment categories              |
-| `'designations'`      | DesignationUtilsService      | Designations       | Job designations                   |
-| `'offices'`           | OfficeUtilsService           | Offices            | Office locations                   |
-| `'officeLevels'`      | OfficeLevelUtilsService      | Office Levels      | Administrative levels              |
-| `'states'`            | StateUtilsService            | States             | State data                         |
-| `'mpmlas'`            | MpmlaUtilsService            | MP/MLAs            | Elected representatives            |
-| `'prants'`            | PrantUtilsService            | Prants             | Regional divisions                 |
-
-## TypeScript Interface
-
-For better type safety and IntelliSense support:
-
-```typescript
-export interface ReferenceFieldConfig {
-  name: string;
-  type: "reference";
-  label: string;
-  required?: boolean;
-  options: string;
-  displayField?: string | string[]; // Single field or array for concatenation
-  displayFieldSeparator?: string; // Separator for concatenated fields
-  valueField?: string;
-  dependsOn?: string;
-  filters?: { [key: string]: any };
-  sortBy?: string;
-  sortOrder?: "asc" | "desc";
-  conditional?: string;
-}
-```
+The application integrates with a backend API supporting structured filtering, pagination, sorting, and relations. Query options are automatically built from field configurations and sent to backend endpoints for efficient data loading.
 
 ## Troubleshooting
 
 ### Common Issues
 
-#### 1. "No service found for optionsKey" Error
+**"No service found for optionsKey" Error:**
 
-**Problem:** Invalid service key in `options`
-**Solution:** Use one of the valid service keys from the Available Service Options table
+- Check that the service key exists in the service map
+- Verify the service is properly imported and injected
 
-#### 2. "Could not find column with id" Error
+**Empty Modal/No Data:**
 
-**Problem:** Mismatch between schema column names and actual data field names
-**Solution:** Check if the service properly maps database columns to JSON field names
-
-#### 3. Empty Modal / No Data
-
-**Problem:** Filters are too restrictive or dependency not selected
-**Solution:**
-
-- Check filter criteria
+- Check filter criteria are not too restrictive
 - Ensure parent fields are selected for dependent fields
 - Verify API is returning data
 
-#### 4. Sorting Not Working
-
-**Problem:** Sort field doesn't exist in data
-**Solution:** Verify the `sortBy` field name matches actual data fields
-
-#### 5. Dependencies Not Updating
-
-**Problem:** Parent-child relationship not configured correctly
-**Solution:**
+**Dependencies Not Updating:**
 
 - Ensure `dependsOn` matches exact parent field name
 - Check that parent field has `valueField` configured
 - Verify parent service sets dependency ID correctly
 
-### Best Practices
+**Default Values Not Working:**
 
-1. **Always specify `displayField` and `valueField`** for clarity
-2. **Use meaningful field names** that reflect the data purpose
-3. **Test filter combinations** to ensure they work as expected
-4. **Keep dependency chains reasonable** (max 3-4 levels)
-5. **Use TypeScript interfaces** for better development experience
-6. **Document complex filter logic** in comments
+- Check that the default value format matches available data
+- Use object-based specification for precise matching
+- Check console for debug messages about matching attempts
 
-#### Field Concatenation Best Practices
+## Contributing
 
-7. **Choose appropriate separators** based on the data type:
+1. Follow the established patterns for form configuration
+2. Use TypeScript interfaces for type safety
+3. Add validation messages for new fields
+4. Test with real data to ensure proper functionality
+5. Document complex configurations with comments
 
-   - Use `' '` (space) for names: "John Doe"
-   - Use `', '` (comma-space) for locations: "Village, Taluka, District"
-   - Use `' - '` (dash) for detailed info: "John Doe - Engineering - Manager"
-   - Use `' | '` (pipe) for distinct categories: "Username | Department | Role"
+## Build and Deployment
 
-8. **Order fields logically** in the array:
+```bash
+# Development build
+ng build
 
-   - Most important information first
-   - Follow natural reading patterns (firstName before lastName)
-   - Consider hierarchy (broader to specific: District, Taluka, Village)
+# Production build
+ng build --configuration production
 
-9. **Handle optional fields gracefully**:
+# Analyze bundle size
+ng build --stats-json
+npx webpack-bundle-analyzer dist/planning-frontend/stats.json
+```
 
-   - Place optional fields in the middle or end of the array
-   - The system automatically filters out empty values
+## Backend Query Implementation Status
 
-10. **Test with real data** to ensure concatenated strings are readable and not too long
+### ✅ COMPLETE: All Services Now Support Backend Queries
 
-11. **Consider mobile display** - longer concatenated strings may be truncated on smaller screens
+**Implementation Summary:**
 
-### Performance Tips
+- **18/18 services** now have full backend query support
+- All services implement `fetchItemsWithQuery()` override methods
+- All main services have `/query` endpoints with QueryHelper integration
+- Automatic fallback to frontend filtering if backend queries fail
+- Consistent query interface across all services
 
-1. **Use specific filters** to reduce data load
-2. **Limit dependency depth** to avoid cascading API calls
-3. **Cache frequently used reference data** at service level
-4. **Consider pagination** for large datasets (future enhancement)
+**Services with Full Backend Query Support:**
 
-## Future Enhancements
+**Core Reference Services:**
 
-Planned features for future versions:
+- ✅ UserProfileUtilsService - Complete with schema defaults
+- ✅ SectorUtilsService - Full filtering, sorting, pagination
+- ✅ DistrictUtilsService - Full filtering, sorting, pagination
+- ✅ FundUtilsService - Full filtering, sorting, pagination
+- ✅ FinancialYearUtilsService - Full filtering, sorting, pagination
+- ✅ DepartmentUtilsService - Full filtering, sorting, pagination
+- ✅ DesignationUtilsService - Full filtering, sorting, pagination
+- ✅ OfficeUtilsService - Full filtering, sorting, pagination
+- ✅ OfficeLevelUtilsService - Full filtering, sorting, pagination
+- ✅ StateUtilsService - Full filtering, sorting, pagination
+- ✅ MpmlaUtilsService - Full filtering, sorting, pagination
+- ✅ PrantUtilsService - Full filtering, sorting, pagination
+- ✅ OfficerClassUtilsService - Full filtering, sorting, pagination
+- ✅ EmploymentTypeUtilsService - Full filtering, sorting, pagination
+- ✅ BeneficiaryGroupUtilsService - Full filtering, sorting, pagination
+- ✅ AcUtilsService - Full filtering, sorting, pagination
 
-- [ ] **Client-side pagination** for large datasets
-- [ ] **Search functionality** within modals
-- [ ] **Multi-select capability** for array values
-- [ ] **Custom filter functions** for complex logic
-- [ ] **Async filter validation** with debouncing
-- [ ] **Export/Import** of filter configurations
-- [ ] **Template-based filtering** for common use cases
+**Dependency-Based Services:**
+
+- ✅ SubsectorUtilsService - Backend support with sector dependency
+- ✅ TalukaUtilsService - Backend support with district dependency
+- ✅ GpVillageUtilsService - Backend support with taluka dependency
+
+**Performance Benefits:**
+
+- 🚀 Reduced memory usage - only loads required data
+- ⚡ Faster load times - server-side filtering reduces network transfer
+- 📱 Better UX - pagination and search provide responsive experience
+- 📈 Scalability - handles large datasets efficiently
+
+**Query Features:**
+
+- **Filter Operators**: eq, like, in, gte, lte, ne, isNull, isNotNull
+- **Sorting**: ASC/DESC with multiple field support
+- **Pagination**: Configurable page size and navigation
+- **Search**: Global search across searchable fields
+- **Relations**: Support for nested object filtering
 
 ---
 
-**Need Help?** Check the troubleshooting section or refer to the complete examples above.
+**Status**: ✅ Complete Backend Query Implementation  
+**Last Updated**: December 2024  
+**Build Status**: ✅ All services compile successfully
+
+**For detailed examples and advanced usage, refer to the form configurations in `src/app/components/forms-config/`.**

@@ -125,6 +125,8 @@ export class GenericFormComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // Setup dynamic options after ViewChildren are available
     this.setupDynamicOptions();
+    // Set default values for reference fields
+    this.setReferenceFieldDefaults();
   }
 
   next() {
@@ -309,9 +311,9 @@ export class GenericFormComponent implements OnInit, AfterViewInit {
     }
 
     return {
-      loadItems: async () => {
+      loadItems: async (options?: any) => {
         try {
-          const response = await fetchMethod.call(service)();
+          const response = await fetchMethod.call(service)(options);
           if (!response?.data || !response?.schema || !response?.defaultVisibleColumns) {
             throw new Error(`Invalid response from ${optionsKey}`);
           }
@@ -443,6 +445,119 @@ export class GenericFormComponent implements OnInit, AfterViewInit {
       // Clear the selected value in the form
       this.formGroup.get(fieldName)?.setValue(null);
       referenceField.selectedItem = null; // Also clear the selected item
+    }
+  }
+
+  private async setReferenceFieldDefaults(): Promise<void> {
+    // Find all reference fields with default values
+    const referenceFieldsWithDefaults = this.columns
+      .flatMap(column => column.fields || [])
+      .filter(field => field.type === 'reference' && field.defaultValue);
+
+    for (const field of referenceFieldsWithDefaults) {
+      try {
+        await this.setReferenceFieldDefault(field);
+      } catch (error) {
+        console.error(`Failed to set default value for ${field.name}:`, error);
+      }
+    }
+  }
+
+  private async setReferenceFieldDefault(field: any): Promise<void> {
+    const service = this.getService(field.options);
+    if (!service || !service.loadItems) {
+      console.error(`No service found for field ${field.name} with options ${field.options}`);
+      return;
+    }
+
+    try {
+      // Load all items from the service
+      const response = await service.loadItems();
+      const items = response.data || [];
+
+      // Find the item that matches the default value
+      let defaultItem = null;
+      const defaultValue = field.defaultValue;
+
+      // Check if defaultValue is an object with field/value specification
+      if (typeof defaultValue === 'object' && defaultValue !== null && !Array.isArray(defaultValue)) {
+        // Object format: { fieldName: value }
+        // Example: { nameEn: 'Mehsana' } or { nameGu: 'મહેસાણા' }
+
+        for (const [fieldName, fieldValue] of Object.entries(defaultValue)) {
+          const fieldValueStr = String(fieldValue);
+
+          // Try exact match first
+          defaultItem = items.find((item: any) =>
+            item[fieldName] &&
+            item[fieldName].toString().toLowerCase() === fieldValueStr.toLowerCase()
+          );
+
+          // If not found, try partial match
+          if (!defaultItem) {
+            defaultItem = items.find((item: any) =>
+              item[fieldName] &&
+              item[fieldName].toString().toLowerCase().includes(fieldValueStr.toLowerCase())
+            );
+          }
+
+          // If found, break out of the loop
+          if (defaultItem) {
+            console.log(`Found item for ${field.name} using ${fieldName}: "${fieldValueStr}"`);
+            break;
+          }
+        }
+      } else {
+        // Simple value format (backward compatibility)
+        // First try exact match on the value field (usually 'id')
+        defaultItem = items.find((item: any) => item[field.valueField] === defaultValue);
+
+        // If not found, try to match by name fields (case-insensitive)
+        if (!defaultItem) {
+          const nameFields = ['name', 'nameEn', 'nameGu', 'title', 'label'];
+          for (const nameField of nameFields) {
+            defaultItem = items.find((item: any) =>
+              item[nameField] &&
+              item[nameField].toString().toLowerCase() === defaultValue.toString().toLowerCase()
+            );
+            if (defaultItem) break;
+          }
+        }
+
+        // If not found, try partial match on name fields
+        if (!defaultItem) {
+          const nameFields = ['name', 'nameEn', 'nameGu', 'title', 'label'];
+          for (const nameField of nameFields) {
+            defaultItem = items.find((item: any) =>
+              item[nameField] &&
+              item[nameField].toString().toLowerCase().includes(defaultValue.toString().toLowerCase())
+            );
+            if (defaultItem) break;
+          }
+        }
+      }
+
+      if (defaultItem) {
+        // Set the form control value to the value field (usually ID)
+        const valueToSet = defaultItem[field.valueField];
+        this.formGroup.get(field.name)?.setValue(valueToSet);
+
+        // Also update the reference field component if it exists
+        const referenceFieldComponent = this.referenceFieldComponents?.find(
+          comp => comp.controlName === field.name
+        );
+        if (referenceFieldComponent) {
+          // The reference field component will handle loading data and setting the display
+          referenceFieldComponent.writeValue(valueToSet);
+        }
+      } else {
+        const defaultValueStr = typeof defaultValue === 'object'
+          ? JSON.stringify(defaultValue)
+          : defaultValue;
+        console.warn(`Could not find item matching default value ${defaultValueStr} for field ${field.name}`);
+      }
+    } catch (error) {
+      console.error(`Error setting default value for ${field.name}:`, error);
     }
   }
 

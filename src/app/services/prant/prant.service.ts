@@ -1,10 +1,10 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
 import { CreatePrantDto, Prant, UpdatePrantDto } from '../../models/prant.model';
+import { QueryOptions, QueryHelper } from '../../core/query.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,14 @@ export class PrantService {
   // Get all prants
   getAllPrants(): Observable<ReferenceDataResponse<Prant>> {
     return this.http.get<ReferenceDataResponse<Prant>>(this.apiUrl);
+  }
+
+  // Get prants with query (filtering, sorting, pagination)
+  getPrantsWithQuery(options: QueryOptions): Observable<ReferenceDataResponse<Prant>> {
+    const params = QueryHelper.buildQueryParams(options);
+    return this.http.get<ReferenceDataResponse<Prant>>(`${this.apiUrl}/query`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get prant by ID

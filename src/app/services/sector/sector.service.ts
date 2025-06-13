@@ -7,6 +7,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
 import { CreateSectorDto, Sector, UpdateSectorDto } from '../../models/sector.model';
+import { QueryOptions, QueryHelper } from '../../core/query.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,14 @@ export class SectorService {
   // Get all sectors
   getAllSectors(): Observable<ReferenceDataResponse<Sector>> {
     return this.http.get<ReferenceDataResponse<Sector>>(this.apiUrl);
+  }
+
+  // Get sectors with query (filtering, sorting, pagination)
+  getSectorsWithQuery(options: QueryOptions): Observable<ReferenceDataResponse<Sector>> {
+    const params = QueryHelper.buildQueryParams(options);
+    return this.http.get<ReferenceDataResponse<Sector>>(`${this.apiUrl}/query`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get sector by ID

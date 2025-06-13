@@ -1,10 +1,10 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
 import { CreateDesignationDto, Designation, UpdateDesignationDto } from '../../models/designation.model';
+import { QueryOptions, QueryHelper } from '../../core/query.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,14 @@ export class DesignationService {
   // Get all designations
   getAllDesignations(): Observable<ReferenceDataResponse<Designation>> {
     return this.http.get<ReferenceDataResponse<Designation>>(this.apiUrl);
+  }
+
+  // Get designations with query (filtering, sorting, pagination)
+  getDesignationsWithQuery(options: QueryOptions): Observable<ReferenceDataResponse<Designation>> {
+    const params = QueryHelper.buildQueryParams(options);
+    return this.http.get<ReferenceDataResponse<Designation>>(`${this.apiUrl}/query`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get designation by ID

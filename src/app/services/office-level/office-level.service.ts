@@ -1,10 +1,10 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
 import { CreateOfficeLevelDto, OfficeLevel, UpdateOfficeLevelDto } from '../../models/office-level.model';
+import { QueryOptions, QueryHelper } from '../../core/query.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,14 @@ export class OfficeLevelService {
   // Get all office-levels
   getAllOfficeLevels(): Observable<ReferenceDataResponse<OfficeLevel>> {
     return this.http.get<ReferenceDataResponse<OfficeLevel>>(this.apiUrl);
+  }
+
+  // Get office levels with query (filtering, sorting, pagination)
+  getOfficeLevelsWithQuery(options: QueryOptions): Observable<ReferenceDataResponse<OfficeLevel>> {
+    const params = QueryHelper.buildQueryParams(options);
+    return this.http.get<ReferenceDataResponse<OfficeLevel>>(`${this.apiUrl}/query`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get office-level by ID

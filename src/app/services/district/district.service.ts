@@ -7,6 +7,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
 import { CreateDistrictDto, District, UpdateDistrictDto } from '../../models/district.model';
+import { QueryOptions, QueryHelper } from '../../core/query.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,14 @@ export class DistrictService {
   // Get all districts
   getAllDistricts(): Observable<ReferenceDataResponse<District>> {
     return this.http.get<ReferenceDataResponse<District>>(this.apiUrl);
+  }
+
+  // Get districts with query (filtering, sorting, pagination)
+  getDistrictsWithQuery(options: QueryOptions): Observable<ReferenceDataResponse<District>> {
+    const params = QueryHelper.buildQueryParams(options);
+    return this.http.get<ReferenceDataResponse<District>>(`${this.apiUrl}/query`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get district by ID

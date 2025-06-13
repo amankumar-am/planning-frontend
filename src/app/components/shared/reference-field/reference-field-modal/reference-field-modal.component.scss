@@ -1,108 +1,288 @@
 // src/app/components/shared/reference-field/reference-field-modal/reference-field-modal.component.scss
 
+/* --- Global Dialog Scroll Prevention --- */
+::ng-deep .mat-mdc-dialog-surface.mdc-dialog__surface {
+  overflow: hidden !important;
+  max-height: none !important;
+}
+
+::ng-deep .mat-mdc-dialog-surface {
+  overflow: hidden !important;
+  max-height: none !important;
+}
+
+::ng-deep .mdc-dialog__surface {
+  overflow: hidden !important;
+  max-height: none !important;
+}
+
+/* Force all dialog-related elements to not scroll */
+::ng-deep .cdk-overlay-pane .mat-mdc-dialog-container,
+::ng-deep .cdk-overlay-pane .mat-dialog-container,
+::ng-deep .mat-mdc-dialog-container,
+::ng-deep .mat-dialog-container {
+  overflow: hidden !important;
+  max-height: 95vh !important;
+}
+
+/* --- Main Dialog Container --- */
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 95vh;
+}
+
+:host > div {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 95vh;
+  overflow: hidden;
+}
+
 /* --- Dialog Header --- */
 .dialog-header {
-  padding: 4px 8px;
+  padding: 12px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #e0e0e0;
+  background: #f8f9fa;
 }
 
 .dialog-header h2 {
   margin: 0;
-  font-size: 14px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
 }
 
 /* --- Dialog Content --- */
 mat-dialog-content {
-  padding: 4px 8px;
-  overflow: auto;
+  padding: 16px 16px 0 16px;
+  overflow: hidden !important;
   flex: 1 1 auto;
   border-bottom: 1px solid #e0e0e0;
   margin-bottom: 24px;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(95vh - 140px);
 }
 
 /* --- Form Row Layout --- */
 .form-row.spaced-row {
   display: flex;
-  align-items: center;
-  gap: 50px;
+  align-items: flex-end;
+  gap: 24px;
   width: 100%;
   justify-content: space-between;
-  margin-top: 10px;
-  margin-bottom: -20px;
+  margin-top: 0;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  flex-shrink: 0;
 }
 
 .form-row.spaced-row button[mat-stroked-button] {
   margin-bottom: 0;
-  margin-top: -12px;
+  margin-top: 0;
+  height: 40px;
+  font-size: 14px;
+  padding: 0 16px;
 }
 
 /* --- Search Field --- */
 .search-field {
-  width: 30% !important;
-  min-width: 80px;
-  margin: 2px 0 0 0;
+  width: 300px !important;
+  min-width: 250px;
+  margin: 0;
   display: block;
+  position: relative;
 }
 
 .search-field mat-form-field {
   width: 100%;
+  margin-top: 8px;
+}
+
+.search-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 4px;
+  padding-left: 2px;
+}
+
+/* Improve search field styling */
+.search-field ::ng-deep {
+  .mat-mdc-text-field-wrapper {
+    height: 48px !important;
+  }
+  
+  .mat-mdc-form-field-infix {
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    min-height: 24px !important;
+  }
+  
+  .mat-mdc-input-element {
+    font-size: 14px !important;
+    padding: 0 !important;
+  }
+  
+  .mat-mdc-form-field-outline {
+    .mat-mdc-notched-outline-leading,
+    .mat-mdc-notched-outline-trailing,
+    .mat-mdc-notched-outline-notch {
+      border-width: 1px !important;
+      border-color: #ccc !important;
+    }
+  }
+  
+  /* Focus state */
+  &.mat-focused {
+    .mat-mdc-form-field-outline {
+      .mat-mdc-notched-outline-leading,
+      .mat-mdc-notched-outline-trailing,
+      .mat-mdc-notched-outline-notch {
+        border-color: #1976d2 !important;
+        border-width: 2px !important;
+      }
+    }
+  }
 }
 
 /* --- Table --- */
 .table-wrapper {
-  flex: 1;
+  flex: 1 1 auto;
   overflow: auto;
-  margin-bottom: 4px;
+  margin-bottom: 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  min-height: 0;
+  max-height: calc(95vh - 300px);
 }
 
+/* Improve table readability */
 ::ng-deep {
   .mat-mdc-table {
-    --mat-table-row-item-height: 16px !important;
-    --mat-table-header-row-item-height: 16px !important;
-    --mat-table-cell-padding: 0 1px !important;
-    font-size: 9px !important;
+    --mat-table-row-item-height: 48px !important;
+    --mat-table-header-row-item-height: 56px !important;
+    --mat-table-cell-padding: 0 16px !important;
+    font-size: 14px !important;
   }
   .mat-mdc-header-cell,
   .mat-mdc-cell {
-    font-size: 9px !important;
-    padding: 0 1px !important;
-    height: 16px !important;
-    min-height: 16px !important;
-    line-height: 16px !important;
+    font-size: 14px !important;
+    padding: 0 16px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    line-height: 1.4 !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+  }
+  .mat-mdc-header-cell {
+    height: 56px !important;
+    min-height: 56px !important;
+    font-weight: 500 !important;
+    color: #333 !important;
+    background-color: #f8f9fa !important;
   }
   .mat-mdc-row,
   .mat-mdc-header-row {
-    height: 16px !important;
-    min-height: 16px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+  }
+  .mat-mdc-header-row {
+    height: 56px !important;
+    min-height: 56px !important;
+  }
+  .mat-mdc-row:hover {
+    background-color: #f5f5f5 !important;
   }
 }
 
 /* --- Dialog Footer --- */
 mat-dialog-actions {
   position: absolute;
-  padding: 2px 4px !important;
+  padding: 16px !important;
   border-top: 1px solid #e0e0e0;
   display: flex;
   justify-content: center;
-  gap: 4px;
+  gap: 12px;
   background: white;
   flex-shrink: 0;
-  min-height: 24px;
+  min-height: 64px;
   z-index: 10;
 }
 
 mat-dialog-actions button {
-  font-size: 9px !important;
-  min-height: 14px !important;
-  padding: 0 4px !important;
+  font-size: 14px !important;
+  min-height: 40px !important;
+  padding: 0 24px !important;
+  border-radius: 4px !important;
 }
 
+/* Prevent Angular Material dialog from creating scroll bars */
 :host ::ng-deep .cdk-overlay-pane .mat-dialog-container {
-  padding-bottom: 32px !important;
+  padding-bottom: 80px !important;
+  max-height: 95vh !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+:host ::ng-deep .mat-mdc-dialog-content {
+  overflow: hidden !important;
+  max-height: none !important;
+}
+
+:host ::ng-deep .mat-mdc-dialog-container {
+  overflow: hidden !important;
+}
+
+/* Target ALL possible dialog elements that could create scroll bars */
+:host ::ng-deep .mat-mdc-dialog-surface.mdc-dialog__surface {
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+  overflow: hidden !important;
+}
+
+:host ::ng-deep .mat-mdc-dialog-surface {
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+  overflow: hidden !important;
+}
+
+:host ::ng-deep .mdc-dialog__surface {
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+  overflow: hidden !important;
+}
+
+:host ::ng-deep .cdk-overlay-pane {
+  overflow: hidden !important;
+}
+
+:host ::ng-deep .cdk-global-overlay-wrapper {
+  overflow: hidden !important;
+}
+
+/* Very specific targeting of the problematic element */
+:host ::ng-deep div.mat-mdc-dialog-surface.mdc-dialog__surface {
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+  overflow: hidden !important;
+  max-height: 95vh !important;
+}
+
+/* Alternative targeting */
+.mat-mdc-dialog-surface.mdc-dialog__surface {
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+  overflow: hidden !important;
+  max-height: 95vh !important;
 }
 
 /* --- Column Menu --- */
@@ -130,11 +310,12 @@ mat-dialog-actions button {
 }
 
 .column-select-menu .menu-actions button.mat-flat-button {
-  font-size: 11px;
-  line-height: 24px;
-  padding: 0 8px;
+  font-size: 14px;
+  line-height: 36px;
+  padding: 0 16px;
   color: #6200ee;
   background-color: transparent;
+  min-height: 36px;
 }
 
 .column-select-menu .menu-actions button.mat-flat-button:hover {
@@ -173,63 +354,68 @@ button[mat-stroked-button] {
 }
 
 .paginator-container {
-  margin-top: 4px;
+  margin-top: 8px;
+  border-top: 1px solid #e0e0e0;
+  padding: 8px 16px 16px 16px;
+  margin-left: -16px;
+  margin-right: -16px;
+  flex-shrink: 0;
   
   ::ng-deep {
     .compact-paginator {
       .mat-mdc-paginator-container {
-        min-height: 24px !important;
-        padding: 0 8px !important;
+        min-height: 56px !important;
+        padding: 0 16px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: flex-end !important;
-        height: 24px !important;
+        height: 56px !important;
       }
 
       .mat-mdc-paginator-page-size {
-        margin: 0 4px !important;
+        margin: 0 8px !important;
         display: flex !important;
         align-items: center !important;
-        height: 24px !important;
-        min-height: 24px !important;
+        height: 40px !important;
+        min-height: 40px !important;
       }
 
       .mat-mdc-paginator-page-size-label {
-        font-size: 9px !important;
-        margin: 0 2px !important;
-        line-height: 24px !important;
-        height: 24px !important;
+        font-size: 14px !important;
+        margin: 0 8px !important;
+        line-height: 40px !important;
+        height: 40px !important;
         display: flex !important;
         align-items: center !important;
       }
 
       .mat-mdc-paginator-page-size-select {
-        width: 40px !important;
-        margin: 0 2px !important;
-        height: 24px !important;
-        min-height: 24px !important;
+        width: 60px !important;
+        margin: 0 8px !important;
+        height: 40px !important;
+        min-height: 40px !important;
         
         .mat-mdc-select-value {
-          font-size: 9px !important;
-          line-height: 24px !important;
-          height: 24px !important;
+          font-size: 14px !important;
+          line-height: 40px !important;
+          height: 40px !important;
           display: flex !important;
           align-items: center !important;
         }
 
         .mat-mdc-select-trigger {
-          height: 24px !important;
-          min-height: 24px !important;
+          height: 40px !important;
+          min-height: 40px !important;
           display: flex !important;
           align-items: center !important;
         }
       }
 
       .mat-mdc-paginator-range-label {
-        font-size: 9px !important;
-        margin: 0 4px !important;
-        line-height: 24px !important;
-        height: 24px !important;
+        font-size: 14px !important;
+        margin: 0 16px !important;
+        line-height: 40px !important;
+        height: 40px !important;
         display: flex !important;
         align-items: center !important;
       }
@@ -238,19 +424,19 @@ button[mat-stroked-button] {
       .mat-mdc-paginator-navigation-next,
       .mat-mdc-paginator-navigation-first,
       .mat-mdc-paginator-navigation-last {
-        width: 20px !important;
-        height: 20px !important;
-        min-height: 20px !important;
-        line-height: 20px !important;
-        margin: 0 2px !important;
+        width: 40px !important;
+        height: 40px !important;
+        min-height: 40px !important;
+        line-height: 40px !important;
+        margin: 0 4px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         
         .mat-mdc-paginator-icon {
-          width: 14px !important;
-          height: 14px !important;
-          line-height: 14px !important;
+          width: 20px !important;
+          height: 20px !important;
+          line-height: 20px !important;
         }
       }
 
@@ -262,18 +448,18 @@ button[mat-stroked-button] {
 
       .mat-mdc-select-panel {
         .mat-mdc-option {
-          font-size: 9px !important;
-          height: 24px !important;
-          min-height: 24px !important;
-          line-height: 24px !important;
+          font-size: 14px !important;
+          height: 40px !important;
+          min-height: 40px !important;
+          line-height: 40px !important;
           display: flex !important;
           align-items: center !important;
         }
       }
 
       .mat-mdc-select-value-text {
-        font-size: 9px !important;
-        line-height: 24px !important;
+        font-size: 14px !important;
+        line-height: 40px !important;
       }
     }
   }

@@ -5,6 +5,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
 import { CreateFinancialYearDto, FinancialYear, UpdateFinancialYearDto } from '../../models/financialYear.model';
+import { QueryOptions, QueryHelper } from '../../core/query.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,14 @@ export class FinancialYearService {
   // Get all financial years
   getAllFinancialYears(): Observable<ReferenceDataResponse<FinancialYear>> {
     return this.http.get<ReferenceDataResponse<FinancialYear>>(this.apiUrl);
+  }
+
+  // Get financial years with query (filtering, sorting, pagination)
+  getFinancialYearsWithQuery(options: QueryOptions): Observable<ReferenceDataResponse<FinancialYear>> {
+    const params = QueryHelper.buildQueryParams(options);
+    return this.http.get<ReferenceDataResponse<FinancialYear>>(`${this.apiUrl}/query`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get current financial year

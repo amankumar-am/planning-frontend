@@ -7,6 +7,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
 import { CreateUserProfileDto, UserProfile, UpdateUserProfileDto } from '../../models/user-profile.model';
+import { QueryOptions, QueryHelper } from '../../core/query.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,14 @@ export class UserProfileService {
   // Get all user-profiles
   getAllUserProfiles(): Observable<ReferenceDataResponse<UserProfile>> {
     return this.http.get<ReferenceDataResponse<UserProfile>>(this.apiUrl);
+  }
+
+  // Get user-profiles with query (filtering, sorting, pagination)
+  getUserProfilesWithQuery(options: QueryOptions): Observable<ReferenceDataResponse<UserProfile>> {
+    const params = QueryHelper.buildQueryParams(options);
+    return this.http.get<ReferenceDataResponse<UserProfile>>(`${this.apiUrl}/query`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get user-profile by ID

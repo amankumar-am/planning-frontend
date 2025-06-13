@@ -1,10 +1,10 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
 import { CreateOfficeDto, Office, UpdateOfficeDto } from '../../models/office.model';
+import { QueryOptions, QueryHelper } from '../../core/query.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,14 @@ export class OfficeService {
   // Get all offices
   getAllOffices(): Observable<ReferenceDataResponse<Office>> {
     return this.http.get<ReferenceDataResponse<Office>>(this.apiUrl);
+  }
+
+  // Get offices with query (filtering, sorting, pagination)
+  getOfficesWithQuery(options: QueryOptions): Observable<ReferenceDataResponse<Office>> {
+    const params = QueryHelper.buildQueryParams(options);
+    return this.http.get<ReferenceDataResponse<Office>>(`${this.apiUrl}/query`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get office by ID

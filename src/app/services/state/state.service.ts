@@ -1,10 +1,10 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
 import { CreateStateDto, State, UpdateStateDto } from '../../models/state.model';
+import { QueryOptions, QueryHelper } from '../../core/query.helper';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,14 @@ export class StateService {
   // Get all states
   getAllStates(): Observable<ReferenceDataResponse<State>> {
     return this.http.get<ReferenceDataResponse<State>>(this.apiUrl);
+  }
+
+  // Get states with query (filtering, sorting, pagination)
+  getStatesWithQuery(options: QueryOptions): Observable<ReferenceDataResponse<State>> {
+    const params = QueryHelper.buildQueryParams(options);
+    return this.http.get<ReferenceDataResponse<State>>(`${this.apiUrl}/query`, { params }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Get state by ID
