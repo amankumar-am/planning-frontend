@@ -6,7 +6,7 @@ export const form1Config = {
             fields: [
                 { name: 'demand_number', type: 'text', label: 'Number', readonly: true, defaultValue: '1' },
                 { name: 'demand_workId', type: 'text', label: 'Work ID', required: true },
-                { name: 'demand_financialYear', type: 'reference', label: 'Financial Year', required: true, options: 'financialYears' },
+                { name: 'demand_financialYear', type: 'reference', label: 'Financial Year', required: true, options: 'financialYears', displayField: 'name', valueField: 'id' },
                 { name: 'demand_requestDate', type: 'date', label: 'Request Date', required: true },
                 { name: 'demand_proposalAmount', type: 'number', label: 'Proposal Amount', required: true, pattern: /^\d+(\.\d{1,2})?$/ },
                 { name: 'demand_proposalDate', type: 'date', label: 'Proposal Date', required: true },
@@ -17,7 +17,7 @@ export const form1Config = {
             fields: [
                 { name: 'demand_proposerName', type: 'text', label: 'Proposer Name', required: true },
                 { name: 'demand_schemeName', type: 'text', label: 'Scheme Name', required: true },
-                { name: 'demand_fund', type: 'reference', label: 'Fund', required: true, options: 'funds' },
+                { name: 'demand_fund', type: 'reference', label: 'Fund', required: true, options: 'funds', displayField: 'fundingSource_En', valueField: 'id' },
                 { name: 'demand_MpMlaName', type: 'text', label: 'MP/MLA Name', required: true },
                 { name: 'demand_estimatedCompletionDate', type: 'date', label: 'Estimation Completion Date', required: true },
                 { name: 'demand_workDescription', type: 'textarea', label: 'Work Description', required: true, minLength: 10 },
@@ -26,13 +26,13 @@ export const form1Config = {
         },
         {
             fields: [
-                { name: 'demand_sector', type: 'reference', label: 'Sector', required: true, options: 'sectors' },
-                { name: 'demand_subSector', type: 'reference', label: 'Sub-Sector', required: true, options: 'subSectors' },
-                { name: 'demand_beneficiaryDistrict', type: 'reference', label: 'Beneficiary District', required: true, options: 'districts' },
-                { name: 'demand_beneficiaryTaluka', type: 'reference', label: 'Beneficiary Taluka', required: true, options: 'talukas' },
-                { name: 'demand_beneficiaryGroup', type: 'reference', label: 'Beneficiary Group', required: false, options: 'beneficiaryGroups' },
+                { name: 'demand_sector', type: 'reference', label: 'Sector', required: true, options: 'sectors', displayField: 'nameGu', valueField: 'id' },
+                { name: 'demand_subSector', type: 'reference', label: 'Sub-Sector', required: true, options: 'subSectors', dependsOn: 'demand_sector', displayField: 'nameGu', valueField: 'id' },
+                { name: 'demand_beneficiaryDistrict', type: 'reference', label: 'Beneficiary District', required: true, options: 'districts', displayField: 'nameGu', valueField: 'id' },
+                { name: 'demand_beneficiaryTaluka', type: 'reference', label: 'Beneficiary Taluka', required: true, options: 'talukas', dependsOn: 'demand_beneficiaryDistrict', displayField: 'nameGu', valueField: 'id' },
+                { name: 'demand_beneficiaryGroup', type: 'reference', label: 'Beneficiary Group', required: false, options: 'beneficiaryGroups', displayField: 'name_gu', valueField: 'id' },
                 { name: 'demand_beneficiaryAreaType', type: 'radio', label: 'Beneficiary Area Type', required: true, options: ['urban', 'village'] },
-                { name: 'demand_beneficiaryVillage', type: 'reference', label: 'Beneficiary Village', conditional: 'demand_beneficiaryAreaType:village', options: 'villages' },
+                { name: 'demand_beneficiaryVillage', type: 'reference', label: 'Beneficiary Village', conditional: 'demand_beneficiaryAreaType:village', options: 'villages', dependsOn: 'demand_beneficiaryTaluka', displayField: 'nameGu', valueField: 'id' },
                 { name: 'demand_beneficiaryNagarpalika', type: 'text', label: 'Beneficiary Nagarpalika', conditional: 'demand_beneficiaryAreaType:urban' },
             ],
         },

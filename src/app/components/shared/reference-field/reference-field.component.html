@@ -3,7 +3,7 @@
     matInput
     [formControl]="control"
     [readonly]="true"
-    [value]="getName(control.value)"
+    [value]="getDisplayValue(selectedItem)"
     (click)="onInputClick($event)"
     (focus)="blurInput($event)"
     tabindex="-1"

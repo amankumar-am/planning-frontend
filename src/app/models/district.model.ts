@@ -1,5 +1,7 @@
 // src/app/models/district.model.ts
 
+import { State } from "./state.model";
+
 
 export interface District {
     id: number;
@@ -7,7 +9,7 @@ export interface District {
     nameEn: string;
     nameGu: string;
     name: string
-    state: number;
+    state: State;
     isActive: boolean;
     createdBy: string;
     createdAt: Date;

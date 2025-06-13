@@ -22,7 +22,7 @@ export class SubsectorUtilsService extends BaseReferenceUtilsService<Subsector> 
     }
 
     protected async fetchAllItems(): Promise<{ data: Subsector[]; schema: ReferenceSchema<Subsector>[], defaultVisibleColumns: string[] }> {
-        if (this.sectorId == null) {
+        if (this.sectorId == null || this.sectorId <= 0) {
             return { data: [], schema: [], defaultVisibleColumns: [] };
         }
 

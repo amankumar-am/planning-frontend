@@ -211,29 +211,81 @@ const generateFiles = (entity, entityCode, projectPath) => {
 };
 
 // Example usage for fund
-const entity = 'ps1';
+const entity = 'userProfile';
 const entityCode = `
-  @PrimaryGeneratedColumn({ name: 'PS1_Id' })
-  id!: number;
+     @PrimaryGeneratedColumn({ name: 'MUsr_Id' })
+    id!: number;
 
-  @ManyToOne(() => FinancialYear, { onUpdate: 'CASCADE', onDelete: 'RESTRICT' })
-  @JoinColumn({ name: 'PS1_FinancialYear', referencedColumnName: 'id' })
-  financialYear!: FinancialYear;
+    @Column({ name: 'MUsr_Username', length: 100, unique: true })
+    username!: string;
 
-  @ManyToOne(() => FundEntity, { onUpdate: 'CASCADE', onDelete: 'RESTRICT' })
-  @JoinColumn({ name: 'PS1_Fund', referencedColumnName: 'id' })
-  fund!: FundEntity;
+    @Column({ name: 'MUsr_FirstName', length: 100, nullable: true })
+    firstName?: string;
 
-  @ManyToOne(() => TalukaEntity, { onUpdate: 'CASCADE', onDelete: 'RESTRICT' })
-  @JoinColumn({ name: 'PS1_Taluka', referencedColumnName: 'id' })
-  taluka!: TalukaEntity;
+    @Column({ name: 'MUsr_LastName', length: 100, nullable: true })
+    lastName?: string;
 
-  @ManyToOne(() => SectorEntity, { onUpdate: 'CASCADE', onDelete: 'RESTRICT' })
-  @JoinColumn({ name: 'PS1_Sector', referencedColumnName: 'id' })
-  sector!: SectorEntity;
+    @Column({ name: 'MUsr_DateOfBirth', type: 'date', nullable: true })
+    dateOfBirth?: Date;
 
-  @Column({ name: 'PS1_Stage' })
-  stage!: number;
+    @Column({ name: 'MUsr_Gender', length: 20, nullable: true })
+    gender?: string;
+
+    @Column({ name: 'MUsr_PermanentAddress', length: 500, nullable: true })
+    permanentAddress?: string;
+
+    @Column({ name: 'MUsr_CurrentAddress', length: 500, nullable: true })
+    currentAddress?: string;
+
+    @Column({ name: 'MUsr_EmailId', length: 100, unique: true })
+    email?: string;
+
+    @Column({ name: 'MUsr_Mobile', length: 100, unique: true })
+    mobile?: string;
+
+    @Column({ name: 'MUsr_PAN', length: 20, nullable: true })
+    pan?: string;
+
+    @ManyToOne(() => DepartmentEntity, { onUpdate: 'CASCADE', onDelete: 'SET NULL' })
+    @JoinColumn({ name: 'MUsr_Department', referencedColumnName: 'id' })
+    department?: DepartmentEntity;
+
+    @ManyToOne(() => OfficeEntity, { onUpdate: 'CASCADE', onDelete: 'SET NULL' })
+    @JoinColumn({ name: 'MUsr_Office', referencedColumnName: 'id' })
+    office?: OfficeEntity;
+
+    @ManyToOne(() => DesignationEntity, { onUpdate: 'CASCADE', onDelete: 'SET NULL' })
+    @JoinColumn({ name: 'MUsr_Designation', referencedColumnName: 'id' })
+    designation?: DesignationEntity;
+
+    @ManyToOne(() => EmploymentTypeEntity, { onUpdate: 'CASCADE', onDelete: 'SET NULL' })
+    @JoinColumn({ name: 'MUsr_EmploymentType', referencedColumnName: 'id' })
+    employmentType?: EmploymentTypeEntity;
+
+    @Column({ name: 'MUsr_DateOfJoiningService', type: 'date', nullable: true })
+    dateOfJoiningService?: Date;
+
+    @Column({ name: 'MUsr_DateOfJoiningCurrentPost', type: 'date', nullable: true })
+    dateOfJoiningCurrentPost?: Date;
+
+    @ManyToOne(() => OfficerClassEntity, { onUpdate: 'CASCADE', onDelete: 'SET NULL' })
+    @JoinColumn({ name: 'MUsr_OfficerClass', referencedColumnName: 'id' })
+    officerClass?: OfficerClassEntity;
+
+    @Column({ name: 'MUsr_Password', length: 60 })
+    password!: string;
+
+    @Column({ name: 'MUsr_LastLogin', type: 'timestamp', nullable: true })
+    lastLogin?: Date;
+
+    @Column({ name: 'MUsr_PasswordChangedAt', type: 'timestamp', nullable: true })
+    passwordChangedAt?: Date;
+
+    @Column({ name: 'MUsr_PasswordResetToken', length: 100, nullable: true })
+    passwordResetToken?: string;
+
+    @Column({ name: 'MUsr_PasswordResetExpires', type: 'timestamp', nullable: true })
+    passwordResetExpires?: Date;
 `;
 const projectPath = 'D:/Angular/planning/planning-frontend';
 

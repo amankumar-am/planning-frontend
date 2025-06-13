@@ -178,8 +178,92 @@ export class ReferenceFieldModalComponent<T extends object> implements AfterView
     return `reference_field_visible_columns_${hash}`;
   }
 
+  getDisplayValue(row: any, fieldName: keyof T): string {
+    // Get the raw value first
+    const value = row[fieldName];
+
+
+
+    // Handle the case where we get '[object Object]' string but need to find the actual object
+    if (value === '[object Object]') {
+      // Try to find a related object field that might contain the actual data
+      const fieldStr = String(fieldName);
+      const possibleObjectFields = [
+        `${fieldStr}Object`,
+        `${fieldStr}Data`,
+        `${fieldStr}Info`,
+        fieldStr.replace(/Id$/, ''), // Remove 'Id' suffix if present
+        fieldStr.replace(/Name$/, ''), // Remove 'Name' suffix if present
+      ];
+
+      for (const possibleField of possibleObjectFields) {
+        if (row[possibleField] && typeof row[possibleField] === 'object') {
+          return this.extractDisplayValue(row[possibleField]);
+        }
+      }
+
+      // If no related object found, check if there's a similar field with 'Name' or 'Title' suffix
+      const possibleNameFields = [
+        `${fieldStr}Name`,
+        `${fieldStr}Title`,
+        `${fieldStr}NameEn`,
+        `${fieldStr.replace(/([A-Z])/g, '_$1').toLowerCase()}_name`,
+      ];
+
+      for (const nameField of possibleNameFields) {
+        if (row[nameField] && typeof row[nameField] === 'string') {
+          return String(row[nameField]);
+        }
+      }
+
+      return '[Complex Object]';
+    }
+
+    // Handle objects directly before they get stringified
+    if (value && typeof value === 'object') {
+      return this.extractDisplayValue(value);
+    }
+
+    return this.formatCellValue(value);
+  }
+
+  private extractDisplayValue(obj: any): string {
+    // Try common display field names in priority order
+    const displayFields = ['name', 'nameEn', 'title', 'label', 'description', 'text', 'displayName'];
+    for (const field of displayFields) {
+      if (field in obj && obj[field] !== null && obj[field] !== undefined && obj[field] !== '') {
+        return String(obj[field]);
+      }
+    }
+
+    // If no standard display field found, try to find any suitable string field
+    const excludePatterns = ['id', 'created', 'updated', 'deleted', 'password', 'token', 'key', 'secret'];
+    const stringFields = Object.keys(obj).filter(key => {
+      const keyLower = key.toLowerCase();
+      return (
+        typeof obj[key] === 'string' &&
+        obj[key] !== null &&
+        obj[key] !== undefined &&
+        obj[key].length > 0 &&
+        !excludePatterns.some(pattern => keyLower.includes(pattern))
+      );
+    });
+
+    if (stringFields.length > 0) {
+      return String(obj[stringFields[0]]);
+    }
+
+    // Last resort - show field names
+    return `[Object: ${Object.keys(obj).join(', ')}]`;
+  }
+
   formatCellValue(value: any, type?: string): string {
     if (value === null || value === undefined) return '';
+
+    // Handle the case where an object was already converted to '[object Object]' string
+    if (value === '[object Object]') {
+      return '[Complex Object]';
+    }
 
     // Handle datetime strings or type 'datetime'
     if (
@@ -206,17 +290,38 @@ export class ReferenceFieldModalComponent<T extends object> implements AfterView
     }
 
     // Handle object types (like selectedItem: { id, name })
-    if (typeof value === 'object') {
-      if ('name' in value) return value.name;
-      if ('label' in value) return value.label;
-      try {
-        return JSON.stringify(value);
-      } catch {
-        return '[Object]';
+    if (typeof value === 'object' && value !== null) {
+      // Try common display field names in priority order
+      const displayFields = ['name', 'nameEn', 'title', 'label', 'description', 'text', 'displayName'];
+      for (const field of displayFields) {
+        if (field in value && value[field] !== null && value[field] !== undefined && value[field] !== '') {
+          return String(value[field]);
+        }
       }
+
+      // If no standard display field found, try to find any suitable string field
+      const excludePatterns = ['id', 'created', 'updated', 'deleted', 'password', 'token', 'key', 'secret'];
+      const stringFields = Object.keys(value).filter(key => {
+        const keyLower = key.toLowerCase();
+        return (
+          typeof value[key] === 'string' &&
+          value[key] !== null &&
+          value[key] !== undefined &&
+          value[key].length > 0 &&
+          !excludePatterns.some(pattern => keyLower.includes(pattern))
+        );
+      });
+
+      if (stringFields.length > 0) {
+        return String(value[stringFields[0]]);
+      }
+
+      // Fallback: show available fields for debugging
+      const availableFields = Object.keys(value).join(', ');
+      return `[Object: ${availableFields}]`;
     }
 
     // Default fallback
-    return value.toString();
+    return String(value);
   }
 }

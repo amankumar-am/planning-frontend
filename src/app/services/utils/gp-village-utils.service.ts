@@ -22,7 +22,7 @@ export class GpVillageUtilsService extends BaseReferenceUtilsService<GpVillage> 
     }
 
     protected async fetchAllItems(): Promise<{ data: GpVillage[]; schema: ReferenceSchema<GpVillage>[], defaultVisibleColumns: string[] }> {
-        if (this.talukaId == null) {
+        if (this.talukaId == null || this.talukaId <= 0) {
             return { data: [], schema: [], defaultVisibleColumns: [] };
         }
 

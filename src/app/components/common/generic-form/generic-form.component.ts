@@ -1,6 +1,6 @@
 // src/app/components/common/generic-form/generic-form.component.ts
 
-import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormBuilder } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { CommonModule } from '@angular/common';
@@ -51,7 +51,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatSnackBarModule,
   ],
 })
-export class GenericFormComponent implements OnInit {
+export class GenericFormComponent implements OnInit, AfterViewInit {
   @Input() formGroup!: FormGroup;
   @Input() formConfig!: any;
   @Input() stepper!: MatStepper;
@@ -66,6 +66,8 @@ export class GenericFormComponent implements OnInit {
   datePickers: { [key: string]: any } = {};
   currentField: any = null;
   menuItem?: MenuItem;
+
+  @ViewChildren(ReferenceFieldComponent) referenceFieldComponents!: QueryList<ReferenceFieldComponent<any>>;
 
   constructor(
     public fyUtils: FinancialYearUtilsService,
@@ -92,7 +94,6 @@ export class GenericFormComponent implements OnInit {
     this.columns = this.formConfig?.columns ?? [];
 
     this.setupConditionalValidators();
-    this.setupDynamicOptions();
 
     if (this.menuItemId) {
       this.menuItem = this.findMenuItem(this.menuItemId);
@@ -102,7 +103,10 @@ export class GenericFormComponent implements OnInit {
     }
   }
 
-
+  ngAfterViewInit() {
+    // Setup dynamic options after ViewChildren are available
+    this.setupDynamicOptions();
+  }
 
   next() {
     if (this.formGroup?.valid) {
@@ -350,34 +354,66 @@ export class GenericFormComponent implements OnInit {
   }
 
   private setupDynamicOptions() {
-    if (this.stepIndex !== 0) return;
+    // Remove stepIndex restriction to allow dependencies in all steps
+    // if (this.stepIndex !== 0) return;
 
     this.formGroup.get('demand_beneficiaryDistrict')?.valueChanges.subscribe((district: any) => {
-      const districtId = district?.id;
-      if (districtId) {
+      // Handle both object values (old) and primitive values (new with valueField)
+      const districtId = typeof district === 'object' ? district?.id : district;
+      if (districtId && districtId > 0) {
         this.talukaUtils.setDistrictId(districtId);
         this.talukaUtils.getDataFetcher()?.().catch((err) => console.error('Failed to load talukas:', err));
+      } else {
+        this.talukaUtils.setDistrictId(0); // Reset to ensure no data loads
       }
+      // Reset the taluka reference field cache
+      this.resetReferenceFieldCache('demand_beneficiaryTaluka');
+      // Also reset dependent village field
+      this.resetReferenceFieldCache('demand_beneficiaryVillage');
       this.cdr.detectChanges();
     });
 
     this.formGroup.get('demand_beneficiaryTaluka')?.valueChanges.subscribe((taluka: any) => {
-      const talukaId = taluka?.id;
-      if (talukaId) {
+      // Handle both object values (old) and primitive values (new with valueField)
+      const talukaId = typeof taluka === 'object' ? taluka?.id : taluka;
+      if (talukaId && talukaId > 0) {
         this.gpVillageUtils.setTalukaId(talukaId);
         this.gpVillageUtils.getDataFetcher()?.().catch((err) => console.error('Failed to load villages:', err));
+      } else {
+        this.gpVillageUtils.setTalukaId(0); // Reset to ensure no data loads
       }
+      // Reset the village reference field cache
+      this.resetReferenceFieldCache('demand_beneficiaryVillage');
       this.cdr.detectChanges();
     });
 
     this.formGroup.get('demand_sector')?.valueChanges.subscribe((sector: any) => {
-      const sectorId = sector?.id;
-      if (sectorId) {
+      // Handle both object values (old) and primitive values (new with valueField)
+      const sectorId = typeof sector === 'object' ? sector?.id : sector;
+      if (sectorId && sectorId > 0) {
         this.subsectorUtils.setSectorId(sectorId);
         this.subsectorUtils.getDataFetcher()?.().catch((err) => console.error('Failed to load subsectors:', err));
+      } else {
+        this.subsectorUtils.setSectorId(0); // Reset to ensure no data loads
       }
+      // Reset the subsector reference field cache
+      this.resetReferenceFieldCache('demand_subSector');
       this.cdr.detectChanges();
     });
+  }
+
+  private resetReferenceFieldCache(fieldName: string): void {
+    // Find the reference field component by controlName
+    const referenceField = this.referenceFieldComponents?.find(
+      comp => comp.controlName === fieldName
+    );
+
+    if (referenceField) {
+      referenceField.resetDataCache();
+      // Clear the selected value in the form
+      this.formGroup.get(fieldName)?.setValue(null);
+      referenceField.selectedItem = null; // Also clear the selected item
+    }
   }
 
   getControl(fieldName: string): FormControl | null {

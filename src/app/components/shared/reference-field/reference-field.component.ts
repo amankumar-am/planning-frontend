@@ -31,6 +31,9 @@ import { HasName } from '../../../services/generic.model';
 export class ReferenceFieldComponent<T extends HasName> implements OnInit, ControlValueAccessor, Validator {
   @Input() fetchData?: () => Promise<{ data: T[]; schema: { field: keyof T; label: string }[], defaultVisibleColumns: string[] }>;
   @Input() labelField: string = '';
+  @Input() displayField: string = 'name'; // Field to display in the input
+  @Input() valueField: string = 'id'; // Field to use as the value (defaulted to 'id')
+  @Input() dependsOn: string = ''; // Field that this reference depends on
   @Input() schema: { field: keyof T; label: string }[] = [];
   @Input() selectedItem: T | null = null;
   @Input() defaultVisibleColumns: string[] = [];
@@ -57,6 +60,31 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
     }
     // Set required state based on field configuration
     this.isRequired = this.field?.required ?? this.required;
+
+    // Listen for changes in the parent field if dependsOn is specified
+    if (this.dependsOn && this.formGroup) {
+      const parentControl = this.formGroup.get(this.dependsOn);
+      if (parentControl) {
+        parentControl.valueChanges.subscribe((value) => {
+          // Reset cache when parent changes
+          this.resetDataCache();
+          // Clear current selection
+          this.selectedItem = null;
+          // Clear form value
+          if (this.formGroup && this.controlName) {
+            this.formGroup.get(this.controlName)?.setValue(null);
+          }
+        });
+      }
+    }
+  }
+
+  // Method to reset the data cache - called when dependencies change
+  resetDataCache(): void {
+    this.isDataLoaded = false;
+    this.data = [];
+    this.schema = [];
+    this.defaultVisibleColumns = [];
   }
 
   openModal(): void {
@@ -116,19 +144,36 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
       if (result !== undefined) {
         this.selectedItem = result;
         this.selectedItemChange.emit(result);
-        this.onChange(result);
+        // Use the valueField to determine what value to submit
+        const valueToSubmit = result ? this.getFieldValue(result, this.valueField) : null;
+        this.onChange(valueToSubmit);
         this.onTouched();
-        // Ensure the form control value is updated
+        // Ensure the form control value is updated with the value field
         if (this.formGroup && this.controlName) {
-          this.formGroup.get(this.controlName)?.setValue(result);
+          this.formGroup.get(this.controlName)?.setValue(valueToSubmit);
         }
       }
     });
   }
 
-  getName(item: T | null): string {
+  // Get the display value using the displayField
+  getDisplayValue(item: T | null): string {
     if (!item) return '';
-    return item.name as string;
+    return this.getFieldValue(item, this.displayField) as string || '';
+  }
+
+  // Helper method to get field value from an object
+  private getFieldValue(item: T, fieldName: string): any {
+    // Handle nested field access with dot notation (e.g., 'user.name')
+    if (fieldName.includes('.')) {
+      return fieldName.split('.').reduce((obj, key) => obj?.[key as keyof typeof obj], item as any);
+    }
+    return (item as any)[fieldName];
+  }
+
+  // Keep the old getName method for backward compatibility
+  getName(item: T | null): string {
+    return this.getDisplayValue(item);
   }
 
   onInputClick(event: MouseEvent): void {
@@ -142,11 +187,21 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
   }
 
   // ControlValueAccessor methods
-  onChange: (value: T | null) => void = () => { };
+  onChange: (value: any) => void = () => { };
   onTouched: () => void = () => { };
 
-  writeValue(value: T | null): void {
-    this.selectedItem = value;
+  writeValue(value: any): void {
+    // If value is provided, we need to find the corresponding item
+    // This might be the full object or just the value field
+    if (value && typeof value === 'object') {
+      this.selectedItem = value as T;
+    } else if (value) {
+      // Try to find the item by the value field
+      const foundItem = this.data.find(item => this.getFieldValue(item, this.valueField) === value);
+      this.selectedItem = foundItem || null;
+    } else {
+      this.selectedItem = null;
+    }
   }
 
   registerOnChange(fn: any): void {

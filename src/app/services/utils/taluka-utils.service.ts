@@ -22,7 +22,7 @@ export class TalukaUtilsService extends BaseReferenceUtilsService<Taluka> {
     }
 
     protected async fetchAllItems(): Promise<{ data: Taluka[]; schema: ReferenceSchema<Taluka>[], defaultVisibleColumns: string[] }> {
-        if (this.districtId == null) {
+        if (this.districtId == null || this.districtId <= 0) {
             return { data: [], schema: [], defaultVisibleColumns: [] };
         }
         const response = await firstValueFrom(this.talukaService.getTalukasByDistrict(this.districtId));

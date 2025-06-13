@@ -32,6 +32,9 @@
               [formGroup]="formGroup"
               [controlName]="field.name"
               [labelField]="field.label"
+              [displayField]="field.displayField || 'name'"
+              [valueField]="field.valueField || 'id'"
+              [dependsOn]="field.dependsOn || ''"
               [fetchData]="getService(field.options).loadItems"
               class="full-width"
             ></app-reference-field>
