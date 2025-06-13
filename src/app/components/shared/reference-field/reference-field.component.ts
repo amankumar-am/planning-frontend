@@ -31,7 +31,8 @@ import { HasName } from '../../../services/generic.model';
 export class ReferenceFieldComponent<T extends HasName> implements OnInit, ControlValueAccessor, Validator {
   @Input() fetchData?: () => Promise<{ data: T[]; schema: { field: keyof T; label: string }[], defaultVisibleColumns: string[] }>;
   @Input() labelField: string = '';
-  @Input() displayField: string = 'name'; // Field to display in the input
+  @Input() displayField: string | string[] = 'name'; // Field(s) to display in the input - can be single field or array for concatenation
+  @Input() displayFieldSeparator: string = ' '; // Separator for concatenated fields (default: space)
   @Input() valueField: string = 'id'; // Field to use as the value (defaulted to 'id')
   @Input() dependsOn: string = ''; // Field that this reference depends on
   @Input() schema: { field: keyof T; label: string }[] = [];
@@ -42,6 +43,11 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
   @Input() formControlName: string = '';
   @Input() formGroup: FormGroup | null = null;
   @Input() controlName: string = '';
+
+  // New filtering and sorting inputs
+  @Input() filters: { [key: string]: any } = {}; // Filter criteria: { field: value }
+  @Input() sortBy: string = ''; // Field to sort by
+  @Input() sortOrder: 'asc' | 'desc' = 'asc'; // Sort order
 
   @Output() selectedItemChange = new EventEmitter<T | null>();
 
@@ -113,7 +119,17 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
         });
         return;
       }
-      this.data = response.data;
+
+      // Apply filtering and sorting to the data
+      let processedData = response.data;
+
+      // Apply filters
+      processedData = this.applyFilters(processedData);
+
+      // Apply sorting
+      processedData = this.applySorting(processedData);
+
+      this.data = processedData;
       this.schema = response.schema;
       this.defaultVisibleColumns = response.defaultVisibleColumns;
       this.isDataLoaded = true;
@@ -159,7 +175,15 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
   // Get the display value using the displayField
   getDisplayValue(item: T | null): string {
     if (!item) return '';
-    return this.getFieldValue(item, this.displayField) as string || '';
+    if (Array.isArray(this.displayField)) {
+      // Filter out empty/null/undefined values before joining
+      const values = this.displayField
+        .map(field => this.getFieldValue(item, field) as string)
+        .filter(value => value !== null && value !== undefined && value !== '');
+      return values.join(this.displayFieldSeparator);
+    } else {
+      return this.getFieldValue(item, this.displayField as string) as string || '';
+    }
   }
 
   // Helper method to get field value from an object
@@ -226,5 +250,68 @@ export class ReferenceFieldComponent<T extends HasName> implements OnInit, Contr
 
   get control(): FormControl {
     return (this.formGroup?.get(this.controlName) as FormControl) || new FormControl();
+  }
+
+  // Apply filters to the data
+  private applyFilters(data: T[]): T[] {
+    if (!this.filters || Object.keys(this.filters).length === 0) {
+      return data;
+    }
+
+    return data.filter(item => {
+      return Object.entries(this.filters).every(([field, filterValue]) => {
+        if (filterValue === null || filterValue === undefined || filterValue === '') {
+          return true; // Skip empty filters
+        }
+
+        const itemValue = this.getFieldValue(item, field);
+
+        // Handle different filter types
+        if (typeof filterValue === 'string') {
+          // Case-insensitive string matching
+          return String(itemValue).toLowerCase().includes(filterValue.toLowerCase());
+        } else if (typeof filterValue === 'boolean') {
+          return itemValue === filterValue;
+        } else if (typeof filterValue === 'number') {
+          return itemValue === filterValue;
+        } else if (Array.isArray(filterValue)) {
+          // Array filter - check if item value is in the array
+          return filterValue.includes(itemValue);
+        } else {
+          // Exact match for other types
+          return itemValue === filterValue;
+        }
+      });
+    });
+  }
+
+  // Apply sorting to the data
+  private applySorting(data: T[]): T[] {
+    if (!this.sortBy) {
+      return data;
+    }
+
+    return [...data].sort((a, b) => {
+      const aValue = this.getFieldValue(a, this.sortBy);
+      const bValue = this.getFieldValue(b, this.sortBy);
+
+      // Handle null/undefined values
+      if (aValue == null && bValue == null) return 0;
+      if (aValue == null) return this.sortOrder === 'asc' ? 1 : -1;
+      if (bValue == null) return this.sortOrder === 'asc' ? -1 : 1;
+
+      // Convert to strings for comparison if needed
+      const aStr = String(aValue);
+      const bStr = String(bValue);
+
+      let comparison = 0;
+      if (aStr < bStr) {
+        comparison = -1;
+      } else if (aStr > bStr) {
+        comparison = 1;
+      }
+
+      return this.sortOrder === 'desc' ? -comparison : comparison;
+    });
   }
 }

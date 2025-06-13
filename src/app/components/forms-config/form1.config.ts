@@ -18,7 +18,7 @@ export const form1Config = {
                 { name: 'demand_proposerName', type: 'text', label: 'Proposer Name', required: true },
                 { name: 'demand_schemeName', type: 'text', label: 'Scheme Name', required: true },
                 { name: 'demand_fund', type: 'reference', label: 'Fund', required: true, options: 'funds', displayField: 'fundingSource_En', valueField: 'id' },
-                { name: 'demand_MpMlaName', type: 'text', label: 'MP/MLA Name', required: true },
+                { name: 'demand_MpMlaName', type: 'reference', label: 'MP/MLA Name', required: true, options: 'mpmlas', displayField: 'name', valueField: 'id' },
                 { name: 'demand_estimatedCompletionDate', type: 'date', label: 'Estimation Completion Date', required: true },
                 { name: 'demand_workDescription', type: 'textarea', label: 'Work Description', required: true, minLength: 10 },
                 { name: 'demand_importanceOfWork', type: 'text', label: 'Importance of Work', required: true },
@@ -38,9 +38,9 @@ export const form1Config = {
         },
         {
             fields: [
-                { name: 'demand_officer', type: 'text', label: 'Demand Officer' },
-                { name: 'demand_assignPSTo', type: 'text', label: 'Assign PS To', required: true },
-                { name: 'demand_implementationOfficer', type: 'text', label: 'Implementation Officer', required: true },
+                { name: 'demand_officer', type: 'reference', label: 'Demand Officer', required: true, options: 'userProfiles', displayField: ['firstName', 'lastName'], displayFieldSeparator: ' ', valueField: 'id', sortBy: 'firstName', sortOrder: 'asc' },
+                { name: 'demand_assignPSTo', type: 'reference', label: 'Assign PS To', required: true, options: 'userProfiles', displayField: ['firstName', 'lastName', 'username'], displayFieldSeparator: ' - ', valueField: 'id', filters: { isActive: true }, sortBy: 'firstName', sortOrder: 'asc' },
+                { name: 'demand_implementationOfficer', type: 'reference', label: 'Implementation Officer', required: true, options: 'userProfiles', displayField: 'username', valueField: 'id', filters: { isActive: true }, sortBy: 'username', sortOrder: 'desc' },
                 { name: 'demand_isTrust', type: 'checkbox', label: 'Trust?', defaultValue: false },
                 { name: 'demand_trustName', type: 'text', label: 'Trust Name', conditional: 'demand_isTrust:true' },
                 { name: 'demand_trustAddress', type: 'text', label: 'Trust Address', conditional: 'demand_isTrust:true' },

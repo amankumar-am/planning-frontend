@@ -1,49 +1,47 @@
-// src/app/services/user-profile/user-profile.service.ts
-
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.prod';
 import { ReferenceDataResponse } from '../generic.model';
-import { CreateUserProfileDto, UserProfile, UpdateUserProfileDto } from '../../models/user-profile.model';
+import { CreateAcDto, Ac, UpdateAcDto } from '../../models/ac.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserProfileService {
-  private apiUrl = `${environment.apiBaseUrl}/users`;
+export class AcService {
+  private apiUrl = `${environment.apiBaseUrl}/acs`;
 
   constructor(private http: HttpClient) { }
 
-  // Get all user-profiles
-  getAllUserProfiles(): Observable<ReferenceDataResponse<UserProfile>> {
-    return this.http.get<ReferenceDataResponse<UserProfile>>(this.apiUrl);
+  // Get all acs
+  getAllAcs(): Observable<ReferenceDataResponse<Ac>> {
+    return this.http.get<ReferenceDataResponse<Ac>>(this.apiUrl);
   }
 
-  // Get user-profile by ID
-  getUserProfileById(id: number): Observable<UserProfile> {
-    return this.http.get<UserProfile>(`${this.apiUrl}/${id}`).pipe(
+  // Get ac by ID
+  getAcById(id: number): Observable<Ac> {
+    return this.http.get<Ac>(`${this.apiUrl}/${id}`).pipe(
       catchError(this.handleError)
     );
   }
 
-  // Create new user-profile
-  createUserProfile(userProfile: CreateUserProfileDto): Observable<UserProfile> {
-    return this.http.post<UserProfile>(this.apiUrl, userProfile).pipe(
+  // Create new ac
+  createAc(ac: CreateAcDto): Observable<Ac> {
+    return this.http.post<Ac>(this.apiUrl, ac).pipe(
       catchError(this.handleError)
     );
   }
 
-  // Update user-profile
-  updateUserProfile(id: number, userProfile: UpdateUserProfileDto): Observable<UserProfile> {
-    return this.http.put<UserProfile>(`${this.apiUrl}/${id}`, userProfile).pipe(
+  // Update ac
+  updateAc(id: number, ac: UpdateAcDto): Observable<Ac> {
+    return this.http.put<Ac>(`${this.apiUrl}/${id}`, ac).pipe(
       catchError(this.handleError)
     );
   }
 
-  // Delete user-profile
-  deleteUserProfile(id: number): Observable<void> {
+  // Delete ac
+  deleteAc(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
       catchError(this.handleError)
     );

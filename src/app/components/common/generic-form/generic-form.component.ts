@@ -4,7 +4,6 @@ import { Component, Input, OnInit, AfterViewInit, ChangeDetectorRef, ViewChildre
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, FormBuilder } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { CommonModule } from '@angular/common';
-import { ReferenceFieldModule } from '../../shared/reference-field/reference-field.module';
 import { ValidationMessageDirective } from '../../../directives/validation/validation-message.directive';
 import { FinancialYearUtilsService } from '../../../services/utils/financial-year-utils.service';
 import { BeneficiaryGroupUtilsService } from '../../../services/utils/beneficiary-group-utils.service';
@@ -16,7 +15,7 @@ import { TalukaUtilsService } from '../../../services/utils/taluka-utils.service
 import { GpVillageUtilsService } from '../../../services/utils/gp-village-utils.service';
 import { MATERIAL_STANDALONE_IMPORTS } from '../../materialConfig/material.module';
 import { ReferenceFieldComponent } from '../../shared/reference-field/reference-field.component';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { MENU_CONFIG, MenuItem } from '../../../config/menu.config';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,6 +27,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Ps1Service } from '../../../services/ps1/ps1.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserProfileUtilsService } from '../../../services/utils/user-profile-utils.service';
+import { OfficerClassUtilsService } from '../../../services/utils/officer-class-utils.service';
+import { DepartmentUtilsService } from '../../../services/utils/department-utils.service';
+import { EmploymentTypeUtilsService } from '../../../services/utils/employment-type-utils.service';
+import { DesignationUtilsService } from '../../../services/utils/designation-utils.service';
+import { OfficeUtilsService } from '../../../services/utils/office-utils.service';
+import { OfficeLevelUtilsService } from '../../../services/utils/office-level-utils.service';
+import { StateUtilsService } from '../../../services/utils/state-utils.service';
+import { MpmlaUtilsService } from '../../../services/utils/mpmla-utils.service';
+import { PrantUtilsService } from '../../../services/utils/prant-utils.service';
+import { AcUtilsService } from '../../../services/utils/ac-utils.service';
 
 @Component({
   selector: 'app-generic-form',
@@ -38,7 +48,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     ReactiveFormsModule,
     CommonModule,
     ...MATERIAL_STANDALONE_IMPORTS,
-    ReferenceFieldModule,
     ReferenceFieldComponent,
     ValidationMessageDirective,
     MatButtonModule,
@@ -78,10 +87,20 @@ export class GenericFormComponent implements OnInit, AfterViewInit {
     public districtUtils: DistrictUtilsService,
     public talukaUtils: TalukaUtilsService,
     public gpVillageUtils: GpVillageUtilsService,
+    public acUtils: AcUtilsService,
+    public userProfileUtils: UserProfileUtilsService,
+    public officerClassUtils: OfficerClassUtilsService,
+    public departmentUtils: DepartmentUtilsService,
+    public employmentTypeUtils: EmploymentTypeUtilsService,
+    public designationUtils: DesignationUtilsService,
+    public officeUtils: OfficeUtilsService,
+    public officeLevelUtils: OfficeLevelUtilsService,
+    public stateUtils: StateUtilsService,
+    public mpmlaUtils: MpmlaUtilsService,
+    public prantUtils: PrantUtilsService,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute,
     private ps1Service: Ps1Service,
     private snackBar: MatSnackBar
   ) { }
@@ -256,6 +275,7 @@ export class GenericFormComponent implements OnInit, AfterViewInit {
 
   getService(optionsKey: string): any {
     const serviceMap: Record<string, any> = {
+      ac: this.acUtils,
       financialYears: this.fyUtils,
       funds: this.fundUtils,
       sectors: this.sectorUtils,
@@ -264,6 +284,16 @@ export class GenericFormComponent implements OnInit, AfterViewInit {
       talukas: this.talukaUtils,
       villages: this.gpVillageUtils,
       beneficiaryGroups: this.bgUtils,
+      userProfiles: this.userProfileUtils,
+      officerClasses: this.officerClassUtils,
+      departments: this.departmentUtils,
+      employmentTypes: this.employmentTypeUtils,
+      designations: this.designationUtils,
+      offices: this.officeUtils,
+      officeLevels: this.officeLevelUtils,
+      states: this.stateUtils,
+      mpmlas: this.mpmlaUtils,
+      prants: this.prantUtils,
     };
 
     const service = serviceMap[optionsKey];

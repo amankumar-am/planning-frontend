@@ -18,6 +18,7 @@ export class UserProfileUtilsService extends BaseReferenceUtilsService<UserProfi
 
     protected async fetchAllItems(): Promise<{ data: UserProfile[]; schema: ReferenceSchema<UserProfile>[], defaultVisibleColumns: string[] }> {
         const response = await firstValueFrom(this.userProfileService.getAllUserProfiles());
+
         return {
             data: response?.data || [],
             schema: response?.schema || [],
